@@ -939,6 +939,27 @@
     if(pageId==="pagePay") renderPay();
   };
 </script>
+<!-- BGM KivoPay -->
+<audio id="bgm" loop preload="auto">
+  <source src="https://files.catbox.moe/mog6bq.mp3" type="audio/mpeg">
+</audio>
 
+<script>
+  const bgm = document.getElementById("bgm");
+  bgm.volume = 0.35; // kecilin biar halus
+
+  // "autoplay" paling aman: nyala otomatis setelah user tap/click pertama
+  function startBGM(){
+    bgm.play().catch(()=>{});
+    document.removeEventListener("click", startBGM);
+    document.removeEventListener("touchstart", startBGM);
+  }
+  document.addEventListener("click", startBGM, {once:true});
+  document.addEventListener("touchstart", startBGM, {once:true});
+
+  // optional: kalau kamu punya fungsi login sukses, panggil ini biar langsung nyala pas login:
+  // bgm.play().catch(()=>{});
+</script>
+  
 </body>
 </html>
