@@ -369,39 +369,62 @@
     </section>
 
     <!-- PAGE: INTRO -->
-    <section class="page" id="pageIntro">
-      <div class="panel">
-        <div class="content">
-          <h2>Selamat Datang ✨</h2>
-          <p class="typing">
-            <span id="typing"></span><span class="cursor">|</span>
-          </p>
-          <div class="divider"></div>
-          <p class="muted">Klik tombol di bawah untuk masuk ke halaman kategori.</p>
-          <button class="btn primary" style="margin-top:10px" onclick="goTo('pageKategori')">
-            Masuk Ke Halaman Kategori →
-          </button>
+<section class="page" id="pageIntro">
+  <div class="panel">
+    <div class="content">
+      <h2>Selamat Datang ✨</h2>
+
+      <p class="typing">
+        <span id="typing"></span><span class="cursor">|</span>
+      </p>
+
+      <div class="divider"></div>
+      <p class="muted">Klik tombol di bawah untuk masuk ke halaman kategori.</p>
+
+      <button class="btn primary"
+      style="margin-top:10px"
+      onclick="goTo('pageKategori'); setTimeout(typingKategori,200);">
+      Masuk Ke Halaman Kategori →
+      </button>
+
+    </div>
+  </div>
+</section>
+
+
+
+    
+  </div>
+  </sec<!-- PAGE: KATEGORI -->
+<section class="page" id="pageKategori">
+  <div class="panel">
+    <div class="content">
+      <h2>Halaman Kategori</h2>
+      <p>Pilih kategori untuk melihat produk.</p>
+
+      <div class="typingWrap">
+        <div class="typingLine">
+          <span class="dotPulse"></span>
+          <span id="typingText"></span><span class="caret">|</span>
+        </div>
+
+        <div class="floatingTips">
+          <span class="chip">✨ Diskon & promo</span>
+          <span class="chip">⚡ Proses cepat</span>
+          <span class="chip">🛡️ Aman</span>
         </div>
       </div>
-    </section>
 
-    <!-- PAGE: KATEGORI -->
-    <section class="page" id="pageKategori">
-      <div class="panel">
-        <div class="content">
-          <h2>Halaman Kategori</h2>
-          <p>Pilih kategori untuk melihat produk.</p>
-        </div>
-      </div>
+    </div>
+  </div>
 
-      <div class="grid" id="catGrid"></div>
+  <div class="grid" id="catGrid"></div>
 
-      <div style="margin-top:14px">
-        <button class="btn" onclick="logout()">Logout</button>
-      </div>
-    </section>
-
-    <!-- PAGE: PRODUK -->
+  <div style="margin-top:14px">
+    <button class="btn" onclick="logout()">Logout</button>
+  </div>
+</section> 
+tion>UK -->
     <section class="page" id="pageProduk">
       <div class="panel">
         <div class="content">
@@ -563,20 +586,20 @@
       id:"nokos",
       name:"Nokos WA/Tele",
       desc:"Nomor virtual • proses manual admin",
-      img:"https://images.bukaolshop.com/hosting/181218/45231c6da75d480602.png"
+      img:"https://images.bukaolshop.com/hosting/181218/16aea1c112a5636278.png"
     },
     {
-      id:"panel",
-      name:"Panel SMM",
-      desc:"Layanan sosial media • (opsional)",
-      img:"https://images.bukaolshop.com/hosting/181218/ff232ca6b143229137.png"
-    },
-    {
-      id:"topup",
-      name:"TopUp & Game",
-      desc:"Topup saldo/game • (opsional)",
-      img:"https://images.bukaolshop.com/hosting/181218/ad8345f7b9c8953792.png"
-    },
+ id:"segera1",
+ name:"Segera Hadir",
+ desc:"Produk sedang dalam pengembangan",
+ img:"https://images.bukaolshop.com/hosting/181218/16aea1c112a5636278.png"
+},
+{
+ id:"segera2",
+ name:"Segera Hadir",
+ desc:"Produk sedang dalam pengembangan",
+ img:"https://images.bukaolshop.com/hosting/181218/16aea1c112a5636278.png"
+  },
   ];
 
   // ====== DATA PRODUK ======
@@ -640,15 +663,15 @@
 
     nokos: [
   // ===== WhatsApp =====
-  {title:"Nokos WhatsApp", variant:"Indonesia", price:8000, img:"https://images.bukaolshop.com/hosting/181218/450cb4fcb88a174062.png"},
-  {title:"Nokos WhatsApp", variant:"Filipina", price:17300, img:"https://images.bukaolshop.com/hosting/181218/450cb4fcb88a174062.png"},
-  {title:"Nokos WhatsApp", variant:"Malaysia", price:9000, img:"https://images.bukaolshop.com/hosting/181218/450cb4fcb88a174062.png"},
-  {title:"Nokos WhatsApp", variant:"Hongkong", price:16000, img:"https://images.bukaolshop.com/hosting/181218/450cb4fcb88a174062.png"},
+  {title:"Nokos WhatsApp", variant:"Indonesia", price:8000, img:"https://images.bukaolshop.com/hosting/181218/60c88b2821bf500477.png"},
+  {title:"Nokos WhatsApp", variant:"Filipina", price:17300, img:"https://images.bukaolshop.com/hosting/181218/60c88b2821bf500477.png"},
+  {title:"Nokos WhatsApp", variant:"Malaysia", price:9000, img:"https://images.bukaolshop.com/hosting/181218/60c88b2821bf500477.png"},
+  {title:"Nokos WhatsApp", variant:"Hongkong", price:16000, img:"https://images.bukaolshop.com/hosting/181218/60c88b2821bf500477.png"},
 
   // ===== Telegram =====
-  {title:"Nokos Telegram", variant:"Indonesia", price:7000, img:"https://images.bukaolshop.com/hosting/181218/45231c6da75d480602.png"},
-  {title:"Nokos Telegram", variant:"Filipina", price:8000, img:"https://images.bukaolshop.com/hosting/181218/45231c6da75d480602.png"},
-  {title:"Nokos Telegram", variant:"Malaysia", price:9000, img:"https://images.bukaolshop.com/hosting/181218/45231c6da75d480602.png"},
+  {title:"Nokos Telegram", variant:"Indonesia", price:7000, img:"https://images.bukaolshop.com/hosting/181218/450cb4fcb88a174062.png"},
+  {title:"Nokos Telegram", variant:"Filipina", price:8000, img:"https://images.bukaolshop.com/hosting/181218/450cb4fcb88a174062.png"},
+  {title:"Nokos Telegram", variant:"Malaysia", price:9000, img:"https://images.bukaolshop.com/hosting/181218/450cb4fcb88a174062.png"},
 ],
 
     segera: [
@@ -964,15 +987,43 @@ Bukti: (lampirkan screenshot)`;
     const name = localStorage.getItem("kp_name");
     const wa = localStorage.getItem("kp_wa");
     if(name && wa){
-      qs("uName").textContent = name;
-      qs("adminTxt").textContent = ADMIN_WA;
-      goTo("pageIntro");
-      typingStart();
-    }else{
-      goTo("pageLogin");
+  qs("uName").textContent = name;
+  qs("adminTxt").textContent = ADMIN_WA;
+  goTo("pageIntro");
+  typingStart();
+     // tambah baris ini saja
+}else{
+  goTo("pageLogin");
     }
   }
   init();
+  
+const typingMsg = "Selamat Berbelanja Di Website KivoPay, Happy Shopping Ya Kak ☺️";
+let tIndex = 0;
+let tForward = true;
+
+function typingKategori(){
+  const el = document.getElementById("typingText");
+  if(!el) return;
+
+  if(tForward){
+    tIndex++;
+    if(tIndex >= typingMsg.length){
+      tForward = false;
+      setTimeout(typingKategori, 1200);
+      return;
+    }
+  }else{
+    tIndex--;
+    if(tIndex <= 0){
+      tForward = true;
+    }
+  }
+
+  el.textContent = typingMsg.substring(0,tIndex);
+  setTimeout(typingKategori, 60);
+}
+  
 </script>
 </body>
 </html>
