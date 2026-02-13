@@ -1,196 +1,722 @@
-<!doctype html>
-<html lang="id">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>KivoPay Linktree</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+  <title>Keii Official • Store</title>
+  
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
+  <!-- Google Font: Inter & Clash Display -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ========== RESET & GLOBAL ========== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-<style>
-:root{
-  --bg:#0b0f18;
-  --card:rgba(255,255,255,.08);
-  --border:rgba(255,255,255,.15);
-  --text:#f1f4ff;
-  --muted:#c5cbea;
-}
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #080b12;
+      color: white;
+      overflow-x: hidden;
+    }
 
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-  color:var(--text);
-  background:var(--bg);
-  overflow-x:hidden;
-}
+    /* ========== PARTICLES CANVAS ========== */
+    #particleCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
 
-/* background */
-.bg{
-  position:fixed;
-  inset:0;
-  background:
-    linear-gradient(rgba(10,15,25,.6),rgba(10,15,25,.85)),
-    url("https://images.bukaolshop.com/hosting/181218/62fb8ef2e275827256.png") center/cover no-repeat;
-  z-index:-3;
-}
+    /* ========== INTRO SECTION ========== */
+    .intro {
+      position: relative;
+      min-height: 100vh;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at 70% 30%, #0e1a26, #030609);
+      z-index: 2;
+      overflow: hidden;
+    }
 
-/* soft rain */
-.rain{
-  position:fixed;
-  inset:-20% 0 0 0;
-  background-image:linear-gradient(120deg, rgba(255,255,255,.15), rgba(255,255,255,0));
-  background-size:2px 80px;
-  animation:rainMove 1.8s linear infinite;
-  opacity:.4;
-  z-index:-2;
-  pointer-events:none;
-}
+    .glow-overlay {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 30% 50%, rgba(0, 255, 200, 0.06) 0%, transparent 60%);
+      animation: pulseGlow 8s infinite alternate;
+    }
 
-@keyframes rainMove{
-  from{background-position:0 -100px}
-  to{background-position:0 100px}
-}
+    .intro-content {
+      max-width: 1100px;
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+      z-index: 10;
+      animation: fadeScale 1.2s ease;
+    }
 
-.wrap{
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:20px;
-}
+    /* LOGO BRAND */
+    .logo-wrapper {
+      margin-bottom: 2rem;
+    }
 
-.card{
-  width:min(520px,100%);
-  background:var(--card);
-  backdrop-filter:blur(15px);
-  border:1px solid var(--border);
-  border-radius:25px;
-  padding:25px 18px 22px;
-  box-shadow:0 20px 60px rgba(0,0,0,.5);
-  text-align:center;
-}
+    .logo-wrapper img {
+      height: 110px;
+      width: auto;
+      filter: drop-shadow(0 0 25px rgba(0, 255, 200, 0.4));
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      border-radius: 30px;
+      padding: 15px 25px;
+    }
 
-/* profile */
-.avatar{
-  width:95px;
-  height:95px;
-  border-radius:50%;
-  object-fit:cover;
-  border:2px solid rgba(255,255,255,.3);
-  box-shadow:0 0 20px rgba(110,168,254,.4);
-  margin-bottom:10px;
-}
+    /* TYPING ANIMATION */
+    .typing-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 1.8rem;
+    }
 
-.handle{
-  margin:5px 0;
-  font-weight:700;
-  opacity:.9;
-}
+    .dynamic-text {
+      font-size: clamp(2rem, 8vw, 4.8rem);
+      font-weight: 800;
+      background: linear-gradient(145deg, #ffffff, #a8f0ff, #e0b0ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      border-right: 5px solid #0ff;
+      padding-right: 15px;
+      animation: blinkCursor 1s infinite;
+      line-height: 1.2;
+    }
 
-.title{
-  font-size:clamp(18px,4vw,24px);
-  font-weight:900;
-  margin:8px 0;
-}
+    .badge-premium {
+      display: inline-block;
+      background: rgba(0, 40, 50, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid cyan;
+      padding: 0.7rem 2rem;
+      border-radius: 60px;
+      color: #baffff;
+      letter-spacing: 5px;
+      font-weight: 700;
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+      margin-bottom: 1.8rem;
+    }
 
-.sub{
-  color:var(--muted);
-  font-weight:700;
-  margin-bottom:10px;
-}
+    .btn-neon {
+      background: transparent;
+      border: 2px solid #0ff;
+      color: #0ff;
+      padding: 1.2rem 3.2rem;
+      font-size: 1.4rem;
+      font-weight: 700;
+      border-radius: 60px;
+      display: inline-flex;
+      align-items: center;
+      gap: 15px;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 0 35px rgba(0, 255, 255, 0.2);
+      margin-top: 2.2rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+    }
 
-/* typing */
-.typingBox{
-  margin:10px auto 15px;
-  padding:8px 15px;
-  border-radius:999px;
-  background:rgba(255,255,255,.1);
-  display:inline-block;
-  font-weight:700;
-  font-size:14px;
-}
+    .btn-neon:hover {
+      background: #0ff;
+      color: black;
+      box-shadow: 0 0 70px cyan;
+      transform: scale(1.07);
+    }
 
-/* buttons */
-.btn{
-  display:block;
-  margin:12px 0;
-  padding:15px;
-  border-radius:18px;
-  text-decoration:none;
-  color:white;
-  font-weight:800;
-  letter-spacing:.5px;
-  background:linear-gradient(135deg,rgba(110,168,254,.5),rgba(94,234,212,.4));
-  border:1px solid rgba(255,255,255,.2);
-  transition:.3s;
-}
+    .vibrate {
+      animation: vibrate 0.3s ease;
+    }
 
-.btn:hover{
-  transform:translateY(-3px);
-  box-shadow:0 10px 30px rgba(110,168,254,.4);
-}
+    /* ========== MAIN STORE CONTENT ========== */
+    .store-content {
+      position: relative;
+      z-index: 5;
+      background: #0a0f17;
+      border-top: 1px solid rgba(0, 255, 255, 0.2);
+      display: none;
+      padding: 3rem 1.5rem 5rem;
+    }
 
-.footer{
-  margin-top:12px;
-  font-size:13px;
-  opacity:.7;
-}
-</style>
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .section-title h2 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: white;
+      text-shadow: 0 0 15px cyan;
+      margin-bottom: 0.6rem;
+    }
+
+    .section-title p {
+      color: #b0e0ff;
+      font-size: 1.2rem;
+    }
+
+    /* ========== KATEGORI CARD ========== */
+    .category-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .category-card {
+      background: rgba(18, 28, 45, 0.8);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(0, 230, 255, 0.25);
+      border-radius: 36px;
+      padding: 2rem;
+      box-shadow: 0 25px 35px -8px rgba(0,0,0,0.7);
+      transition: 0.2s;
+    }
+
+    .category-card:hover {
+      border-color: rgba(0, 255, 255, 0.7);
+      box-shadow: 0 0 30px rgba(0,255,255,0.2);
+    }
+
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .category-header img {
+      height: 60px;
+      width: auto;
+      background: white;
+      padding: 10px 18px;
+      border-radius: 20px;
+      object-fit: contain;
+    }
+
+    .category-header h3 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: #e6f7ff;
+    }
+
+    .price-list {
+      list-style: none;
+    }
+
+    .price-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.9rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 1.1rem;
+    }
+
+    .price-list li:last-child {
+      border-bottom: none;
+    }
+
+    .price-tag {
+      background: rgba(0, 255, 255, 0.1);
+      padding: 0.4rem 1.2rem;
+      border-radius: 30px;
+      color: #0ff;
+      font-weight: 700;
+      border: 1px solid rgba(0,255,255,0.3);
+    }
+
+    .note-box {
+      margin-top: 1.5rem;
+      background: rgba(0, 20, 30, 0.6);
+      border-left: 6px solid cyan;
+      padding: 1.2rem;
+      border-radius: 18px;
+      color: #b0f0ff;
+      font-size: 0.95rem;
+    }
+
+    /* ========== PEMBAYARAN SECTION ========== */
+    .payment-section {
+      background: rgba(10, 18, 28, 0.9);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(0,255,255,0.25);
+      border-radius: 48px;
+      padding: 2.5rem;
+      margin: 2.5rem 0;
+    }
+
+    .payment-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .payment-method {
+      background: rgba(0,0,0,0.3);
+      padding: 1.5rem;
+      border-radius: 24px;
+    }
+
+    .payment-method h4 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: cyan;
+      margin-bottom: 1rem;
+    }
+
+    .payment-number {
+      background: #0a121f;
+      padding: 0.8rem 1.2rem;
+      border-radius: 16px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .qris-dual {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: center;
+      margin-top: 1.5rem;
+    }
+
+    .qris-logo-box {
+      text-align: center;
+      background: rgba(0,0,0,0.2);
+      padding: 2rem;
+      border-radius: 28px;
+    }
+
+    .qris-logo-box img {
+      width: 130px;
+      margin-bottom: 0.8rem;
+    }
+
+    .qris-image-box {
+      text-align: center;
+    }
+
+    .qris-foto {
+      width: 100%;
+      max-width: 260px;
+      border-radius: 20px;
+      border: 2px solid rgba(0,255,255,0.3);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-contact {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: #1e3a4a;
+      border: 1px solid cyan;
+      padding: 0.9rem 2rem;
+      border-radius: 50px;
+      color: white;
+      font-weight: 600;
+      text-decoration: none;
+      margin: 1rem 0.5rem;
+    }
+
+    .btn-contact:hover {
+      background: cyan;
+      color: black;
+    }
+
+    /* ========== MODAL POP UP QRIS ========== */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.95);
+      backdrop-filter: blur(10px);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 24px;
+      border: 3px solid cyan;
+      box-shadow: 0 0 50px cyan;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 30px;
+      right: 50px;
+      color: white;
+      font-size: 55px;
+      cursor: pointer;
+    }
+
+    .close-modal:hover {
+      color: cyan;
+    }
+
+    /* ========== ANIMATIONS ========== */
+    @keyframes pulseGlow {
+      0% { opacity: 0.2; }
+      100% { opacity: 0.7; }
+    }
+
+    @keyframes fadeScale {
+      0% { opacity: 0; transform: scale(0.96); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes blinkCursor {
+      0%, 100% { border-color: cyan; }
+      50% { border-color: transparent; }
+    }
+
+    @keyframes vibrate {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+
+    @media (max-width: 800px) {
+      .category-grid { grid-template-columns: 1fr; }
+      .payment-grid { grid-template-columns: 1fr; }
+      .qris-dual { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
-
 <body>
 
-<div class="bg"></div>
-<div class="rain"></div>
+  <!-- PARTICLES BACKGROUND -->
+  <canvas id="particleCanvas"></canvas>
 
-<div class="wrap">
-<div class="card">
+  <!-- AUDIO MP3 (TIDAK ADA IKON, OTOMATIS PLAY PAS KLIK) -->
+  <audio id="bgMusic" loop preload="auto">
+    <source src="https://files.catbox.moe/cbnrod.mp3" type="audio/mpeg">
+  </audio>
 
-<img class="avatar" src="https://images.bukaolshop.com/hosting/181218/5f576e0af873494477.png">
-<p class="handle">@KivoPay</p>
+  <!-- ========== INTRO SECTION ========== -->
+  <section class="intro">
+    <div class="glow-overlay"></div>
+    
+    <div class="intro-content">
+      <!-- LOGO BRAND -->
+      <div class="logo-wrapper">
+        <img src="https://images.bukaolshop.com/hosting/181218/b75e04fa2c36935913.png" alt="Keii Official Logo" onerror="this.src='https://via.placeholder.com/300x100?text=KEII+OFFICIAL'; this.style.background='#0a1a2a';">
+      </div>
 
-<h1 class="title">
-Website Aplikasi Premium KivoPay Start Perak an 😋
-</h1>
+      <span class="badge-premium">
+        <i class="fas fa-crown"></i> PREMIUM STORE <i class="fas fa-crown"></i>
+      </span>
 
-<p class="sub">@KivoPayStoreLinktree</p>
+      <!-- TYPING ANIMATION: Selamat Datang Di Website keii Official -->
+      <div class="typing-container">
+        <span id="typingElement" class="dynamic-text"></span>
+      </div>
 
-<div class="typingBox">
-<span id="typing"></span>
-</div>
+      <p style="color: #b0f0ff; font-size: 1.2rem; margin-bottom: 1rem; letter-spacing: 2px;">
+        <i class="fas fa-shield-alt"></i> AMAN • TERPERCAYA • CEPAT
+      </p>
 
-<a class="btn" href="https://kivopay.github.io/Panel-KivoPay-/" target="_blank">
-Website Aplikasi Premium KivoPay
-</a>
+      <!-- TOMBOL MASUK STORE (TRIGGER AUDIO + CONTENT) -->
+      <button id="enterStoreBtn" class="btn-neon">
+        <i class="fas fa-store"></i> MASUK KE STORE
+        <i class="fas fa-arrow-right"></i>
+      </button>
 
-<a class="btn" href="https://whatsapp.com/channel/0029Vb7T9EgFXUud9v38zN2v" target="_blank">
-SALURAN KIVOPAY INFORMATION
-</a>
+      <p style="margin-top: 2rem; color: rgba(150,220,255,0.5); font-size: 0.9rem;">
+        <i class="fas fa-headphones"></i> putar musik · klik tombol
+      </p>
+    </div>
+  </section>
 
-<a class="btn" href="https://whatsapp.com/channel/0029Vb6zSDuBadmTBX4YRg1v" target="_blank">
-SALURAN KIVOPAY UPDATE LAYANAN
-</a>
+  <!-- ========== MAIN STORE CONTENT ========== -->
+  <div id="storeContent" class="store-content">
+    <div class="container">
 
-<a class="btn" href="https://t.me/KivoPay1" target="_blank">
-Ada Pertanyaan Ke Sini
-</a>
+      <!-- HEADER STORE -->
+      <div class="section-title">
+        <h2><i class="fas fa-store-alt" style="color: cyan;"></i> KEII OFFICIAL STORE</h2>
+        <p>pilih produk, lakukan pembayaran, chat admin</p>
+  </div>
+   <!-- ===== KATEGORI PRODUK ===== -->
+      <div class="category-grid">
+        
+        <!-- KATEGORI 1: XCVI V9 -->
+        <div class="category-card">
+          <div class="category-header">
+            <img src="https://images.bukaolshop.com/hosting/181218/16aea1c112a5636278.png" alt="XCVI V9" onerror="this.src='https://via.placeholder.com/200x80?text=XCVI+V9';">
+            <h3>XCVI V9</h3>
+          </div>
+          <ul class="price-list">
+            <li><span>Akses Apk 15 Hari</span> <span class="price-tag">Rp 15.000</span></li>
+            <li><span>Akses Apk 1 Bulan</span> <span class="price-tag">Rp 20.000</span></li>
+            <li><span>Akses Apk Permanen</span> <span class="price-tag">Rp 50.000</span></li>
+            <li><span>Akses Reseller Apk</span> <span class="price-tag">Rp 85.000</span></li>
+          </ul>
+          <!-- NOTE PENTING -->
+          <div class="note-box">
+            <i class="fas fa-exclamation-triangle" style="color: #ffd966;"></i> 
+            <strong>Note:</strong> Title Member Tidak Bisa Jual Apk. 
+            Title Reseller Baru Bisa Jual Apk. 
+            Lebih Baik Kalian Buy Reseller Apk Bisa Jual Apk 🚀
+          </div>
+        </div>
 
-<div class="footer">© KivoPay</div>
+        <!-- KATEGORI 2: NIKA V26 -->
+        <div class="category-card">
+          <div class="category-header">
+            <img src="https://via.placeholder.com/200x80?text=NIKA+V26" alt="Nika V26" style="background: white; padding: 10px 18px; border-radius: 20px;">
+            <h3>NIKA V26</h3>
+          </div>
+          <ul class="price-list">
+            <li><span>Akses 1 Minggu</span> <span class="price-tag">Rp 20.000</span></li>
+            <li><span>Akses 1 Bulan</span> <span class="price-tag">Rp 40.000</span></li>
+            <li><span>Akses Permanen</span> <span class="price-tag">Rp 50.000</span></li>
+          </ul>
+          <div style="margin-top: 1.5rem; color: #aad0ff;">
+            <i class="fas fa-check-circle" style="color: #00e6b8;"></i> ready update
+          </div>
+        </div>
+      </div>
 
-</div>
-</div>
+      <!-- ========== SECTION PEMBAYARAN & ORDER ========== -->
+      <div class="payment-section">
+        <h3 style="font-size: 2rem; margin-bottom: 1.8rem; display: flex; align-items: center; gap: 15px; color: white;">
+          <i class="fas fa-credit-card" style="color: cyan;"></i> Halaman Order / Pembayaran
+        </h3>
 
-<script>
-const text="Selamat Datang Di Linktree KivoPay 🙏";
-let i=0,dir=1;
-function type(){
-document.getElementById("typing").innerHTML=text.slice(0,i);
-i+=dir;
-if(i>text.length+5) dir=-1;
-if(i<0){dir=1;i=0;}
-setTimeout(type,dir==1?60:30);
-}
-type();
-</script>
+        <!-- NOMOR ADMIN & CHANNEL -->
+        <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 2.5rem;">
+          <a href="https://wa.me/6285150895395" target="_blank" class="btn-contact">
+            <i class="fab fa-whatsapp" style="font-size: 1.6rem;"></i> Admin WA
+          </a>
+          <a href="https://whatsapp.com/channel/0029Vb6zSDuBadmTBX4YRg1v" target="_blank" class="btn-contact">
+            <i class="fab fa-whatsapp"></i> Saluran Admin
+          </a>
+        </div>
 
+        <!-- NOMOR REKENING DANA & SEABANK -->
+        <div class="payment-grid">
+          <div class="payment-method">
+            <h4><img src="https://images.bukaolshop.com/hosting/181218/f2f4904ff62a785161.png" style="height: 30px;" alt="Dana"> DANA</h4>
+            <div class="payment-number">087753513090</div>
+            <p style="margin-top: 0.6rem; color: #ccc;">a/n kamxxx</p>
+          </div>
+          <div class="payment-method">
+            <h4><img src="https://images.bukaolshop.com/hosting/181218/0d46bd2ba133491753.png" style="height: 30px;" alt="Seabank"> SEABANK</h4>
+            <div class="payment-number">901517870612</div>
+            <p style="margin-top: 0.6rem; color: #ccc;">a/n kamxxx</p>
+          </div>
+        </div>
+
+        <!-- QRIS -->
+        <h4 style="color: cyan; margin: 1.8rem 0 1rem;"><i class="fas fa-qrcode"></i> QRIS PAYMENT</h4>
+        <div class="qris-dual">
+          <div class="qris-logo-box">
+            <img src="https://images.bukaolshop.com/hosting/181218/111e83c3a6f5204498.png" alt="Logo QRIS">
+            <p style="color: #0ff; margin-top: 0.5rem;">Logo Resmi QRIS</p>
+          </div>
+          <div class="qris-image-box">
+            <img id="qrisImage" src="https://images.bukaolshop.com/hosting/181218/cce817858ef1663896.png" class="qris-foto" alt="QRIS" title="Klik untuk perbesar">
+            <p style="margin-top: 0.8rem; color: #b0e0ff;">
+              <i class="fas fa-search"></i> klik QRIS untuk perbesar
+            </p>
+          </div>
+        </div>
+
+        <!-- INSTRUKSI BUKTI TRANSFER -->
+        <div style="margin-top: 2.5rem; background: rgba(0,30,40,0.7); padding: 1.8rem; border-radius: 28px; border-left: 8px solid #0ff;">
+          <h4 style="color: white; margin-bottom: 1rem;"><i class="fas fa-camera"></i> Kirim Bukti Transfer</h4>
+          <p style="color: #e0f0ff;">✅ Sertakan bukti dengan jelas, <strong style="color: #ffd966;">NO BUREM</strong> & nama harus pas dengan norek/qris.</p>
+          <p style="color: #e0f0ff; margin-top: 0.6rem;">✅ Chat admin via WhatsApp di atas, kirim bukti dan produk yang dipilih.</p>
+          <p style="color: #e0f0ff; margin-top: 0.6rem;">⏳ Proses cepat, max 5-10 menit.</p>
+        </div>
+      </div>
+
+      <!-- FOOTER STORE -->
+      <div style="text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(0,255,255,0.1); color: #80b0cc;">
+        <i class="fas fa-crown"></i> Keii Official • Premium Store • Aman & Terpercaya
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL QRIS POP UP -->
+  <div id="qrisModal" class="modal">
+    <span class="close-modal">&times;</span>
+    <img class="modal-content" id="modalQris" src="https://images.bukaolshop.com/hosting/181218/cce817858ef1663896.png">
+  </div>
+
+  <script>
+    // ========== 1. PARTICLES BACKGROUND ==========
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    function createParticles() {
+      for (let i = 0; i < 110; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          radius: Math.random() * 2.2 + 0.6,
+          speedX: Math.random() * 0.4 - 0.2,
+          speedY: Math.random() * 0.4 - 0.2,
+          color: `rgba(0, ${Math.floor(180 + Math.random() * 75)}, 255, ${Math.random() * 0.5})`
+        });
+      }
+    }
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let p of particles) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+        p.x += p.speedX;
+        p.y += p.speedY;
+        if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
+      }
+      requestAnimationFrame(drawParticles);
+    }
+
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      particles = [];
+      createParticles();
+    });
+
+    resizeCanvas();
+    createParticles();
+    drawParticles();
+
+    // ========== 2. TYPING EFFECT ==========
+    const typingElement = document.getElementById('typingElement');
+    const texts = ['Selamat Datang', 'Di Website', 'keii Official'];
+    let textIndex = 0, charIndex = 0, isDeleting = false;
+
+    function typeEffect() {
+      const currentText = texts[textIndex];
+      if (isDeleting) {
+        typingElement.textContent = currentText.substring(0, charIndex - 1);
+        charIndex--;
+      } else {
+        typingElement.textContent = currentText.substring(0, charIndex + 1);
+        charIndex++;
+      }
+      if (!isDeleting && charIndex === currentText.length) {
+        isDeleting = true;
+        setTimeout(typeEffect, 2000);
+      } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        textIndex = (textIndex + 1) % texts.length;
+        setTimeout(typeEffect, 400);
+      } else {
+        setTimeout(typeEffect, isDeleting ? 60 : 130);
+      }
+    }
+    typeEffect();
+
+    // ========== 3. AUDIO MP3 (TIDAK ADA IKON) ==========
+    const bgMusic = document.getElementById('bgMusic');
+    let musicStarted = false;
+
+    function startMusic() {
+      if (!musicStarted) {
+        bgMusic.play().then(() => {
+          musicStarted = true;
+        }).catch(e => console.log('Audio play delayed'));
+      }
+    }
+
+    // ========== 4. REVEAL STORE + MUSIC ==========
+    const enterBtn = document.getElementById('enterStoreBtn');
+    const storeContent = document.getElementById('storeContent');
+
+    enterBtn.addEventListener('click', function() {
+      // Efek getar
+      this.classList.add('vibrate');
+      setTimeout(() => this.classList.remove('vibrate'), 400);
+      
+      // Putar musik
+      startMusic();
+      
+      // Tampilkan konten store
+      storeContent.style.display = 'block';
+      
+      // Scroll halus
+      setTimeout(() => {
+        storeContent.scrollIntoView({ behavior: 'smooth' });
+      }, 200);
+    });
+
+    storeContent.style.display = 'none';
+
+    // ========== 5. MODAL QRIS ==========
+    const modal = document.getElementById('qrisModal');
+    const qrisImg = document.getElementById('qrisImage');
+    const modalImg = document.getElementById('modalQris');
+    const closeBtn = document.querySelector('.close-modal');
+
+    qrisImg.addEventListener('click', function() {
+      modal.style.display = 'flex';
+    });
+
+    closeBtn.addEventListener('click', function() {
+      modal.style.display = 'none';
+    });
+
+    window.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && modal.style.display === 'flex') {
+        modal.style.display = 'none';
+      }
+    });
+  </script>
 </body>
 </html>
