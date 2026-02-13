@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Keii Official • 4 Halaman Terpisah</title>
+    <title>Keii Official • 4 Halaman</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -51,7 +52,6 @@
             font-weight: 800;
             color: white;
             text-shadow: 0 0 10px cyan;
-            min-height: 80px;
             border-right: 4px solid cyan;
             display: inline-block;
             padding-right: 10px;
@@ -106,7 +106,6 @@
             cursor: pointer;
         }
 
-        /* KATEGORI GRID - 2 KOLOM */
         .kategori-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -146,7 +145,7 @@
             color: white;
         }
 
-        /* ========== HALAMAN 3 - PRODUK (DETAIL HARGA) ========== */
+        /* ========== HALAMAN 3 - PRODUK ========== */
         .halaman3 {
             width: 100%;
             min-height: 100vh;
@@ -225,7 +224,7 @@
             margin-bottom: 25px;
         }
 
-        /* ========== HALAMAN 4 - PEMBAYARAN (NOMOR + QRIS + WA) ========== */
+        /* ========== HALAMAN 4 - PEMBAYARAN (QRIS + LOGO TERPISAH + TOMBOL 👁️) ========== */
         .halaman4 {
             width: 100%;
             min-height: 100vh;
@@ -262,19 +261,116 @@
             letter-spacing: 2px;
         }
 
-        .qris-box {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin: 30px 0;
+        /* ===== QRIS SECTION - LOGO & FOTO TERPISAH + TOMBOL 👁️ ===== */
+        .qris-section {
+            margin: 40px 0 30px;
         }
 
-        .qris-image {
+        .qris-title {
+            color: cyan;
+            font-size: 36px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .qris-dual-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        /* LOGO QRIS */
+        .qris-logo-container {
+            background: rgba(0,0,0,0.3);
+            border: 2px solid rgba(0,255,255,0.2);
+            border-radius: 40px;
+            padding: 40px;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .qris-logo-container:hover {
+            border-color: cyan;
+            box-shadow: 0 0 30px rgba(0,255,255,0.2);
+        }
+
+        .qris-logo-container img {
+            width: 180px;
+            margin-bottom: 20px;
+        }
+
+        .qris-logo-container p {
+            color: cyan;
+            font-size: 22px;
+            font-weight: bold;
+            background: rgba(0,50,70,0.5);
+            padding: 10px 20px;
+            border-radius: 50px;
+            display: inline-block;
+        }
+
+        /* FOTO QRIS + TOMBOL 👁️ */
+        .qris-foto-container {
+            background: rgba(0,0,0,0.3);
+            border: 2px solid rgba(0,255,255,0.2);
+            border-radius: 40px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .qris-image-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        #qrisImage {
             width: 100%;
-            max-width: 300px;
-            border-radius: 20px;
+            max-width: 280px;
+            border-radius: 25px;
             border: 3px solid cyan;
+            filter: blur(12px);
+            transition: 0.3s;
+            display: block;
+        }
+
+        #qrisImage.show {
+            filter: blur(0);
+        }
+
+        .btn-eye {
+            background: rgba(0, 255, 255, 0.2);
+            border: 2px solid cyan;
+            color: white;
+            padding: 14px 35px;
+            border-radius: 60px;
+            font-size: 22px;
+            font-weight: bold;
             cursor: pointer;
+            margin-top: 25px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            transition: 0.2s;
+        }
+
+        .btn-eye:hover {
+            background: cyan;
+            color: black;
+        }
+
+        .btn-eye i {
+            font-size: 26px;
+        }
+
+        /* WHATSAPP BUTTONS */
+        .wa-section {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            margin: 40px 0 30px;
         }
 
         .wa-btn {
@@ -283,10 +379,18 @@
             padding: 18px 40px;
             border-radius: 60px;
             text-decoration: none;
-            display: inline-block;
-            font-size: 20px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: bold;
         }
 
+        .wa-btn.channel {
+            background: #833ab4;
+        }
+
+        /* MODAL QRIS */
         .modal-qris {
             display: none;
             position: fixed;
@@ -316,16 +420,22 @@
             cursor: pointer;
         }
 
+        .instruction-box {
+            background: rgba(0,50,80,0.7);
+            padding: 30px;
+            border-radius: 40px;
+            margin-top: 30px;
+        }
+
         @media (max-width: 800px) {
-            .kategori-grid, .grid-payment, .qris-box {
+            .kategori-grid, .grid-payment, .qris-dual-box {
                 grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-
-<!-- ========== HALAMAN 1 : INTRO ========== -->
+ <!-- ========== HALAMAN 1 : INTRO ========== -->
 <div id="halaman1" class="halaman1">
     <div>
         <img src="https://images.bukaolshop.com/hosting/181218/b75e04fa2c36935913.png" 
@@ -345,18 +455,16 @@
         </p>
         
         <button id="btnMasuk" class="btn-masuk">
-            🏪 MASUK KE STORE →
+            <i class="fas fa-store"></i> MASUK KE STORE →
         </button>
     </div>
 </div>
 
 <!-- ========== HALAMAN 2 : BERANDA (HANYA KATEGORI) ========== -->
 <div id="halaman2" class="halaman2">
-    <!-- HEADER -->
     <div class="header">
         <div style="display: flex; align-items: center; gap: 15px;">
-            <img src="https://images.bukaolshop.com/hosting/181218/b75e04fa2c36935913.png" 
-                 class="logo-small" style="height: 50px;">
+            <img src="https://images.bukaolshop.com/hosting/181218/b75e04fa2c36935913.png" class="logo-small">
             <span style="font-size: 32px; font-weight: bold; color: cyan;">Keii Official</span>
         </div>
         <div>
@@ -365,17 +473,14 @@
         </div>
     </div>
     
-    <!-- JUDUL KATEGORI -->
-    <h1 style="font-size: 48px; margin: 30px 0 20px; color: white;">📦 Kategori Produk</h1>
-    <p style="color: #b0e0ff; font-size: 20px; margin-bottom: 40px;">Pilih kategori untuk melihat detail harga</p>
+    <h1 style="font-size: 48px; margin: 30px 0 20px;">📦 Kategori Produk</h1>
+    <p style="color: #b0e0ff; font-size: 20px; margin-bottom: 40px;">Pilih kategori untuk lihat detail harga</p>
     
-    <!-- KATEGORI GRID - PISAH, TIDAK ADA PAYMENT DISINI -->
     <div class="kategori-grid">
         <!-- XCVI V9 -->
         <div class="kategori-card" onclick="bukaProduk('xcvi')">
             <div class="kategori-header">
-                <img src="https://images.bukaolshop.com/hosting/181218/16aea1c112a5636278.png" 
-                     onerror="this.src='https://via.placeholder.com/80x80?text=XCVI'">
+                <img src="https://images.bukaolshop.com/hosting/181218/16aea1c112a5636278.png">
                 <h2>XCVI V9</h2>
             </div>
             <p style="color: #b0e0ff; font-size: 18px;">Akses Apk Bug XCVI V9</p>
@@ -388,8 +493,7 @@
         <!-- NIKA V26 -->
         <div class="kategori-card" onclick="bukaProduk('nika')">
             <div class="kategori-header">
-                <img src="https://images.bukaolshop.com/hosting/181218/160d9ef17e48893793.png" 
-                     onerror="this.src='https://via.placeholder.com/80x80?text=NIKA'">
+                <img src="https://images.bukaolshop.com/hosting/181218/160d9ef17e48893793.png">
                 <h2>NIKA V26</h2>
             </div>
             <p style="color: #b0e0ff; font-size: 18px;">Akses Apk Bug Nika V26</p>
@@ -399,8 +503,9 @@
             </button>
         </div>
     </div>
-    </div>
-    <!-- ========== HALAMAN 3 : PRODUK (DETAIL HARGA) ========== -->
+</div>
+
+<!-- ========== HALAMAN 3 : PRODUK ========== -->
 <div id="halaman3" class="halaman3">
     <button class="btn-back" onclick="pindahHalaman(2)">
         ← Kembali ke Kategori
@@ -468,22 +573,22 @@
     </div>
 </div>
 
-<!-- ========== HALAMAN 4 : PEMBAYARAN (NOMOR + QRIS + WA) ========== -->
+<!-- ========== HALAMAN 4 : PEMBAYARAN (QRIS + LOGO TERPISAH + TOMBOL 👁️) ========== -->
 <div id="halaman4" class="halaman4">
     <button class="btn-back" onclick="pindahHalaman(2)">
         ← Kembali ke Beranda
     </button>
     
     <div class="pembayaran-container">
-        <h1 style="font-size: 48px; margin-bottom: 20px; color: cyan;">
+        <h1 style="font-size: 48px; color: cyan;">
             <i class="fas fa-credit-card"></i> Pembayaran
         </h1>
         
-        <div id="infoProduk" style="background: rgba(0,255,255,0.1); padding: 15px; border-radius: 50px; text-align: center; font-size: 22px; margin: 20px 0;">
+        <div id="infoProduk" style="background: rgba(0,255,255,0.1); padding: 18px; border-radius: 60px; text-align: center; font-size: 24px; margin: 30px 0;">
             ⚡ Silakan pilih produk terlebih dahulu
         </div>
         
-        <!-- NOMOR REKENING -->
+        <!-- BANK ACCOUNTS -->
         <div class="grid-payment">
             <div class="payment-item">
                 <h3 style="display: flex; align-items: center; gap: 15px; color: cyan; font-size: 32px;">
@@ -502,51 +607,65 @@
             </div>
         </div>
         
-        <!-- QRIS -->
-        <h2 style="color: cyan; margin: 40px 0 20px; font-size: 36px;">
-            <i class="fas fa-qrcode"></i> QRIS PAYMENT
-        </h2>
-        
-        <div class="qris-box">
-            <div style="text-align: center; background: rgba(0,0,0,0.3); padding: 30px; border-radius: 30px;">
-                <img src="https://images.bukaolshop.com/hosting/181218/111e83c3a6f5204498.png" style="width: 150px;">
-                <p style="color: cyan; margin-top: 15px;">Logo Resmi QRIS</p>
+        <!-- ===== QRIS SECTION - LOGO & FOTO TERPISAH + TOMBOL 👁️ ===== -->
+        <div class="qris-section">
+            <div class="qris-title">
+                <i class="fas fa-qrcode"></i> QRIS PAYMENT
             </div>
-            <div style="text-align: center;">
-                <img id="gambarQris" 
-                     src="https://images.bukaolshop.com/hosting/181218/cce817858ef1663896.png" 
-                     class="qris-image"
-                     onclick="bukaModal()">
-                <p style="color: #b0e0ff; margin-top: 15px;">🔍 Klik QRIS untuk perbesar</p>
+            
+            <div class="qris-dual-box">
+                <!-- LOGO QRIS (TERPISAH) -->
+                <div class="qris-logo-container">
+                    <img src="https://images.bukaolshop.com/hosting/181218/111e83c3a6f5204498.png" alt="Logo QRIS">
+                    <p><i class="fas fa-check-circle"></i> Logo Resmi QRIS</p>
+                </div>
+                
+                <!-- FOTO QRIS + TOMBOL 👁️ (TERPISAH) -->
+                <div class="qris-foto-container">
+                    <div class="qris-image-wrapper">
+                        <img id="qrisImage" 
+                             src="https://images.bukaolshop.com/hosting/181218/cce817858ef1663896.png" 
+                             alt="QRIS Code">
+                    </div>
+                    
+                    <!-- TOMBOL 👁️ TAMPILKAN QRIS -->
+                    <button id="toggleQrisBtn" class="btn-eye">
+                        <i id="eyeIcon" class="fas fa-eye-slash"></i> Tampilkan QRIS
+                    </button>
+                    <p style="color: #b0e0ff; margin-top: 15px; font-size: 16px;">
+                        <i class="fas fa-search"></i> Klik tombol untuk lihat QRIS
+                    </p>
+                </div>
             </div>
         </div>
         
         <!-- WHATSAPP BUTTONS -->
-        <div style="display: flex; gap: 25px; justify-content: center; margin: 50px 0 30px;">
+        <div class="wa-section">
             <a href="https://wa.me/6285150895395" target="_blank" class="wa-btn">
                 <i class="fab fa-whatsapp"></i> Chat Admin
             </a>
-            <a href="https://whatsapp.com/channel/0029Vb6zSDuBadmTBX4YRg1v" target="_blank" class="wa-btn" style="background: #833ab4;">
+            <a href="https://whatsapp.com/channel/0029Vb6zSDuBadmTBX4YRg1v" target="_blank" class="wa-btn channel">
                 <i class="fab fa-whatsapp"></i> Saluran Official
             </a>
         </div>
         
         <!-- INSTRUKSI -->
-        <div style="background: rgba(0,50,80,0.7); padding: 25px; border-radius: 30px;">
-            <h3 style="font-size: 28px; margin-bottom: 15px;">📸 Kirim Bukti Transfer</h3>
-            <p style="font-size: 20px;">✅ Sertakan bukti dengan jelas, <span style="color: yellow;">NO BUREM</span> & nama harus pas dengan norek/qris.</p>
+        <div class="instruction-box">
+            <h3 style="font-size: 28px; margin-bottom: 15px;">
+                <i class="fas fa-camera"></i> Kirim Bukti Transfer
+            </h3>
+            <p style="font-size: 20px; color: #e0f0ff;">
+                ✅ Sertakan bukti dengan jelas, <span style="color: yellow; font-weight: bold;">NO BUREM</span> & nama harus pas dengan norek/qris.
+            </p>
         </div>
     </div>
 </div>
 
-<!-- MODAL QRIS -->
+<!-- MODAL QRIS (UNTUK PERBESAR) -->
 <div id="modalQris" class="modal-qris">
     <span class="close-modal" onclick="tutupModal()">&times;</span>
     <img src="https://images.bukaolshop.com/hosting/181218/cce817858ef1663896.png" class="modal-content">
 </div>
-
-<!-- FONT AWESOME -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <script>
     // ========== TYPING EFFECT (KETIK HAPUS KETIK) ==========
@@ -624,7 +743,29 @@
         pindahHalaman(4);
     }
     
-    // ========== MODAL QRIS ==========
+    // ========== TOMBOL 👁️ TAMPILKAN QRIS ==========
+    const qrisImage = document.getElementById("qrisImage");
+    const toggleBtn = document.getElementById("toggleQrisBtn");
+    const eyeIcon = document.getElementById("eyeIcon");
+    let qrisBlur = true;
+    
+    toggleBtn.addEventListener("click", function() {
+        if(qrisBlur) {
+            qrisImage.classList.add("show");
+            qrisImage.style.filter = "blur(0)";
+            eyeIcon.className = "fas fa-eye";
+            toggleBtn.innerHTML = '<i id="eyeIcon" class="fas fa-eye"></i> Sembunyikan QRIS';
+            qrisBlur = false;
+        } else {
+            qrisImage.classList.remove("show");
+            qrisImage.style.filter = "blur(12px)";
+            eyeIcon.className = "fas fa-eye-slash";
+            toggleBtn.innerHTML = '<i id="eyeIcon" class="fas fa-eye-slash"></i> Tampilkan QRIS';
+            qrisBlur = true;
+        }
+    });
+    
+    // ========== MODAL QRIS (KLIK GAMBAR) ==========
     function bukaModal() {
         document.getElementById("modalQris").style.display = "flex";
     }
@@ -633,12 +774,20 @@
         document.getElementById("modalQris").style.display = "none";
     }
     
+    // Klik gambar QRIS buka modal
+    qrisImage.addEventListener("click", function() {
+        bukaModal();
+    });
+    
     // ========== INIT ==========
     window.onload = function() {
         pindahHalaman(1);
         setTimeout(ketik, 500);
+        
+        // Set initial blur
+        qrisImage.style.filter = "blur(12px)";
     };
 </script>
 
 </body>
-</html>
+    </html>   
