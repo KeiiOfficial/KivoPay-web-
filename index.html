@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
-  <title>Keii Official • Store</title>
+  <title>Keii Official • Premium Store</title>
   
   <!-- Font Awesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   
-  <!-- Google Font: Inter & Clash Display -->
+  <!-- Google Font: Inter + Clash Display -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <style>
@@ -21,7 +21,7 @@
 
     body {
       font-family: 'Inter', sans-serif;
-      background: #080b12;
+      background: #03050a;
       color: white;
       overflow-x: hidden;
     }
@@ -37,26 +37,36 @@
       pointer-events: none;
     }
 
-    /* ========== INTRO SECTION ========== */
-    .intro {
-      position: relative;
-      min-height: 100vh;
+    /* ========== INTRO PAGE ========== */
+    .intro-page {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
+      height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      background: radial-gradient(circle at 70% 30%, #0e1a26, #030609);
-      z-index: 2;
-      overflow: hidden;
+      background: radial-gradient(circle at 70% 30%, #0c1a2a, #010203);
+      z-index: 100;
+      transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1), visibility 0.8s;
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .intro-page.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
     }
 
     .glow-overlay {
       position: absolute;
       width: 100%;
       height: 100%;
-      background: radial-gradient(circle at 30% 50%, rgba(0, 255, 200, 0.06) 0%, transparent 60%);
-      animation: pulseGlow 8s infinite alternate;
+      background: radial-gradient(circle at 30% 50%, rgba(0, 255, 200, 0.08) 0%, transparent 70%);
+      animation: pulseGlow 6s infinite alternate;
     }
 
     .intro-content {
@@ -71,99 +81,188 @@
     /* LOGO BRAND */
     .logo-wrapper {
       margin-bottom: 2rem;
+      position: relative;
     }
 
     .logo-wrapper img {
-      height: 110px;
+      height: 120px;
       width: auto;
-      filter: drop-shadow(0 0 25px rgba(0, 255, 200, 0.4));
+      filter: drop-shadow(0 0 30px rgba(0, 255, 200, 0.5));
       background: rgba(255, 255, 255, 0.03);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(0, 255, 255, 0.2);
-      border-radius: 30px;
-      padding: 15px 25px;
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(0, 255, 255, 0.25);
+      border-radius: 35px;
+      padding: 15px 30px;
+      transition: transform 0.3s;
     }
 
-    /* TYPING ANIMATION */
-    .typing-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-wrap: wrap;
-      margin-bottom: 1.8rem;
+    .logo-wrapper img:hover {
+      transform: scale(1.02);
+    }
+
+    /* TYPING ANIMATION PREMIUM */
+    .typing-premium {
+      margin-bottom: 1.5rem;
+    }
+
+    .static-text {
+      font-size: clamp(1.8rem, 6vw, 3rem);
+      font-weight: 600;
+      color: rgba(255,255,255,0.9);
+      letter-spacing: 2px;
     }
 
     .dynamic-text {
-      font-size: clamp(2rem, 8vw, 4.8rem);
+      font-size: clamp(2.5rem, 9vw, 5.2rem);
       font-weight: 800;
-      background: linear-gradient(145deg, #ffffff, #a8f0ff, #e0b0ff);
+      background: linear-gradient(145deg, #ffffff, #9ef0ff, #d6b0ff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      display: inline-block;
       border-right: 5px solid #0ff;
       padding-right: 15px;
       animation: blinkCursor 1s infinite;
       line-height: 1.2;
+      margin-top: 0.5rem;
     }
 
-    .badge-premium {
+    .badge-store {
       display: inline-block;
-      background: rgba(0, 40, 50, 0.7);
+      background: rgba(0, 30, 40, 0.8);
       backdrop-filter: blur(12px);
-      border: 1px solid cyan;
-      padding: 0.7rem 2rem;
+      border: 1px solid rgba(0, 255, 255, 0.5);
+      padding: 0.8rem 2.5rem;
       border-radius: 60px;
-      color: #baffff;
-      letter-spacing: 5px;
+      color: #bfffff;
+      letter-spacing: 6px;
       font-weight: 700;
-      box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
-      margin-bottom: 1.8rem;
+      box-shadow: 0 0 35px rgba(0, 255, 255, 0.2);
+      margin: 1.8rem 0;
+      font-size: 1.1rem;
     }
 
     .btn-neon {
       background: transparent;
       border: 2px solid #0ff;
       color: #0ff;
-      padding: 1.2rem 3.2rem;
-      font-size: 1.4rem;
+      padding: 1.3rem 3.5rem;
+      font-size: 1.5rem;
       font-weight: 700;
-      border-radius: 60px;
+      border-radius: 70px;
       display: inline-flex;
       align-items: center;
-      gap: 15px;
+      gap: 18px;
       cursor: pointer;
-      transition: 0.3s;
-      box-shadow: 0 0 35px rgba(0, 255, 255, 0.2);
+      transition: 0.4s;
+      box-shadow: 0 0 40px rgba(0, 255, 255, 0.2);
       margin-top: 2.2rem;
       text-transform: uppercase;
-      letter-spacing: 3px;
+      letter-spacing: 4px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-neon:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0,255,255,0.2), transparent);
+      transition: 0.5s;
+    }
+
+    .btn-neon:hover:before {
+      left: 100%;
     }
 
     .btn-neon:hover {
       background: #0ff;
       color: black;
-      box-shadow: 0 0 70px cyan;
-      transform: scale(1.07);
+      box-shadow: 0 0 80px cyan;
+      transform: scale(1.08);
     }
 
     .vibrate {
       animation: vibrate 0.3s ease;
     }
 
-    /* ========== MAIN STORE CONTENT ========== */
-    .store-content {
+    /* ========== STORE PAGE (HALAMAN TERPISAH) ========== */
+    .store-page {
       position: relative;
-      z-index: 5;
-      background: #0a0f17;
-      border-top: 1px solid rgba(0, 255, 255, 0.2);
+      min-height: 100vh;
+      background: #05080f;
+      z-index: 50;
+      padding: 2rem 1.5rem 4rem;
       display: none;
-      padding: 3rem 1.5rem 5rem;
+      opacity: 0;
+      transition: opacity 0.6s ease;
     }
 
-    .container {
+    .store-page.visible {
+      display: block;
+      opacity: 1;
+    }
+
+    .store-container {
       max-width: 1300px;
       margin: 0 auto;
     }
 
+    /* HEADER STORE */
+    .store-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 0;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid rgba(0,255,255,0.15);
+      flex-wrap: wrap;
+    }
+
+    .store-logo {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .store-logo img {
+      height: 60px;
+      background: rgba(255,255,255,0.03);
+      padding: 8px 15px;
+      border-radius: 20px;
+      border: 1px solid rgba(0,255,255,0.2);
+    }
+
+    .store-logo span {
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(145deg, #fff, #0ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .store-nav {
+      display: flex;
+      gap: 25px;
+    }
+
+    .nav-item {
+      color: #b0e0ff;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0.6rem 1.2rem;
+      border-radius: 30px;
+      transition: 0.2s;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      background: rgba(0,255,255,0.1);
+      color: cyan;
+    }
+
+    /* SECTION TITLE */
     .section-title {
       text-align: center;
       margin-bottom: 3rem;
@@ -173,7 +272,7 @@
       font-size: 2.5rem;
       font-weight: 800;
       color: white;
-      text-shadow: 0 0 15px cyan;
+      text-shadow: 0 0 20px rgba(0,255,255,0.3);
       margin-bottom: 0.6rem;
     }
 
@@ -182,29 +281,175 @@
       font-size: 1.2rem;
     }
 
-    /* ========== KATEGORI GRID 2 KOLOM ========== */
+    /* ========== PAYMENT SECTION (DI ATAS) ========== */
+    .payment-premium-section {
+      background: linear-gradient(145deg, rgba(12, 25, 35, 0.9), rgba(5, 15, 25, 0.95));
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      border-radius: 50px;
+      padding: 2.5rem;
+      margin-bottom: 3rem;
+      box-shadow: 0 30px 40px -15px rgba(0,0,0,0.6);
+    }
+
+    .payment-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 2.2rem;
+    }
+
+    .payment-header i {
+      font-size: 2.2rem;
+      color: cyan;
+    }
+
+    .payment-header h3 {
+      font-size: 1.9rem;
+      color: white;
+      font-weight: 700;
+    }
+
+    .payment-methods-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .payment-item {
+      background: rgba(0,0,0,0.3);
+      padding: 1.5rem;
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .payment-item h4 {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: cyan;
+      margin-bottom: 1.2rem;
+      font-size: 1.3rem;
+    }
+
+    .payment-number {
+      background: #0a1420;
+      padding: 1rem 1.2rem;
+      border-radius: 20px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      font-size: 1.2rem;
+      border: 1px solid rgba(0,255,255,0.15);
+      color: #e0f0ff;
+    }
+
+    .qris-premium {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: center;
+      margin-top: 1.5rem;
+    }
+
+    .qris-logo {
+      text-align: center;
+      background: rgba(0,0,0,0.2);
+      padding: 2rem;
+      border-radius: 28px;
+    }
+
+    .qris-logo img {
+      width: 150px;
+      margin-bottom: 0.8rem;
+    }
+
+    .qris-image {
+      text-align: center;
+    }
+
+    .qris-image img {
+      width: 100%;
+      max-width: 280px;
+      border-radius: 24px;
+      border: 2px solid rgba(0,255,255,0.4);
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .qris-image img:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 35px cyan;
+    }
+
+    /* ========== WHATSAPP BUTTONS (DI BAWAH) ========== */
+    .whatsapp-section {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.8rem;
+      margin: 2.5rem 0 1.5rem;
+    }
+
+    .btn-wa-premium {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      background: linear-gradient(145deg, #1a3a4a, #0e2a36);
+      border: 1px solid rgba(0,255,255,0.5);
+      padding: 1.1rem 2.5rem;
+      border-radius: 60px;
+      color: white;
+      font-weight: 700;
+      font-size: 1.2rem;
+      text-decoration: none;
+      transition: 0.3s;
+      box-shadow: 0 10px 20px -8px rgba(0,0,0,0.5);
+    }
+
+    .btn-wa-premium i {
+      font-size: 1.8rem;
+    }
+
+    .btn-wa-premium:hover {
+      background: #25D366;
+      border-color: #25D366;
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px -5px rgba(37, 211, 102, 0.4);
+    }
+
+    .btn-channel {
+      background: linear-gradient(145deg, #3a1a4a, #2a0e36);
+    }
+
+    .btn-channel:hover {
+      background: #833ab4;
+      border-color: #833ab4;
+    }
+
+    /* ========== KATEGORI GRID ========== */
     .category-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 2rem;
-      margin-bottom: 3rem;
+      margin: 2.5rem 0;
     }
 
     .category-card {
-      background: rgba(18, 28, 45, 0.8);
+      background: rgba(18, 28, 45, 0.7);
       backdrop-filter: blur(12px);
-      border: 1px solid rgba(0, 230, 255, 0.25);
-      border-radius: 36px;
+      border: 1px solid rgba(0, 230, 255, 0.2);
+      border-radius: 40px;
       padding: 2rem;
-      box-shadow: 0 25px 35px -8px rgba(0,0,0,0.7);
-      transition: 0.2s;
+      transition: 0.3s;
       cursor: pointer;
     }
 
     .category-card:hover {
-      border-color: rgba(0, 255, 255, 0.7);
-      box-shadow: 0 0 30px rgba(0,255,255,0.2);
-      transform: translateY(-5px);
+      border-color: cyan;
+      box-shadow: 0 0 35px rgba(0,255,255,0.15);
+      transform: translateY(-8px);
+      background: rgba(25, 40, 60, 0.8);
     }
 
     .category-header {
@@ -216,11 +461,9 @@
 
     .category-header img {
       height: 70px;
-      width: auto;
       background: white;
-      padding: 12px 20px;
-      border-radius: 20px;
-      object-fit: contain;
+      padding: 12px 22px;
+      border-radius: 22px;
     }
 
     .category-header h3 {
@@ -229,22 +472,17 @@
       color: #e6f7ff;
     }
 
-    .category-desc {
-      color: #b0e0ff;
-      margin-bottom: 1.5rem;
-      font-size: 1rem;
-    }
-
     .btn-category {
       background: transparent;
-      border: 1px solid cyan;
+      border: 1.5px solid cyan;
       color: cyan;
-      padding: 0.8rem 1.8rem;
+      padding: 0.9rem 1.8rem;
       border-radius: 40px;
+      font-weight: 600;
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      font-weight: 600;
+      gap: 12px;
+      margin-top: 1rem;
       transition: 0.2s;
     }
 
@@ -253,12 +491,11 @@
       color: black;
     }
 
-    /* ========== HALAMAN PRODUK (DETAIL KATEGORI) ========== */
+    /* ========== PRODUCT PAGE ========== */
     .product-page {
-      display: none;
-      background: rgba(10, 18, 28, 0.95);
+      background: rgba(10, 20, 30, 0.8);
       backdrop-filter: blur(12px);
-      border: 1px solid rgba(0,255,255,0.3);
+      border: 1px solid rgba(0,255,255,0.2);
       border-radius: 48px;
       padding: 2.5rem;
       margin: 2rem 0;
@@ -278,11 +515,6 @@
       border-radius: 25px;
     }
 
-    .product-header h2 {
-      font-size: 2.2rem;
-      color: white;
-    }
-
     .product-list {
       list-style: none;
     }
@@ -291,16 +523,10 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1.2rem 1.5rem;
-      background: rgba(0,0,0,0.2);
-      border-radius: 20px;
+      padding: 1.2rem 1.8rem;
+      background: rgba(0,0,0,0.25);
+      border-radius: 24px;
       margin-bottom: 1rem;
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .product-name {
-      font-size: 1.2rem;
-      font-weight: 600;
     }
 
     .product-price {
@@ -309,142 +535,31 @@
       border-radius: 30px;
       color: #0ff;
       font-weight: 700;
-      border: 1px solid rgba(0,255,255,0.3);
     }
 
     .btn-buy {
-      background: #00b894;
+      background: #00a896;
       border: none;
       color: white;
-      padding: 0.6rem 1.5rem;
+      padding: 0.7rem 1.8rem;
       border-radius: 30px;
       font-weight: 600;
       cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .btn-buy:hover {
-      background: #00cec9;
-      transform: scale(1.05);
     }
 
     .btn-back {
       background: transparent;
-      border: 1px solid #a0a0a0;
+      border: 1px solid #6c7a89;
       color: white;
       padding: 0.8rem 1.8rem;
       border-radius: 40px;
       cursor: pointer;
       margin-bottom: 1.5rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
     }
 
     .btn-back:hover {
       border-color: cyan;
       color: cyan;
-    }
-
-    /* ========== HALAMAN PEMBAYARAN ========== */
-    .payment-page {
-      display: none;
-      background: rgba(8, 18, 28, 0.98);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(0,255,255,0.3);
-      border-radius: 48px;
-      padding: 2.5rem;
-      margin: 2rem 0;
-    }
-
-    .payment-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      margin-bottom: 2rem;
-    }
-
-    .payment-method {
-      background: rgba(0,0,0,0.3);
-      padding: 1.8rem;
-      border-radius: 28px;
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .payment-method h4 {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: cyan;
-      margin-bottom: 1.2rem;
-      font-size: 1.3rem;
-    }
-
-    .payment-number {
-      background: #0a121f;
-      padding: 1rem 1.2rem;
-      border-radius: 16px;
-      font-weight: 600;
-      letter-spacing: 1.5px;
-      font-size: 1.2rem;
-      border: 1px solid rgba(0,255,255,0.1);
-    }
-
-    .qris-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      align-items: center;
-      margin: 2rem 0;
-    }
-
-    .qris-logo-box {
-      text-align: center;
-      background: rgba(0,0,0,0.2);
-      padding: 2rem;
-      border-radius: 28px;
-    }
-
-    .qris-logo-box img {
-      width: 140px;
-      margin-bottom: 0.8rem;
-    }
-
-    .qris-image-box {
-      text-align: center;
-    }
-
-    .qris-foto {
-      width: 100%;
-      max-width: 280px;
-      border-radius: 20px;
-      border: 2px solid rgba(0,255,255,0.3);
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .qris-foto:hover {
-      transform: scale(1.02);
-      box-shadow: 0 0 30px cyan;
-    }
-
-    .btn-wa {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      background: #25D366;
-      border: none;
-      padding: 1rem 2rem;
-      border-radius: 50px;
-      color: white;
-      font-weight: 700;
-      text-decoration: none;
-      margin: 0.5rem;
-    }
-
-    .btn-wa:hover {
-      background: #128C7E;
-      transform: scale(1.05);
     }
 
     /* ========== MODAL QRIS ========== */
@@ -456,8 +571,8 @@
       top: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.95);
-      backdrop-filter: blur(10px);
+      background: rgba(0,0,0,0.98);
+      backdrop-filter: blur(15px);
       align-items: center;
       justify-content: center;
     }
@@ -465,9 +580,9 @@
     .modal-content {
       max-width: 90%;
       max-height: 90%;
-      border-radius: 24px;
+      border-radius: 28px;
       border: 3px solid cyan;
-      box-shadow: 0 0 50px cyan;
+      box-shadow: 0 0 70px cyan;
     }
 
     .close-modal {
@@ -475,12 +590,14 @@
       top: 30px;
       right: 50px;
       color: white;
-      font-size: 55px;
+      font-size: 60px;
       cursor: pointer;
+      transition: 0.2s;
     }
 
     .close-modal:hover {
       color: cyan;
+      transform: rotate(90deg);
     }
 
     /* ========== ANIMATIONS ========== */
@@ -506,9 +623,10 @@
     }
 
     @media (max-width: 800px) {
+      .payment-methods-grid { grid-template-columns: 1fr; }
+      .qris-premium { grid-template-columns: 1fr; }
       .category-grid { grid-template-columns: 1fr; }
-      .payment-grid { grid-template-columns: 1fr; }
-      .qris-container { grid-template-columns: 1fr; }
+      .store-header { flex-direction: column; gap: 1rem; }
     }
   </style>
 </head>
@@ -522,227 +640,179 @@
     <source src="https://files.catbox.moe/cbnrod.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- ========== INTRO SECTION ========== -->
-  <section class="intro">
+  <!-- ========== INTRO PAGE (HALAMAN PERTAMA) ========== -->
+  <div id="introPage" class="intro-page">
     <div class="glow-overlay"></div>
     
     <div class="intro-content">
-      <!-- LOGO BRAND -->
+      <!-- LOGO -->
       <div class="logo-wrapper">
-        <img src="https://images.bukaolshop.com/hosting/181218/b75e04fa2c36935913.png" alt="Keii Official Logo" onerror="this.src='https://via.placeholder.com/300x100?text=KEII+OFFICIAL';">
+        <img src="https://images.bukaolshop.com/hosting/181218/b75e04fa2c36935913.png" alt="Keii Official Logo" onerror="this.src='https://via.placeholder.com/300x120?text=KEII+OFFICIAL';">
       </div>
 
-      <span class="badge-premium">
-        <i class="fas fa-crown"></i> PREMIUM STORE <i class="fas fa-crown"></i>
-      </span>
+      <!-- BADGE PREMIUM DIUBAH JADI "WEBSITE KEII OFFICIAL" -->
+      <div class="badge-store">
+        <i class="fas fa-crown"></i> WEBSITE KEII OFFICIAL <i class="fas fa-crown"></i>
+      </div>
 
       <!-- TYPING ANIMATION -->
-      <div class="typing-container">
+      <div class="typing-premium">
+        <div class="static-text">Selamat Datang Di</div>
         <span id="typingElement" class="dynamic-text"></span>
       </div>
 
-      <p style="color: #b0f0ff; font-size: 1.2rem; margin-bottom: 1rem;">
+      <p style="color: #b0f0ff; font-size: 1.3rem; letter-spacing: 3px; margin: 1.5rem 0;">
         <i class="fas fa-shield-alt"></i> AMAN • TERPERCAYA • CEPAT
       </p>
 
-      <!-- TOMBOL MASUK STORE -->
+      <!-- TOMBOL MASUK KE STORE (PINDAH HALAMAN) -->
       <button id="enterStoreBtn" class="btn-neon">
         <i class="fas fa-store"></i> MASUK KE STORE
         <i class="fas fa-arrow-right"></i>
       </button>
     </div>
-  </section>
-
-  <!-- ========== MAIN STORE CONTENT ========== -->
-  <div id="storeContent" class="store-content">
-    <div class="container">
+  </div>
+    <!-- ========== STORE PAGE (HALAMAN KEDUA - TERPISAH) ========== -->
+  <div id="storePage" class="store-page">
+    <div class="store-container">
 
       <!-- HEADER STORE -->
-      <div class="section-title">
-        <h2><i class="fas fa-store-alt" style="color: cyan;"></i> KEII OFFICIAL STORE</h2>
-        <p>pilih kategori, lihat produk, lakukan pembayaran</p>
-      </div>
-
-      <!-- ===== KATEGORI GRID 2 KOLOM ===== -->
-      <div class="category-grid" id="categoryGrid">
-        
-        <!-- KATEGORI 1: XCVI V9 -->
-        <div class="category-card" onclick="showCategory('xcvi')">
-          <div class="category-header">
-            <img src="https://images.bukaolshop.com/hosting/181218/16aea1c112a5636278.png" alt="XCVI V9" onerror="this.src='https://via.placeholder.com/200x80?text=XCVI+V9';">
-            <h3>XCVI V9</h3>
-          </div>
-          <div class="category-desc">
-            <p>Akses Apk Bug XCVI V9</p>
-            <p style="margin-top: 0.8rem; color: cyan;">⭐ 4.8 • 1.2rb+ terjual</p>
-          </div>
-          <button class="btn-category">
-            <i class="fas fa-box-open"></i> Lihat Produk
-          </button>
+      <div class="store-header">
+        <div class="store-logo">
+          <img src="https://images.bukaolshop.com/hosting/181218/b75e04fa2c36935913.png" alt="Keii" style="height: 50px;">
+          <span>Keii Official</span>
         </div>
-
-        <!-- KATEGORI 2: NIKA V26 (DENGAN LOGO BARU) -->
-        <div class="category-card" onclick="showCategory('nika')">
-          <div class="category-header">
-            <img src="https://images.bukaolshop.com/hosting/181218/160d9ef17e48893793.png" alt="Nika V26" onerror="this.src='https://via.placeholder.com/200x80?text=NIKA+V26';">
-            <h3>NIKA V26</h3>
-          </div>
-          <div class="category-desc">
-            <p>Akses Apk Bug Nika V26</p>
-            <p style="margin-top: 0.8rem; color: cyan;">⭐ 4.9 • 2.5rb+ terjual</p>
-          </div>
-          <button class="btn-category">
-            <i class="fas fa-box-open"></i> Lihat Produk
-          </button>
+        <div class="store-nav">
+          <div class="nav-item active" onclick="showHome()">Beranda</div>
+          <div class="nav-item" onclick="showCategories()">Kategori</div>
+          <div class="nav-item" onclick="showPayment()">Pembayaran</div>
         </div>
       </div>
 
-      <!-- ===== HALAMAN PRODUK XCVI V9 ===== -->
-      <div id="productXcvi" class="product-page">
-        <button class="btn-back" onclick="hideAllProducts()">
-          <i class="fas fa-arrow-left"></i> Kembali ke Kategori
-        </button>
-        
-        <div class="product-header">
-          <img src="https://images.bukaolshop.com/hosting/181218/16aea1c112a5636278.png" alt="XCVI V9">
-          <h2>XCVI V9 • Produk</h2>
+      <!-- ===== PAYMENT SECTION (DI ATAS, PREMIUM) ===== -->
+      <div class="payment-premium-section" id="paymentSection">
+        <div class="payment-header">
+          <i class="fas fa-credit-card"></i>
+          <h3>Pembayaran Instan</h3>
         </div>
 
-        <ul class="product-list">
-          <li>
-            <span class="product-name"><i class="fas fa-clock"></i> Akses Apk 15 Hari</span>
-            <span class="product-price">Rp 15.000</span>
-            <button class="btn-buy" onclick="showPaymentPage('XCVI V9 - 15 Hari', 15000)">
-              <i class="fas fa-shopping-cart"></i> Beli
-            </button>
-          </li>
-          <li>
-            <span class="product-name"><i class="fas fa-calendar"></i> Akses Apk 1 Bulan</span>
-            <span class="product-price">Rp 20.000</span>
-            <button class="btn-buy" onclick="showPaymentPage('XCVI V9 - 1 Bulan', 20000)">
-              <i class="fas fa-shopping-cart"></i> Beli
-            </button>
-          </li>
-          <li>
-            <span class="product-name"><i class="fas fa-infinity"></i> Akses Apk Permanen</span>
-            <span class="product-price">Rp 50.000</span>
-            <button class="btn-buy" onclick="showPaymentPage('XCVI V9 - Permanen', 50000)">
-              <i class="fas fa-shopping-cart"></i> Beli
-            </button>
-          </li>
-          <li>
-            <span class="product-name"><i class="fas fa-store"></i> Akses Reseller Apk</span>
-            <span class="product-price">Rp 85.000</span>
-            <button class="btn-buy" onclick="showPaymentPage('XCVI V9 - Reseller', 85000)">
-              <i class="fas fa-shopping-cart"></i> Beli
-            </button>
-          </li>
-        </ul>
-
-        <!-- NOTE XCVI -->
-        <div style="margin-top: 2rem; background: rgba(0,30,40,0.7); padding: 1.5rem; border-radius: 20px; border-left: 6px solid #ffd966;">
-          <i class="fas fa-exclamation-triangle" style="color: #ffd966;"></i> 
-          <strong>Note:</strong> Title Member Tidak Bisa Jual Apk. Title Reseller Baru Bisa Jual Apk. Lebih Baik Kalian Buy Reseller Apk Bisa Jual Apk 🚀
-        </div>
-      </div>
-
-      <!-- ===== HALAMAN PRODUK NIKA V26 ===== -->
-      <div id="productNika" class="product-page">
-        <button class="btn-back" onclick="hideAllProducts()">
-          <i class="fas fa-arrow-left"></i> Kembali ke Kategori
-        </button>
-        
-        <div class="product-header">
-          <img src="https://images.bukaolshop.com/hosting/181218/160d9ef17e48893793.png" alt="Nika V26">
-          <h2>NIKA V26 • Produk</h2>
-        </div>
-
-        <ul class="product-list">
-          <li>
-            <span class="product-name"><i class="fas fa-clock"></i> Akses 1 Minggu</span>
-            <span class="product-price">Rp 20.000</span>
-            <button class="btn-buy" onclick="showPaymentPage('NIKA V26 - 1 Minggu', 20000)">
-              <i class="fas fa-shopping-cart"></i> Beli
-            </button>
-          </li>
-          <li>
-            <span class="product-name"><i class="fas fa-calendar"></i> Akses 1 Bulan</span>
-            <span class="product-price">Rp 40.000</span>
-            <button class="btn-buy" onclick="showPaymentPage('NIKA V26 - 1 Bulan', 40000)">
-              <i class="fas fa-shopping-cart"></i> Beli
-            </button>
-          </li>
-          <li>
-            <span class="product-name"><i class="fas fa-infinity"></i> Akses Permanen</span>
-            <span class="product-price">Rp 50.000</span>
-            <button class="btn-buy" onclick="showPaymentPage('NIKA V26 - Permanen', 50000)">
-              <i class="fas fa-shopping-cart"></i> Beli
-            </button>
-          </li>
-        </ul>
-          </div>
-          <!-- ===== HALAMAN PEMBAYARAN ===== -->
-      <div id="paymentPage" class="payment-page">
-        <button class="btn-back" onclick="hidePaymentPage()">
-          <i class="fas fa-arrow-left"></i> Kembali ke Produk
-        </button>
-
-        <div style="text-align: center; margin-bottom: 2.5rem;">
-          <h2 style="font-size: 2rem; color: white; margin-bottom: 0.8rem;">
-            <i class="fas fa-credit-card" style="color: cyan;"></i> Halaman Pembayaran
-          </h2>
-          <p id="selectedProductInfo" style="color: #b0e0ff; font-size: 1.2rem; background: rgba(0,255,255,0.05); padding: 0.8rem; border-radius: 50px;">
-            ⚡ Produk: -
-          </p>
-        </div>
-
-        <!-- CONTACT ADMIN -->
-        <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: center; margin-bottom: 2.5rem;">
-          <a href="https://wa.me/6285150895395" target="_blank" class="btn-wa">
-            <i class="fab fa-whatsapp" style="font-size: 1.6rem;"></i> Chat Admin (Bukti TF)
-          </a>
-          <a href="https://whatsapp.com/channel/0029Vb6zSDuBadmTBX4YRg1v" target="_blank" class="btn-wa" style="background: #833ab4;">
-            <i class="fab fa-whatsapp"></i> Saluran Admin
-          </a>
-        </div>
-
-        <!-- PAYMENT METHODS -->
-        <div class="payment-grid">
-          <div class="payment-method">
+        <!-- PAYMENT METHODS GRID -->
+        <div class="payment-methods-grid">
+          <div class="payment-item">
             <h4><img src="https://images.bukaolshop.com/hosting/181218/f2f4904ff62a785161.png" style="height: 35px;" alt="Dana"> DANA</h4>
             <div class="payment-number">087753513090</div>
             <p style="margin-top: 0.8rem; color: #aaa;">a/n kamxxx</p>
           </div>
-          <div class="payment-method">
+          <div class="payment-item">
             <h4><img src="https://images.bukaolshop.com/hosting/181218/0d46bd2ba133491753.png" style="height: 35px;" alt="Seabank"> SEABANK</h4>
             <div class="payment-number">901517870612</div>
             <p style="margin-top: 0.8rem; color: #aaa;">a/n kamxxx</p>
           </div>
         </div>
 
-        <!-- QRIS -->
-        <h4 style="color: cyan; margin: 1.5rem 0 1rem;"><i class="fas fa-qrcode"></i> QRIS PAYMENT</h4>
-        <div class="qris-container">
-          <div class="qris-logo-box">
+        <!-- QRIS SECTION -->
+        <h4 style="color: cyan; margin: 1.8rem 0 1rem;"><i class="fas fa-qrcode"></i> QRIS PAYMENT</h4>
+        <div class="qris-premium">
+          <div class="qris-logo">
             <img src="https://images.bukaolshop.com/hosting/181218/111e83c3a6f5204498.png" alt="Logo QRIS">
-            <p style="color: #0ff;">Logo Resmi QRIS</p>
+            <p style="color: #0ff; margin-top: 0.8rem;">Logo Resmi QRIS</p>
           </div>
-          <div class="qris-image-box">
-            <img id="qrisImage" src="https://images.bukaolshop.com/hosting/181218/cce817858ef1663896.png" class="qris-foto" alt="QRIS">
-            <p style="margin-top: 0.8rem; color: #b0e0ff;">
-              <i class="fas fa-search"></i> klik QRIS untuk perbesar
+          <div class="qris-image">
+            <img id="qrisImage" src="https://images.bukaolshop.com/hosting/181218/cce817858ef1663896.png" alt="QRIS Code" title="Klik untuk perbesar">
+            <p style="color: #b0e0ff; margin-top: 0.8rem;">
+              <i class="fas fa-search-plus"></i> Klik untuk perbesar
             </p>
           </div>
         </div>
+      </div>
 
-        <!-- INSTRUKSI -->
-        <div style="margin-top: 2rem; background: rgba(0,40,50,0.7); padding: 1.8rem; border-radius: 28px; border-left: 8px solid cyan;">
-          <h4 style="color: white; margin-bottom: 1rem;"><i class="fas fa-camera"></i> Kirim Bukti Transfer</h4>
-          <p style="color: #e0f0ff;">✅ Sertakan bukti dengan jelas, <strong style="color: #ffd966;">NO BUREM</strong> & nama harus pas dengan norek/qris.</p>
-          <p style="color: #e0f0ff; margin-top: 0.6rem;">✅ Chat admin via WhatsApp, kirim bukti dan nama produk.</p>
+      <!-- ===== WHATSAPP BUTTONS (DI BAWAH PAYMENT, TAPI DI ATAS KATEGORI) ===== -->
+      <div class="whatsapp-section">
+        <a href="https://wa.me/6285150895395" target="_blank" class="btn-wa-premium">
+          <i class="fab fa-whatsapp"></i> Chat Admin (Kirim Bukti)
+        </a>
+        <a href="https://whatsapp.com/channel/0029Vb6zSDuBadmTBX4YRg1v" target="_blank" class="btn-wa-premium btn-channel">
+          <i class="fab fa-whatsapp"></i> Saluran Official
+        </a>
+      </div>
+
+      <!-- ===== KATEGORI PRODUK (DI BAWAH WHATSAPP) ===== -->
+      <div id="categorySection">
+        <div class="section-title">
+          <h2>Kategori Produk</h2>
+          <p>pilih kategori untuk melihat detail harga</p>
+        </div>
+
+        <div class="category-grid" id="categoryGrid">
+          <!-- KATEGORI XCVI V9 -->
+          <div class="category-card" onclick="showCategory('xcvi')">
+            <div class="category-header">
+              <img src="https://images.bukaolshop.com/hosting/181218/16aea1c112a5636278.png" alt="XCVI V9">
+              <h3>XCVI V9</h3>
+            </div>
+            <p style="color: #b0e0ff; margin-bottom: 1rem;">Akses Apk Bug XCVI V9</p>
+            <p style="color: cyan; margin-bottom: 1.2rem;">⭐ 4.8 • 1.2rb+ terjual</p>
+            <button class="btn-category">
+              <i class="fas fa-box-open"></i> Lihat Produk
+            </button>
+          </div>
+
+          <!-- KATEGORI NIKA V26 (LOGO BARU) -->
+          <div class="category-card" onclick="showCategory('nika')">
+            <div class="category-header">
+              <img src="https://images.bukaolshop.com/hosting/181218/160d9ef17e48893793.png" alt="Nika V26">
+              <h3>NIKA V26</h3>
+            </div>
+            <p style="color: #b0e0ff; margin-bottom: 1rem;">Akses Apk Bug Nika V26</p>
+            <p style="color: cyan; margin-bottom: 1.2rem;">⭐ 4.9 • 2.5rb+ terjual</p>
+            <button class="btn-category">
+              <i class="fas fa-box-open"></i> Lihat Produk
+            </button>
+          </div>
         </div>
       </div>
 
+      <!-- ===== HALAMAN PRODUK XCVI V9 ===== -->
+      <div id="productXcvi" class="product-page" style="display: none;">
+        <button class="btn-back" onclick="hideAllProducts()">
+          <i class="fas fa-arrow-left"></i> Kembali ke Kategori
+        </button>
+        <div class="product-header">
+          <img src="https://images.bukaolshop.com/hosting/181218/16aea1c112a5636278.png" alt="XCVI V9">
+          <h2 style="font-size: 2rem;">XCVI V9</h2>
+        </div>
+        <ul class="product-list">
+          <li><span>Akses Apk 15 Hari</span> <span class="product-price">Rp 15.000</span> <button class="btn-buy" onclick="buyProduct('XCVI V9 - 15 Hari', 15000)">Beli</button></li>
+          <li><span>Akses Apk 1 Bulan</span> <span class="product-price">Rp 20.000</span> <button class="btn-buy" onclick="buyProduct('XCVI V9 - 1 Bulan', 20000)">Beli</button></li>
+          <li><span>Akses Apk Permanen</span> <span class="product-price">Rp 50.000</span> <button class="btn-buy" onclick="buyProduct('XCVI V9 - Permanen', 50000)">Beli</button></li>
+          <li><span>Akses Reseller Apk</span> <span class="product-price">Rp 85.000</span> <button class="btn-buy" onclick="buyProduct('XCVI V9 - Reseller', 85000)">Beli</button></li>
+        </ul>
+        <div style="margin-top: 2rem; background: rgba(0,40,50,0.7); padding: 1.5rem; border-radius: 20px; border-left: 6px solid #ffd966;">
+          <i class="fas fa-exclamation-triangle" style="color: #ffd966;"></i> 
+          <strong>Note:</strong> Title Member Tidak Bisa Jual Apk. Title Reseller Baru Bisa Jual Apk. 🚀
+        </div>
+      </div>
+
+      <!-- ===== HALAMAN PRODUK NIKA V26 ===== -->
+      <div id="productNika" class="product-page" style="display: none;">
+        <button class="btn-back" onclick="hideAllProducts()">
+          <i class="fas fa-arrow-left"></i> Kembali ke Kategori
+        </button>
+        <div class="product-header">
+          <img src="https://images.bukaolshop.com/hosting/181218/160d9ef17e48893793.png" alt="Nika V26">
+          <h2 style="font-size: 2rem;">NIKA V26</h2>
+        </div>
+        <ul class="product-list">
+          <li><span>Akses 1 Minggu</span> <span class="product-price">Rp 20.000</span> <button class="btn-buy" onclick="buyProduct('NIKA V26 - 1 Minggu', 20000)">Beli</button></li>
+          <li><span>Akses 1 Bulan</span> <span class="product-price">Rp 40.000</span> <button class="btn-buy" onclick="buyProduct('NIKA V26 - 1 Bulan', 40000)">Beli</button></li>
+          <li><span>Akses Permanen</span> <span class="product-price">Rp 50.000</span> <button class="btn-buy" onclick="buyProduct('NIKA V26 - Permanen', 50000)">Beli</button></li>
+        </ul>
+      </div>
+
+      <!-- FOOTER -->
+      <div style="text-align: center; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid rgba(0,255,255,0.1); color: #80b0cc;">
+        <i class="fas fa-crown"></i> 2026 • Keii Official • Premium Store
+      </div>
     </div>
   </div>
 
@@ -753,7 +823,7 @@
   </div>
 
   <script>
-    // ========== 1. PARTICLES BACKGROUND ==========
+    // ========== 1. PARTICLES ==========
     const canvas = document.getElementById('particleCanvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
@@ -764,11 +834,11 @@
     }
 
     function createParticles() {
-      for (let i = 0; i < 110; i++) {
+      for (let i = 0; i < 120; i++) {
         particles.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          radius: Math.random() * 2.2 + 0.6,
+          radius: Math.random() * 2.5 + 0.5,
           speedX: Math.random() * 0.4 - 0.2,
           speedY: Math.random() * 0.4 - 0.2,
           color: `rgba(0, ${Math.floor(180 + Math.random() * 75)}, 255, ${Math.random() * 0.5})`
@@ -803,7 +873,7 @@
 
     // ========== 2. TYPING EFFECT ==========
     const typingElement = document.getElementById('typingElement');
-    const texts = ['Selamat Datang', 'Di Website', 'keii Official'];
+    const texts = ['Website Keii Official'];
     let textIndex = 0, charIndex = 0, isDeleting = false;
 
     function typeEffect() {
@@ -817,18 +887,17 @@
       }
       if (!isDeleting && charIndex === currentText.length) {
         isDeleting = true;
-        setTimeout(typeEffect, 2000);
+        setTimeout(typeEffect, 3000);
       } else if (isDeleting && charIndex === 0) {
         isDeleting = false;
-        textIndex = (textIndex + 1) % texts.length;
-        setTimeout(typeEffect, 400);
+        setTimeout(typeEffect, 500);
       } else {
         setTimeout(typeEffect, isDeleting ? 60 : 130);
       }
     }
     typeEffect();
 
-    // ========== 3. AUDIO MP3 ==========
+    // ========== 3. AUDIO ==========
     const bgMusic = document.getElementById('bgMusic');
     let musicStarted = false;
 
@@ -840,59 +909,65 @@
       }
     }
 
-    // ========== 4. REVEAL STORE + MUSIC ==========
+    // ========== 4. PINDAH HALAMAN (INTRO → STORE) ==========
+    const introPage = document.getElementById('introPage');
+    const storePage = document.getElementById('storePage');
     const enterBtn = document.getElementById('enterStoreBtn');
-    const storeContent = document.getElementById('storeContent');
 
     enterBtn.addEventListener('click', function() {
       this.classList.add('vibrate');
       setTimeout(() => this.classList.remove('vibrate'), 400);
+      
       startMusic();
-      storeContent.style.display = 'block';
+      
+      // Sembunyikan intro dengan efek smooth
+      introPage.classList.add('hidden');
+      
+      // Tampilkan store page
       setTimeout(() => {
-        storeContent.scrollIntoView({ behavior: 'smooth' });
+        storePage.classList.add('visible');
+        window.scrollTo(0, 0);
       }, 200);
     });
 
-    storeContent.style.display = 'none';
+    // ========== 5. FUNGSI NAVIGASI STORE ==========
+    window.showHome = function() {
+      document.getElementById('categorySection').style.display = 'block';
+      document.getElementById('productXcvi').style.display = 'none';
+      document.getElementById('productNika').style.display = 'none';
+      document.getElementById('paymentSection').style.display = 'block';
+    }
 
-    // ========== 5. FUNGSI SHOW/HIDE PRODUK & PAYMENT ==========
-    const productXcvi = document.getElementById('productXcvi');
-    const productNika = document.getElementById('productNika');
-    const paymentPage = document.getElementById('paymentPage');
-    const categoryGrid = document.getElementById('categoryGrid');
-    const selectedProductInfo = document.getElementById('selectedProductInfo');
+    window.showCategories = function() {
+      document.getElementById('categorySection').style.display = 'block';
+      document.getElementById('productXcvi').style.display = 'none';
+      document.getElementById('productNika').style.display = 'none';
+    }
+
+    window.showPayment = function() {
+      document.getElementById('paymentSection').scrollIntoView({ behavior: 'smooth' });
+    }
 
     window.showCategory = function(category) {
-      categoryGrid.style.display = 'none';
-      paymentPage.style.display = 'none';
-      
+      document.getElementById('categoryGrid').style.display = 'none';
       if (category === 'xcvi') {
-        productXcvi.style.display = 'block';
-        productNika.style.display = 'none';
-      } else if (category === 'nika') {
-        productNika.style.display = 'block';
-        productXcvi.style.display = 'none';
+        document.getElementById('productXcvi').style.display = 'block';
+        document.getElementById('productNika').style.display = 'none';
+      } else {
+        document.getElementById('productNika').style.display = 'block';
+        document.getElementById('productXcvi').style.display = 'none';
       }
     }
 
     window.hideAllProducts = function() {
-      productXcvi.style.display = 'none';
-      productNika.style.display = 'none';
-      paymentPage.style.display = 'none';
-      categoryGrid.style.display = 'grid';
+      document.getElementById('productXcvi').style.display = 'none';
+      document.getElementById('productNika').style.display = 'none';
+      document.getElementById('categoryGrid').style.display = 'grid';
     }
 
-    window.showPaymentPage = function(productName, price) {
-      productXcvi.style.display = 'none';
-      productNika.style.display = 'none';
-      paymentPage.style.display = 'block';
-      selectedProductInfo.innerHTML = `⚡ Produk: ${productName} • Rp ${price.toLocaleString()}`;
-    }
-
-    window.hidePaymentPage = function() {
-      paymentPage.style.display = 'none';
-      categoryGrid.style.display = 'grid';
+    window.buyProduct = function(product, price) {
+      alert(`✅ Produk: ${product}\n💰 Total: Rp ${price.toLocaleString()}\n\nSilakan transfer ke nomor DANA/SEABANK atau QRIS, lalu kirim bukti ke admin WhatsApp.`);
+      document.getElementById('paymentSection').scrollIntoView({ behavior: 'smooth' });
     }
 
     // ========== 6. MODAL QRIS ==========
