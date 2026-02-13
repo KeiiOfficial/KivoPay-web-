@@ -182,7 +182,7 @@
       font-size: 1.2rem;
     }
 
-    /* ========== KATEGORI CARD ========== */
+    /* ========== KATEGORI GRID 2 KOLOM ========== */
     .category-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -198,79 +198,163 @@
       padding: 2rem;
       box-shadow: 0 25px 35px -8px rgba(0,0,0,0.7);
       transition: 0.2s;
+      cursor: pointer;
     }
 
     .category-card:hover {
       border-color: rgba(0, 255, 255, 0.7);
       box-shadow: 0 0 30px rgba(0,255,255,0.2);
+      transform: translateY(-5px);
     }
 
     .category-header {
       display: flex;
       align-items: center;
       gap: 1.2rem;
-      margin-bottom: 1.8rem;
+      margin-bottom: 1.5rem;
     }
 
     .category-header img {
-      height: 60px;
+      height: 70px;
       width: auto;
       background: white;
-      padding: 10px 18px;
+      padding: 12px 20px;
       border-radius: 20px;
       object-fit: contain;
     }
 
     .category-header h3 {
-      font-size: 1.9rem;
+      font-size: 2rem;
       font-weight: 700;
       color: #e6f7ff;
     }
 
-    .price-list {
+    .category-desc {
+      color: #b0e0ff;
+      margin-bottom: 1.5rem;
+      font-size: 1rem;
+    }
+
+    .btn-category {
+      background: transparent;
+      border: 1px solid cyan;
+      color: cyan;
+      padding: 0.8rem 1.8rem;
+      border-radius: 40px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+
+    .btn-category:hover {
+      background: cyan;
+      color: black;
+    }
+
+    /* ========== HALAMAN PRODUK (DETAIL KATEGORI) ========== */
+    .product-page {
+      display: none;
+      background: rgba(10, 18, 28, 0.95);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(0,255,255,0.3);
+      border-radius: 48px;
+      padding: 2.5rem;
+      margin: 2rem 0;
+    }
+
+    .product-header {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .product-header img {
+      height: 80px;
+      background: white;
+      padding: 15px 25px;
+      border-radius: 25px;
+    }
+
+    .product-header h2 {
+      font-size: 2.2rem;
+      color: white;
+    }
+
+    .product-list {
       list-style: none;
     }
 
-    .price-list li {
+    .product-list li {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0.9rem 1rem;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      font-size: 1.1rem;
+      padding: 1.2rem 1.5rem;
+      background: rgba(0,0,0,0.2);
+      border-radius: 20px;
+      margin-bottom: 1rem;
+      border: 1px solid rgba(255,255,255,0.05);
     }
 
-    .price-list li:last-child {
-      border-bottom: none;
+    .product-name {
+      font-size: 1.2rem;
+      font-weight: 600;
     }
 
-    .price-tag {
-      background: rgba(0, 255, 255, 0.1);
-      padding: 0.4rem 1.2rem;
+    .product-price {
+      background: rgba(0, 255, 255, 0.15);
+      padding: 0.5rem 1.5rem;
       border-radius: 30px;
       color: #0ff;
       font-weight: 700;
       border: 1px solid rgba(0,255,255,0.3);
     }
 
-    .note-box {
-      margin-top: 1.5rem;
-      background: rgba(0, 20, 30, 0.6);
-      border-left: 6px solid cyan;
-      padding: 1.2rem;
-      border-radius: 18px;
-      color: #b0f0ff;
-      font-size: 0.95rem;
+    .btn-buy {
+      background: #00b894;
+      border: none;
+      color: white;
+      padding: 0.6rem 1.5rem;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
     }
 
-    /* ========== PEMBAYARAN SECTION ========== */
-    .payment-section {
-      background: rgba(10, 18, 28, 0.9);
+    .btn-buy:hover {
+      background: #00cec9;
+      transform: scale(1.05);
+    }
+
+    .btn-back {
+      background: transparent;
+      border: 1px solid #a0a0a0;
+      color: white;
+      padding: 0.8rem 1.8rem;
+      border-radius: 40px;
+      cursor: pointer;
+      margin-bottom: 1.5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-back:hover {
+      border-color: cyan;
+      color: cyan;
+    }
+
+    /* ========== HALAMAN PEMBAYARAN ========== */
+    .payment-page {
+      display: none;
+      background: rgba(8, 18, 28, 0.98);
       backdrop-filter: blur(12px);
-      border: 1px solid rgba(0,255,255,0.25);
+      border: 1px solid rgba(0,255,255,0.3);
       border-radius: 48px;
       padding: 2.5rem;
-      margin: 2.5rem 0;
+      margin: 2rem 0;
     }
 
     .payment-grid {
@@ -282,32 +366,36 @@
 
     .payment-method {
       background: rgba(0,0,0,0.3);
-      padding: 1.5rem;
-      border-radius: 24px;
+      padding: 1.8rem;
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,0.05);
     }
 
     .payment-method h4 {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       color: cyan;
-      margin-bottom: 1rem;
+      margin-bottom: 1.2rem;
+      font-size: 1.3rem;
     }
 
     .payment-number {
       background: #0a121f;
-      padding: 0.8rem 1.2rem;
+      padding: 1rem 1.2rem;
       border-radius: 16px;
       font-weight: 600;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
+      font-size: 1.2rem;
+      border: 1px solid rgba(0,255,255,0.1);
     }
 
-    .qris-dual {
+    .qris-container {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 2rem;
       align-items: center;
-      margin-top: 1.5rem;
+      margin: 2rem 0;
     }
 
     .qris-logo-box {
@@ -318,7 +406,7 @@
     }
 
     .qris-logo-box img {
-      width: 130px;
+      width: 140px;
       margin-bottom: 0.8rem;
     }
 
@@ -328,33 +416,38 @@
 
     .qris-foto {
       width: 100%;
-      max-width: 260px;
+      max-width: 280px;
       border-radius: 20px;
       border: 2px solid rgba(0,255,255,0.3);
       cursor: pointer;
       transition: 0.2s;
     }
 
-    .btn-contact {
+    .qris-foto:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 30px cyan;
+    }
+
+    .btn-wa {
       display: inline-flex;
       align-items: center;
       gap: 12px;
-      background: #1e3a4a;
-      border: 1px solid cyan;
-      padding: 0.9rem 2rem;
+      background: #25D366;
+      border: none;
+      padding: 1rem 2rem;
       border-radius: 50px;
       color: white;
-      font-weight: 600;
+      font-weight: 700;
       text-decoration: none;
-      margin: 1rem 0.5rem;
+      margin: 0.5rem;
     }
 
-    .btn-contact:hover {
-      background: cyan;
-      color: black;
+    .btn-wa:hover {
+      background: #128C7E;
+      transform: scale(1.05);
     }
 
-    /* ========== MODAL POP UP QRIS ========== */
+    /* ========== MODAL QRIS ========== */
     .modal {
       display: none;
       position: fixed;
@@ -415,7 +508,7 @@
     @media (max-width: 800px) {
       .category-grid { grid-template-columns: 1fr; }
       .payment-grid { grid-template-columns: 1fr; }
-      .qris-dual { grid-template-columns: 1fr; }
+      .qris-container { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -424,7 +517,7 @@
   <!-- PARTICLES BACKGROUND -->
   <canvas id="particleCanvas"></canvas>
 
-  <!-- AUDIO MP3 (TIDAK ADA IKON, OTOMATIS PLAY PAS KLIK) -->
+  <!-- AUDIO MP3 -->
   <audio id="bgMusic" loop preload="auto">
     <source src="https://files.catbox.moe/cbnrod.mp3" type="audio/mpeg">
   </audio>
@@ -436,31 +529,27 @@
     <div class="intro-content">
       <!-- LOGO BRAND -->
       <div class="logo-wrapper">
-        <img src="https://images.bukaolshop.com/hosting/181218/b75e04fa2c36935913.png" alt="Keii Official Logo" onerror="this.src='https://via.placeholder.com/300x100?text=KEII+OFFICIAL'; this.style.background='#0a1a2a';">
+        <img src="https://images.bukaolshop.com/hosting/181218/b75e04fa2c36935913.png" alt="Keii Official Logo" onerror="this.src='https://via.placeholder.com/300x100?text=KEII+OFFICIAL';">
       </div>
 
       <span class="badge-premium">
         <i class="fas fa-crown"></i> PREMIUM STORE <i class="fas fa-crown"></i>
       </span>
 
-      <!-- TYPING ANIMATION: Selamat Datang Di Website keii Official -->
+      <!-- TYPING ANIMATION -->
       <div class="typing-container">
         <span id="typingElement" class="dynamic-text"></span>
       </div>
 
-      <p style="color: #b0f0ff; font-size: 1.2rem; margin-bottom: 1rem; letter-spacing: 2px;">
+      <p style="color: #b0f0ff; font-size: 1.2rem; margin-bottom: 1rem;">
         <i class="fas fa-shield-alt"></i> AMAN • TERPERCAYA • CEPAT
       </p>
 
-      <!-- TOMBOL MASUK STORE (TRIGGER AUDIO + CONTENT) -->
+      <!-- TOMBOL MASUK STORE -->
       <button id="enterStoreBtn" class="btn-neon">
         <i class="fas fa-store"></i> MASUK KE STORE
         <i class="fas fa-arrow-right"></i>
       </button>
-
-      <p style="margin-top: 2rem; color: rgba(150,220,255,0.5); font-size: 0.9rem;">
-        <i class="fas fa-headphones"></i> putar musik · klik tombol
-      </p>
     </div>
   </section>
 
@@ -471,111 +560,193 @@
       <!-- HEADER STORE -->
       <div class="section-title">
         <h2><i class="fas fa-store-alt" style="color: cyan;"></i> KEII OFFICIAL STORE</h2>
-        <p>pilih produk, lakukan pembayaran, chat admin</p>
-  </div>
-   <!-- ===== KATEGORI PRODUK ===== -->
-      <div class="category-grid">
+        <p>pilih kategori, lihat produk, lakukan pembayaran</p>
+      </div>
+
+      <!-- ===== KATEGORI GRID 2 KOLOM ===== -->
+      <div class="category-grid" id="categoryGrid">
         
         <!-- KATEGORI 1: XCVI V9 -->
-        <div class="category-card">
+        <div class="category-card" onclick="showCategory('xcvi')">
           <div class="category-header">
             <img src="https://images.bukaolshop.com/hosting/181218/16aea1c112a5636278.png" alt="XCVI V9" onerror="this.src='https://via.placeholder.com/200x80?text=XCVI+V9';">
             <h3>XCVI V9</h3>
           </div>
-          <ul class="price-list">
-            <li><span>Akses Apk 15 Hari</span> <span class="price-tag">Rp 15.000</span></li>
-            <li><span>Akses Apk 1 Bulan</span> <span class="price-tag">Rp 20.000</span></li>
-            <li><span>Akses Apk Permanen</span> <span class="price-tag">Rp 50.000</span></li>
-            <li><span>Akses Reseller Apk</span> <span class="price-tag">Rp 85.000</span></li>
-          </ul>
-          <!-- NOTE PENTING -->
-          <div class="note-box">
-            <i class="fas fa-exclamation-triangle" style="color: #ffd966;"></i> 
-            <strong>Note:</strong> Title Member Tidak Bisa Jual Apk. 
-            Title Reseller Baru Bisa Jual Apk. 
-            Lebih Baik Kalian Buy Reseller Apk Bisa Jual Apk 🚀
+          <div class="category-desc">
+            <p>Akses Apk Bug XCVI V9</p>
+            <p style="margin-top: 0.8rem; color: cyan;">⭐ 4.8 • 1.2rb+ terjual</p>
           </div>
+          <button class="btn-category">
+            <i class="fas fa-box-open"></i> Lihat Produk
+          </button>
         </div>
 
-        <!-- KATEGORI 2: NIKA V26 -->
-        <div class="category-card">
+        <!-- KATEGORI 2: NIKA V26 (DENGAN LOGO BARU) -->
+        <div class="category-card" onclick="showCategory('nika')">
           <div class="category-header">
-            <img src="https://via.placeholder.com/200x80?text=NIKA+V26" alt="Nika V26" style="background: white; padding: 10px 18px; border-radius: 20px;">
+            <img src="https://images.bukaolshop.com/hosting/181218/160d9ef17e48893793.png" alt="Nika V26" onerror="this.src='https://via.placeholder.com/200x80?text=NIKA+V26';">
             <h3>NIKA V26</h3>
           </div>
-          <ul class="price-list">
-            <li><span>Akses 1 Minggu</span> <span class="price-tag">Rp 20.000</span></li>
-            <li><span>Akses 1 Bulan</span> <span class="price-tag">Rp 40.000</span></li>
-            <li><span>Akses Permanen</span> <span class="price-tag">Rp 50.000</span></li>
-          </ul>
-          <div style="margin-top: 1.5rem; color: #aad0ff;">
-            <i class="fas fa-check-circle" style="color: #00e6b8;"></i> ready update
+          <div class="category-desc">
+            <p>Akses Apk Bug Nika V26</p>
+            <p style="margin-top: 0.8rem; color: cyan;">⭐ 4.9 • 2.5rb+ terjual</p>
           </div>
+          <button class="btn-category">
+            <i class="fas fa-box-open"></i> Lihat Produk
+          </button>
         </div>
       </div>
 
-      <!-- ========== SECTION PEMBAYARAN & ORDER ========== -->
-      <div class="payment-section">
-        <h3 style="font-size: 2rem; margin-bottom: 1.8rem; display: flex; align-items: center; gap: 15px; color: white;">
-          <i class="fas fa-credit-card" style="color: cyan;"></i> Halaman Order / Pembayaran
-        </h3>
+      <!-- ===== HALAMAN PRODUK XCVI V9 ===== -->
+      <div id="productXcvi" class="product-page">
+        <button class="btn-back" onclick="hideAllProducts()">
+          <i class="fas fa-arrow-left"></i> Kembali ke Kategori
+        </button>
+        
+        <div class="product-header">
+          <img src="https://images.bukaolshop.com/hosting/181218/16aea1c112a5636278.png" alt="XCVI V9">
+          <h2>XCVI V9 • Produk</h2>
+        </div>
 
-        <!-- NOMOR ADMIN & CHANNEL -->
-        <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 2.5rem;">
-          <a href="https://wa.me/6285150895395" target="_blank" class="btn-contact">
-            <i class="fab fa-whatsapp" style="font-size: 1.6rem;"></i> Admin WA
+        <ul class="product-list">
+          <li>
+            <span class="product-name"><i class="fas fa-clock"></i> Akses Apk 15 Hari</span>
+            <span class="product-price">Rp 15.000</span>
+            <button class="btn-buy" onclick="showPaymentPage('XCVI V9 - 15 Hari', 15000)">
+              <i class="fas fa-shopping-cart"></i> Beli
+            </button>
+          </li>
+          <li>
+            <span class="product-name"><i class="fas fa-calendar"></i> Akses Apk 1 Bulan</span>
+            <span class="product-price">Rp 20.000</span>
+            <button class="btn-buy" onclick="showPaymentPage('XCVI V9 - 1 Bulan', 20000)">
+              <i class="fas fa-shopping-cart"></i> Beli
+            </button>
+          </li>
+          <li>
+            <span class="product-name"><i class="fas fa-infinity"></i> Akses Apk Permanen</span>
+            <span class="product-price">Rp 50.000</span>
+            <button class="btn-buy" onclick="showPaymentPage('XCVI V9 - Permanen', 50000)">
+              <i class="fas fa-shopping-cart"></i> Beli
+            </button>
+          </li>
+          <li>
+            <span class="product-name"><i class="fas fa-store"></i> Akses Reseller Apk</span>
+            <span class="product-price">Rp 85.000</span>
+            <button class="btn-buy" onclick="showPaymentPage('XCVI V9 - Reseller', 85000)">
+              <i class="fas fa-shopping-cart"></i> Beli
+            </button>
+          </li>
+        </ul>
+
+        <!-- NOTE XCVI -->
+        <div style="margin-top: 2rem; background: rgba(0,30,40,0.7); padding: 1.5rem; border-radius: 20px; border-left: 6px solid #ffd966;">
+          <i class="fas fa-exclamation-triangle" style="color: #ffd966;"></i> 
+          <strong>Note:</strong> Title Member Tidak Bisa Jual Apk. Title Reseller Baru Bisa Jual Apk. Lebih Baik Kalian Buy Reseller Apk Bisa Jual Apk 🚀
+        </div>
+      </div>
+
+      <!-- ===== HALAMAN PRODUK NIKA V26 ===== -->
+      <div id="productNika" class="product-page">
+        <button class="btn-back" onclick="hideAllProducts()">
+          <i class="fas fa-arrow-left"></i> Kembali ke Kategori
+        </button>
+        
+        <div class="product-header">
+          <img src="https://images.bukaolshop.com/hosting/181218/160d9ef17e48893793.png" alt="Nika V26">
+          <h2>NIKA V26 • Produk</h2>
+        </div>
+
+        <ul class="product-list">
+          <li>
+            <span class="product-name"><i class="fas fa-clock"></i> Akses 1 Minggu</span>
+            <span class="product-price">Rp 20.000</span>
+            <button class="btn-buy" onclick="showPaymentPage('NIKA V26 - 1 Minggu', 20000)">
+              <i class="fas fa-shopping-cart"></i> Beli
+            </button>
+          </li>
+          <li>
+            <span class="product-name"><i class="fas fa-calendar"></i> Akses 1 Bulan</span>
+            <span class="product-price">Rp 40.000</span>
+            <button class="btn-buy" onclick="showPaymentPage('NIKA V26 - 1 Bulan', 40000)">
+              <i class="fas fa-shopping-cart"></i> Beli
+            </button>
+          </li>
+          <li>
+            <span class="product-name"><i class="fas fa-infinity"></i> Akses Permanen</span>
+            <span class="product-price">Rp 50.000</span>
+            <button class="btn-buy" onclick="showPaymentPage('NIKA V26 - Permanen', 50000)">
+              <i class="fas fa-shopping-cart"></i> Beli
+            </button>
+          </li>
+        </ul>
+          </div>
+          <!-- ===== HALAMAN PEMBAYARAN ===== -->
+      <div id="paymentPage" class="payment-page">
+        <button class="btn-back" onclick="hidePaymentPage()">
+          <i class="fas fa-arrow-left"></i> Kembali ke Produk
+        </button>
+
+        <div style="text-align: center; margin-bottom: 2.5rem;">
+          <h2 style="font-size: 2rem; color: white; margin-bottom: 0.8rem;">
+            <i class="fas fa-credit-card" style="color: cyan;"></i> Halaman Pembayaran
+          </h2>
+          <p id="selectedProductInfo" style="color: #b0e0ff; font-size: 1.2rem; background: rgba(0,255,255,0.05); padding: 0.8rem; border-radius: 50px;">
+            ⚡ Produk: -
+          </p>
+        </div>
+
+        <!-- CONTACT ADMIN -->
+        <div style="display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: center; margin-bottom: 2.5rem;">
+          <a href="https://wa.me/6285150895395" target="_blank" class="btn-wa">
+            <i class="fab fa-whatsapp" style="font-size: 1.6rem;"></i> Chat Admin (Bukti TF)
           </a>
-          <a href="https://whatsapp.com/channel/0029Vb6zSDuBadmTBX4YRg1v" target="_blank" class="btn-contact">
+          <a href="https://whatsapp.com/channel/0029Vb6zSDuBadmTBX4YRg1v" target="_blank" class="btn-wa" style="background: #833ab4;">
             <i class="fab fa-whatsapp"></i> Saluran Admin
           </a>
         </div>
 
-        <!-- NOMOR REKENING DANA & SEABANK -->
+        <!-- PAYMENT METHODS -->
         <div class="payment-grid">
           <div class="payment-method">
-            <h4><img src="https://images.bukaolshop.com/hosting/181218/f2f4904ff62a785161.png" style="height: 30px;" alt="Dana"> DANA</h4>
+            <h4><img src="https://images.bukaolshop.com/hosting/181218/f2f4904ff62a785161.png" style="height: 35px;" alt="Dana"> DANA</h4>
             <div class="payment-number">087753513090</div>
-            <p style="margin-top: 0.6rem; color: #ccc;">a/n kamxxx</p>
+            <p style="margin-top: 0.8rem; color: #aaa;">a/n kamxxx</p>
           </div>
           <div class="payment-method">
-            <h4><img src="https://images.bukaolshop.com/hosting/181218/0d46bd2ba133491753.png" style="height: 30px;" alt="Seabank"> SEABANK</h4>
+            <h4><img src="https://images.bukaolshop.com/hosting/181218/0d46bd2ba133491753.png" style="height: 35px;" alt="Seabank"> SEABANK</h4>
             <div class="payment-number">901517870612</div>
-            <p style="margin-top: 0.6rem; color: #ccc;">a/n kamxxx</p>
+            <p style="margin-top: 0.8rem; color: #aaa;">a/n kamxxx</p>
           </div>
         </div>
 
         <!-- QRIS -->
-        <h4 style="color: cyan; margin: 1.8rem 0 1rem;"><i class="fas fa-qrcode"></i> QRIS PAYMENT</h4>
-        <div class="qris-dual">
+        <h4 style="color: cyan; margin: 1.5rem 0 1rem;"><i class="fas fa-qrcode"></i> QRIS PAYMENT</h4>
+        <div class="qris-container">
           <div class="qris-logo-box">
             <img src="https://images.bukaolshop.com/hosting/181218/111e83c3a6f5204498.png" alt="Logo QRIS">
-            <p style="color: #0ff; margin-top: 0.5rem;">Logo Resmi QRIS</p>
+            <p style="color: #0ff;">Logo Resmi QRIS</p>
           </div>
           <div class="qris-image-box">
-            <img id="qrisImage" src="https://images.bukaolshop.com/hosting/181218/cce817858ef1663896.png" class="qris-foto" alt="QRIS" title="Klik untuk perbesar">
+            <img id="qrisImage" src="https://images.bukaolshop.com/hosting/181218/cce817858ef1663896.png" class="qris-foto" alt="QRIS">
             <p style="margin-top: 0.8rem; color: #b0e0ff;">
               <i class="fas fa-search"></i> klik QRIS untuk perbesar
             </p>
           </div>
         </div>
 
-        <!-- INSTRUKSI BUKTI TRANSFER -->
-        <div style="margin-top: 2.5rem; background: rgba(0,30,40,0.7); padding: 1.8rem; border-radius: 28px; border-left: 8px solid #0ff;">
+        <!-- INSTRUKSI -->
+        <div style="margin-top: 2rem; background: rgba(0,40,50,0.7); padding: 1.8rem; border-radius: 28px; border-left: 8px solid cyan;">
           <h4 style="color: white; margin-bottom: 1rem;"><i class="fas fa-camera"></i> Kirim Bukti Transfer</h4>
           <p style="color: #e0f0ff;">✅ Sertakan bukti dengan jelas, <strong style="color: #ffd966;">NO BUREM</strong> & nama harus pas dengan norek/qris.</p>
-          <p style="color: #e0f0ff; margin-top: 0.6rem;">✅ Chat admin via WhatsApp di atas, kirim bukti dan produk yang dipilih.</p>
-          <p style="color: #e0f0ff; margin-top: 0.6rem;">⏳ Proses cepat, max 5-10 menit.</p>
+          <p style="color: #e0f0ff; margin-top: 0.6rem;">✅ Chat admin via WhatsApp, kirim bukti dan nama produk.</p>
         </div>
       </div>
 
-      <!-- FOOTER STORE -->
-      <div style="text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(0,255,255,0.1); color: #80b0cc;">
-        <i class="fas fa-crown"></i> Keii Official • Premium Store • Aman & Terpercaya
-      </div>
     </div>
   </div>
 
-  <!-- MODAL QRIS POP UP -->
+  <!-- MODAL QRIS -->
   <div id="qrisModal" class="modal">
     <span class="close-modal">&times;</span>
     <img class="modal-content" id="modalQris" src="https://images.bukaolshop.com/hosting/181218/cce817858ef1663896.png">
@@ -657,7 +828,7 @@
     }
     typeEffect();
 
-    // ========== 3. AUDIO MP3 (TIDAK ADA IKON) ==========
+    // ========== 3. AUDIO MP3 ==========
     const bgMusic = document.getElementById('bgMusic');
     let musicStarted = false;
 
@@ -674,17 +845,10 @@
     const storeContent = document.getElementById('storeContent');
 
     enterBtn.addEventListener('click', function() {
-      // Efek getar
       this.classList.add('vibrate');
       setTimeout(() => this.classList.remove('vibrate'), 400);
-      
-      // Putar musik
       startMusic();
-      
-      // Tampilkan konten store
       storeContent.style.display = 'block';
-      
-      // Scroll halus
       setTimeout(() => {
         storeContent.scrollIntoView({ behavior: 'smooth' });
       }, 200);
@@ -692,7 +856,46 @@
 
     storeContent.style.display = 'none';
 
-    // ========== 5. MODAL QRIS ==========
+    // ========== 5. FUNGSI SHOW/HIDE PRODUK & PAYMENT ==========
+    const productXcvi = document.getElementById('productXcvi');
+    const productNika = document.getElementById('productNika');
+    const paymentPage = document.getElementById('paymentPage');
+    const categoryGrid = document.getElementById('categoryGrid');
+    const selectedProductInfo = document.getElementById('selectedProductInfo');
+
+    window.showCategory = function(category) {
+      categoryGrid.style.display = 'none';
+      paymentPage.style.display = 'none';
+      
+      if (category === 'xcvi') {
+        productXcvi.style.display = 'block';
+        productNika.style.display = 'none';
+      } else if (category === 'nika') {
+        productNika.style.display = 'block';
+        productXcvi.style.display = 'none';
+      }
+    }
+
+    window.hideAllProducts = function() {
+      productXcvi.style.display = 'none';
+      productNika.style.display = 'none';
+      paymentPage.style.display = 'none';
+      categoryGrid.style.display = 'grid';
+    }
+
+    window.showPaymentPage = function(productName, price) {
+      productXcvi.style.display = 'none';
+      productNika.style.display = 'none';
+      paymentPage.style.display = 'block';
+      selectedProductInfo.innerHTML = `⚡ Produk: ${productName} • Rp ${price.toLocaleString()}`;
+    }
+
+    window.hidePaymentPage = function() {
+      paymentPage.style.display = 'none';
+      categoryGrid.style.display = 'grid';
+    }
+
+    // ========== 6. MODAL QRIS ==========
     const modal = document.getElementById('qrisModal');
     const qrisImg = document.getElementById('qrisImage');
     const modalImg = document.getElementById('modalQris');
