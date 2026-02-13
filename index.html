@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Keii Official Store</title>
+    <title>Keii Official • Premium Store</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -15,8 +15,7 @@
         }
 
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            background: #0b0e1a;
             color: white;
         }
 
@@ -27,7 +26,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #0b0e1a;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -49,9 +48,11 @@
             font-size: 2.5rem;
             font-weight: bold;
             margin-bottom: 30px;
-            border-right: 3px solid white;
+            border-right: 3px solid #00ff9d;
             white-space: nowrap;
             overflow: hidden;
+            color: #00ff9d;
+            text-shadow: 0 0 10px #00ff9d;
             animation: typing 3s steps(40) 1s 1 normal both, blink 0.75s step-end infinite;
         }
 
@@ -62,19 +63,19 @@
 
         @keyframes blink {
             from, to { border-color: transparent; }
-            50% { border-color: white; }
+            50% { border-color: #00ff9d; }
         }
 
         .enter-btn {
-            background: white;
-            color: #764ba2;
+            background: #00ff9d;
+            color: #0b0e1a;
             border: none;
             padding: 15px 40px;
             font-size: 1.5rem;
-            border-radius: 50px;
+            border-radius: 10px;
             cursor: pointer;
             font-weight: bold;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 0 20px #00ff9d;
             transition: transform 0.3s;
             margin-top: 30px;
             opacity: 0;
@@ -91,213 +92,292 @@
 
         /* Main Content */
         .main-content {
-            padding: 20px;
             max-width: 1200px;
             margin: 0 auto;
+            padding: 20px;
         }
 
-        /* Kategori Gandeng Dua */
-        .kategori-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            margin: 30px 0;
-        }
-
-        .kategori-row {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-        }
-
-        .kategori-card {
-            flex: 1;
-            max-width: 300px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+        /* Header Store */
+        .store-header {
+            background: #1a1f35;
             border-radius: 20px;
             padding: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 2px solid transparent;
-            text-align: center;
+            margin-bottom: 20px;
+            border: 1px solid #2a2f45;
         }
 
-        .kategori-card:hover {
-            border-color: gold;
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .kategori-card img {
-            width: 80px;
-            height: 80px;
-            object-fit: contain;
+        .store-name {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #00ff9d;
             margin-bottom: 10px;
         }
 
-        .kategori-card h3 {
-            font-size: 1.3rem;
-            color: gold;
+        .store-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #888;
         }
 
-        /* Produk Grid */
+        .online-dot {
+            width: 10px;
+            height: 10px;
+            background: #00ff9d;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 10px #00ff9d;
+        }
+
+        .warning-text {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid #ff4444;
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 10px;
+            color: #ff8888;
+            font-size: 0.9rem;
+        }
+
+        /* Kategori Section */
+        .kategori-section {
+            background: #1a1f35;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #2a2f45;
+        }
+
+        .kategori-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .kategori-title span {
+            color: #888;
+            font-size: 1rem;
+            margin-left: 10px;
+        }
+
+        .kategori-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .kategori-item {
+            background: #0f1429;
+            border-radius: 15px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid #2a2f45;
+        }
+
+        .kategori-item:hover {
+            border-color: #00ff9d;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 157, 0.2);
+        }
+
+        .kategori-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .kategori-info p {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .kategori-price {
+            text-align: right;
+        }
+
+        .harga {
+            color: #00ff9d;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .paket {
+            color: #888;
+            font-size: 0.8rem;
+        }
+
+        /* Produk Detail */
         .produk-section {
-            margin: 40px 0;
+            background: #1a1f35;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #2a2f45;
         }
 
         .back-btn {
-            background: rgba(255,255,255,0.2);
-            border: 2px solid gold;
+            background: #0f1429;
+            border: 1px solid #2a2f45;
             color: white;
             padding: 10px 20px;
-            border-radius: 25px;
+            border-radius: 10px;
             cursor: pointer;
             margin-bottom: 20px;
             font-size: 1rem;
-            font-weight: bold;
         }
 
         .back-btn:hover {
-            background: gold;
-            color: #333;
-        }
-
-        .produk-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-        }
-
-        .produk-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 2px solid transparent;
-        }
-
-        .produk-card:hover {
-            border-color: gold;
-            transform: scale(1.02);
+            border-color: #00ff9d;
         }
 
         .produk-header {
             display: flex;
             align-items: center;
             gap: 15px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #2a2f45;
         }
 
         .produk-header img {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             object-fit: contain;
-            border-radius: 10px;
+            background: #0f1429;
+            padding: 10px;
+            border-radius: 15px;
+            border: 1px solid #2a2f45;
         }
 
-        .produk-detail {
+        .produk-paket-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .paket-item {
+            background: #0f1429;
+            border-radius: 10px;
+            padding: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid #2a2f45;
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
-        .produk-detail:last-child {
-            border-bottom: none;
+        .paket-item:hover {
+            border-color: #00ff9d;
         }
 
-        .harga {
-            color: gold;
+        .paket-nama {
+            font-weight: 500;
+        }
+
+        .paket-harga {
+            color: #00ff9d;
             font-weight: bold;
             font-size: 1.1rem;
         }
 
         /* Payment Page */
-        .payment-page {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 30px;
-            padding: 30px;
-            margin: 40px 0;
+        .payment-section {
+            background: #1a1f35;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #2a2f45;
         }
 
-        .produk-info {
-            background: rgba(0,0,0,0.3);
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 30px;
+        .selected-produk-info {
+            background: #0f1429;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
             text-align: center;
+        }
+
+        .selected-produk-info h3 {
+            color: #00ff9d;
+            margin-bottom: 5px;
+        }
+
+        .selected-harga {
+            font-size: 1.5rem;
+            color: #00ff9d;
+            font-weight: bold;
+            margin-top: 5px;
         }
 
         .payment-metode {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
-            justify-content: center;
-            margin: 40px 0;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
         }
 
         .metode-card {
-            background: rgba(0,0,0,0.3);
-            border-radius: 20px;
-            padding: 25px;
-            min-width: 280px;
-            text-align: center;
-            border: 2px solid gold;
+            background: #0f1429;
+            border-radius: 15px;
+            padding: 15px;
+            border: 1px solid #2a2f45;
         }
 
-        .metode-logo {
+        .metode-header {
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
-        .metode-logo img {
-            width: 50px;
-            height: 50px;
+        .metode-header img {
+            width: 30px;
+            height: 30px;
             object-fit: contain;
         }
 
-        .metode-logo span {
-            font-size: 1.8rem;
+        .metode-header span {
             font-weight: bold;
+            font-size: 1.1rem;
         }
 
         .nomor-rekening {
-            background: #333;
-            padding: 15px;
-            border-radius: 50px;
+            background: #1a1f35;
+            padding: 10px;
+            border-radius: 8px;
             font-family: monospace;
-            font-size: 1.2rem;
-            margin: 15px 0;
-            letter-spacing: 2px;
+            font-size: 0.9rem;
+            margin: 10px 0;
+            text-align: center;
+            letter-spacing: 1px;
         }
 
         .popup-btn {
-            background: gold;
-            color: #333;
+            background: #00ff9d;
+            color: #0b0e1a;
             border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
+            padding: 8px 15px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 1rem;
-            display: inline-flex;
+            width: 100%;
+            font-size: 0.9rem;
+            display: flex;
             align-items: center;
+            justify-content: center;
             gap: 5px;
         }
 
         .popup-btn i {
-            font-size: 1.2rem;
+            font-size: 1rem;
         }
 
         .qris-img {
+            width: 100%;
             max-width: 150px;
             margin: 10px auto;
             display: block;
@@ -306,31 +386,27 @@
 
         /* Admin Contacts */
         .admin-contacts {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-            margin-top: 40px;
-            padding: 30px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 50px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
         }
 
         .admin-btn {
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 10px;
-            padding: 15px 30px;
-            border-radius: 50px;
+            padding: 15px;
+            border-radius: 10px;
             text-decoration: none;
             color: white;
             font-weight: bold;
-            font-size: 1.1rem;
             transition: transform 0.3s;
         }
 
         .admin-btn:hover {
-            transform: scale(1.05);
+            transform: translateY(-2px);
         }
 
         .wa-btn {
@@ -341,10 +417,17 @@
             background: #0088cc;
         }
 
-        .slow-respon {
+        .respon {
             font-size: 0.8rem;
             opacity: 0.8;
             margin-left: 5px;
+        }
+
+        .note {
+            text-align: center;
+            margin-top: 15px;
+            color: #888;
+            font-size: 0.9rem;
         }
 
         /* Modal */
@@ -355,34 +438,33 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(5px);
+            background: rgba(0,0,0,0.9);
             z-index: 2000;
             align-items: center;
             justify-content: center;
         }
 
         .modal-content {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 40px;
-            border-radius: 30px;
+            background: #1a1f35;
+            padding: 30px;
+            border-radius: 20px;
             text-align: center;
-            max-width: 400px;
-            border: 3px solid gold;
+            max-width: 350px;
+            border: 1px solid #00ff9d;
         }
 
         .modal-content img {
-            max-width: 250px;
+            max-width: 200px;
             margin: 20px 0;
-            border-radius: 15px;
+            border-radius: 10px;
         }
 
         .close-modal {
-            background: gold;
-            color: #333;
+            background: #00ff9d;
+            color: #0b0e1a;
             border: none;
             padding: 10px 30px;
-            border-radius: 25px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
             margin-top: 20px;
@@ -400,14 +482,16 @@
                 white-space: normal;
             }
             
-            .kategori-row {
-                flex-direction: column;
-                align-items: center;
+            .kategori-grid {
+                grid-template-columns: 1fr;
             }
             
-            .kategori-card {
-                width: 100%;
-                max-width: none;
+            .payment-metode {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-contacts {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -423,32 +507,59 @@
 
     <!-- Main Content -->
     <div class="main-content" id="mainContent" style="display: none;">
+        <!-- Store Header -->
+        <div class="store-header">
+            <div class="store-name">Keii Official • Premium Store</div>
+            <div class="store-status">
+                <span class="online-dot"></span>
+                <span>Online • Aktif</span>
+            </div>
+            <div class="warning-text">
+                <i class="fas fa-exclamation-triangle"></i>
+                Harap Jangan Order Ketika Status Admin Offline — Nekat Order Kami Proses Nanti
+            </div>
+        </div>
+
         <!-- Kategori View -->
         <div id="kategoriView">
-            <h1 style="text-align: center; margin: 20px 0;">Pilih Kategori</h1>
-            <div class="kategori-wrapper" id="kategoriWrapper"></div>
+            <div class="kategori-section">
+                <div class="kategori-title">
+                    Aplikasi Premium <span id="totalProduk"></span>
+                </div>
+                <div class="kategori-grid" id="kategoriGrid"></div>
+            </div>
+
+            <div class="kategori-section">
+                <div class="kategori-title">
+                    Nokos & Lainnya
+                </div>
+                <div class="kategori-grid" id="kategoriGrid2"></div>
+            </div>
         </div>
 
         <!-- Produk View -->
         <div id="produkView" style="display: none;">
-            <button class="back-btn" id="backToKategori"><i class="fas fa-arrow-left"></i> Kembali ke Kategori</button>
-            <h2 id="kategoriTitle" style="text-align: center; margin: 20px 0;"></h2>
-            <div class="produk-grid" id="produkGrid"></div>
+            <div class="produk-section">
+                <button class="back-btn" id="backToKategori"><i class="fas fa-arrow-left"></i> Kembali ke Kategori</button>
+                <div id="produkDetailContainer"></div>
+            </div>
         </div>
 
         <!-- Payment View -->
         <div id="paymentView" style="display: none;">
-            <button class="back-btn" id="backToProduk"><i class="fas fa-arrow-left"></i> Kembali ke Produk</button>
-            
-            <div class="payment-page">
-                <div class="produk-info" id="selectedProdukInfo"></div>
+            <div class="payment-section">
+                <button class="back-btn" id="backToProduk"><i class="fas fa-arrow-left"></i> Kembali ke Produk</button>
                 
-                <h2 style="text-align: center; margin: 30px 0;">Metode Pembayaran</h2>
+                <div class="selected-produk-info" id="selectedProdukInfo">
+                    <!-- Akan diisi JS -->
+                </div>
+
+                <h3 style="margin-bottom: 15px;">Metode Pembayaran</h3>
                 
                 <div class="payment-metode">
                     <!-- Dana -->
                     <div class="metode-card">
-                        <div class="metode-logo">
+                        <div class="metode-header">
                             <img src="https://images.bukaolshop.com/hosting/181218/f2f4904ff62a785161.png" alt="Dana">
                             <span>DANA</span>
                         </div>
@@ -460,7 +571,7 @@
 
                     <!-- Seabank -->
                     <div class="metode-card">
-                        <div class="metode-logo">
+                        <div class="metode-header">
                             <img src="https://images.bukaolshop.com/hosting/181218/0d46bd2ba133491753.png" alt="Seabank">
                             <span>SEABANK</span>
                         </div>
@@ -471,8 +582,8 @@
                     </div>
 
                     <!-- QRIS -->
-                    <div class="metode-card">
-                        <div class="metode-logo">
+                    <div class="metode-card" style="grid-column: span 2;">
+                        <div class="metode-header">
                             <img src="https://images.bukaolshop.com/hosting/181218/111e83c3a6f5204498.png" alt="QRIS">
                             <span>QRIS</span>
                         </div>
@@ -487,27 +598,26 @@
                 <div class="admin-contacts">
                     <a href="https://wa.me/6285150895395" target="_blank" class="admin-btn wa-btn">
                         <i class="fab fa-whatsapp"></i>
-                        Admin WhatsApp <span class="slow-respon">[Slow Respon]</span>
+                        Admin WhatsApp <span class="respon">[Slow Respon]</span>
                     </a>
                     <a href="https://t.me/KivoPay1" target="_blank" class="admin-btn tele-btn">
                         <i class="fab fa-telegram-plane"></i>
-                        Admin Telegram <span class="slow-respon">[Fast Respon]</span>
+                        Admin Telegram <span class="respon">[Fast Respon]</span>
                     </a>
                 </div>
                 
-                <p style="text-align: center; margin-top: 20px; color: gold;">
+                <div class="note">
                     <i class="fas fa-info-circle"></i> Kirim bukti transfer ke admin setelah pembayaran
-                </p>
+                </div>
             </div>
         </div>
     </div>
-
-    <!-- Modals -->
+      <!-- Modals -->
     <div class="modal" id="seabankModal">
         <div class="modal-content">
             <img src="https://images.bukaolshop.com/hosting/181218/0d46bd2ba133491753.png" alt="Seabank">
-            <h2 style="margin: 20px 0;">SEABANK</h2>
-            <div style="background: #333; padding: 15px; border-radius: 50px; font-size: 1.3rem; letter-spacing: 2px;">
+            <h2 style="margin: 20px 0; color: #00ff9d;">SEABANK</h2>
+            <div style="background: #0f1429; padding: 15px; border-radius: 8px; font-size: 1.2rem; letter-spacing: 2px;">
                 9015 1787 0612
             </div>
             <p style="margin: 15px 0;">a.n Keii Official</p>
@@ -518,7 +628,7 @@
     <div class="modal" id="qrisModal">
         <div class="modal-content">
             <img src="https://images.bukaolshop.com/hosting/181218/cce817858ef1663896.png" alt="QRIS">
-            <h2 style="margin: 20px 0;">QRIS Pembayaran</h2>
+            <h2 style="margin: 20px 0; color: #00ff9d;">QRIS Pembayaran</h2>
             <button class="close-modal" onclick="closeModal('qrisModal')">Tutup</button>
         </div>
     </div>
@@ -529,70 +639,110 @@
     </audio>
 
     <script>
-        // Data Kategori dengan logo
+        // DATA LENGKAP PRODUK (sesuai permintaan awal)
         const kategoriData = [
+            // APPS PREMIUM (6 kategori)
             {
-                name: "Apps Premium",
-                logo: "https://images.bukaolshop.com/hosting/181218/f2f4904ff62a785161.png",
+                name: "Capcut Premium",
+                paket: "6 Paket",
+                logo: "https://images.bukaolshop.com/hosting/181218/47f862f5ed4a892435.png",
                 produk: [
-                    { logo: "https://images.bukaolshop.com/hosting/181218/f2f4904ff62a785161.png", nama: "Capcut Sharing 7 Hari", harga: "Rp8.000" },
-                    { logo: "https://images.bukaolshop.com/hosting/181218/f2f4904ff62a785161.png", nama: "Capcut Sharing 1 Bulan", harga: "Rp11.000" },
-                    { logo: "https://images.bukaolshop.com/hosting/181218/f2f4904ff62a785161.png", nama: "Capcut Sharing 1 Tahun (Renew)", harga: "Rp26.000" },
-                    { logo: "https://images.bukaolshop.com/hosting/181218/f2f4904ff62a785161.png", nama: "Capcut Private 7 Hari", harga: "Rp11.000" },
-                    { logo: "https://images.bukaolshop.com/hosting/181218/f2f4904ff62a785161.png", nama: "Capcut Private 1 Bulan", harga: "Rp16.000" },
-                    { logo: "https://images.bukaolshop.com/hosting/181218/f2f4904ff62a785161.png", nama: "Capcut Private 1 Tahun", harga: "Rp35.000" },
-                    { logo: "https://images.bukaolshop.com/hosting/181218/26f804d66e6e88158.png", nama: "ChatGPT Sharing 1 Bulan Plus", harga: "Rp20.000" },
-                    { logo: "https://images.bukaolshop.com/hosting/181218/26f804d66e6e88158.png", nama: "ChatGPT Private 1 Bulan Invite", harga: "Rp25.000" },
-                    { logo: "https://images.bukaolshop.com/hosting/181218/1bcea869e27c407235.png", nama: "Wink Private 7 Hari (Acc Buyer)", harga: "Rp10.000" },
-                    { logo: "https://images.bukaolshop.com/hosting/181218/1bcea869e27c407235.png", nama: "Wink Private 7 Hari (Acc Seller)", harga: "Rp13.000" },
-                    { logo: "https://images.bukaolshop.com/hosting/181218/db9934847fa6433172.png", nama: "Disney+ 6 User 1 Bulan", harga: "Rp31.000" },
-                    { logo: "https://images.bukaolshop.com/hosting/181218/db9934847fa6433172.png", nama: "Disney+ 10 User 1 Bulan", harga: "Rp25.000" },
-                    { logo: "https://images.bukaolshop.com/hosting/181218/4a04b8d7e542788237.png", nama: "Alight Motion Private 1 Thn (Seller)", harga: "Rp5.000" },
-                    { logo: "https://images.bukaolshop.com/hosting/181218/4a04b8d7e542788237.png", nama: "Alight Motion Private 1 Thn (Buyer)", harga: "Rp6.000" }
+                    { nama: "Sharing 7 Hari", harga: "Rp 8.000" },
+                    { nama: "Sharing 1 Bulan", harga: "Rp 11.000" },
+                    { nama: "Sharing 1 Tahun (Renew)", harga: "Rp 26.000" },
+                    { nama: "Private 7 Hari", harga: "Rp 11.000" },
+                    { nama: "Private 1 Bulan", harga: "Rp 16.000" },
+                    { nama: "Private 1 Tahun", harga: "Rp 35.000" }
                 ]
             },
             {
+                name: "ChatGPT Premium",
+                paket: "2 Paket",
+                logo: "https://images.bukaolshop.com/hosting/181218/26f804d66e6e88158.png",
+                produk: [
+                    { nama: "Sharing 1 Bulan Plus", harga: "Rp 20.000" },
+                    { nama: "Private 1 Bulan Invite", harga: "Rp 25.000" }
+                ]
+            },
+            {
+                name: "Wink Premium",
+                paket: "2 Paket",
+                logo: "https://images.bukaolshop.com/hosting/181218/1bcea869e27c407235.png",
+                produk: [
+                    { nama: "Private 7 Hari (acc buyer)", harga: "Rp 10.000" },
+                    { nama: "Private 7 Hari (acc seller)", harga: "Rp 13.000" }
+                ]
+            },
+            {
+                name: "Disney+ Premium",
+                paket: "2 Paket",
+                logo: "https://images.bukaolshop.com/hosting/181218/db9934847fa6433172.png",
+                produk: [
+                    { nama: "6 User 1 Bulan", harga: "Rp 31.000" },
+                    { nama: "10 User 1 Bulan", harga: "Rp 25.000" }
+                ]
+            },
+            {
+                name: "Alight Motion Premium",
+                paket: "2 Paket",
+                logo: "https://images.bukaolshop.com/hosting/181218/4a04b8d7e542788237.png",
+                produk: [
+                    { nama: "Private 1 Tahun (acc seller)", harga: "Rp 5.000" },
+                    { nama: "Private 1 Tahun (acc buyer)", harga: "Rp 6.000" }
+                ]
+            },
+            // NOKOS (2 kategori)
+            {
                 name: "Nokos WhatsApp",
+                paket: "5 Paket",
                 logo: "https://images.bukaolshop.com/hosting/181218/60c88b2821bf500477.png",
                 produk: [
-                    { logo: "https://images.bukaolshop.com/hosting/181218/60c88b2821bf500477.png", nama: "Indonesia", harga: "Rp8.000" },
-                    { logo: "https://images.bukaolshop.com/hosting/181218/60c88b2821bf500477.png", nama: "Filipina", harga: "Rp18.500" },
-                    { logo: "https://images.bukaolshop.com/hosting/181218/60c88b2821bf500477.png", nama: "Hongkong", harga: "Rp10.700" },
-                    { logo: "https://images.bukaolshop.com/hosting/181218/60c88b2821bf500477.png", nama: "Malaysia", harga: "Rp10.000" },
-                    { logo: "https://images.bukaolshop.com/hosting/181218/60c88b2821bf500477.png", nama: "Thailand", harga: "Rp20.000" }
+                    { nama: "Indonesia", harga: "Rp 8.000" },
+                    { nama: "Filipina", harga: "Rp 18.500" },
+                    { nama: "Hongkong", harga: "Rp 10.700" },
+                    { nama: "Malaysia", harga: "Rp 10.000" },
+                    { nama: "Thailand", harga: "Rp 20.000" }
                 ]
             },
             {
                 name: "Nokos Telegram",
+                paket: "4 Paket",
                 logo: "https://images.bukaolshop.com/hosting/181218/450cb4fcb88a174062.png",
                 produk: [
-                    { logo: "https://images.bukaolshop.com/hosting/181218/450cb4fcb88a174062.png", nama: "Indonesia", harga: "Rp7.000" },
-                    { logo: "https://images.bukaolshop.com/hosting/181218/450cb4fcb88a174062.png", nama: "Filipina", harga: "Rp9.000" },
-                    { logo: "https://images.bukaolshop.com/hosting/181218/450cb4fcb88a174062.png", nama: "Hongkong", harga: "Rp11.000" },
-                    { logo: "https://images.bukaolshop.com/hosting/181218/450cb4fcb88a174062.png", nama: "Thailand", harga: "Rp36.000" }
+                    { nama: "Indonesia", harga: "Rp 7.000" },
+                    { nama: "Filipina", harga: "Rp 9.000" },
+                    { nama: "Hongkong", harga: "Rp 11.000" },
+                    { nama: "Thailand", harga: "Rp 36.000" }
                 ]
             },
+            // APLIKASI BUG (2 kategori)
             {
                 name: "Bug XCVI V9",
+                paket: "4 Paket",
                 logo: "https://images.bukaolshop.com/hosting/181218/16aea1c112a5636278.png",
                 produk: [
-                    { logo: "https://images.bukaolshop.com/hosting/181218/16aea1c112a5636278.png", nama: "1 Bulan", harga: "Rp20.000" },
-                    { logo: "https://images.bukaolshop.com/hosting/181218/16aea1c112a5636278.png", nama: "2 Bulan", harga: "Rp30.000" },
-                    { logo: "https://images.bukaolshop.com/hosting/181218/16aea1c112a5636278.png", nama: "Permanen", harga: "Rp50.000" },
-                    { logo: "https://images.bukaolshop.com/hosting/181218/16aea1c112a5636278.png", nama: "Reseller", harga: "Rp85.000" }
+                    { nama: "1 Bulan", harga: "Rp 20.000" },
+                    { nama: "2 Bulan", harga: "Rp 30.000" },
+                    { nama: "Permanen", harga: "Rp 50.000" },
+                    { nama: "Reseller", harga: "Rp 85.000" }
                 ]
             },
             {
                 name: "Nika V26",
+                paket: "4 Paket",
                 logo: "https://images.bukaolshop.com/hosting/181218/14d64071e23b494337.png",
                 produk: [
-                    { logo: "https://images.bukaolshop.com/hosting/181218/14d64071e23b494337.png", nama: "Akses 1 Minggu", harga: "Rp25.000" },
-                    { logo: "https://images.bukaolshop.com/hosting/181218/14d64071e23b494337.png", nama: "Akses 1 Bulan", harga: "Rp35.000" },
-                    { logo: "https://images.bukaolshop.com/hosting/181218/14d64071e23b494337.png", nama: "Akses 2 Bulan", harga: "Rp40.000" },
-                    { logo: "https://images.bukaolshop.com/hosting/181218/14d64071e23b494337.png", nama: "Akses Permanen", harga: "Rp50.000" }
+                    { nama: "Akses 1 Minggu", harga: "Rp 25.000" },
+                    { nama: "Akses 1 Bulan", harga: "Rp 35.000" },
+                    { nama: "Akses 2 Bulan", harga: "Rp 40.000" },
+                    { nama: "Akses Permanen", harga: "Rp 50.000" }
                 ]
             }
         ];
+
+        // Hitung total produk
+        const totalProduk = kategoriData.reduce((sum, cat) => sum + cat.produk.length, 0);
+        document.getElementById('totalProduk').textContent = totalProduk + ' Produk';
 
         // Intro Typing
         const introScreen = document.getElementById('introScreen');
@@ -625,93 +775,100 @@
             bgAudio.play().catch(e => console.log('Audio play failed:', e));
         });
 
-        // Play audio on any click after intro
+        // Play audio on any click
         document.addEventListener('click', () => {
             if (bgAudio.paused && introScreen.style.display === 'none') {
                 bgAudio.play().catch(e => console.log('Audio play failed:', e));
             }
         });
 
-        // Render kategori gandeng dua-dua
-        const kategoriWrapper = document.getElementById('kategoriWrapper');
+        // Render kategori
+        const kategoriGrid = document.getElementById('kategoriGrid');
+        const kategoriGrid2 = document.getElementById('kategoriGrid2');
         
         function renderKategori() {
-            let html = '';
-            
-            // Gandeng 2 kategori per row
-            for (let i = 0; i < kategoriData.length; i += 2) {
-                html += '<div class="kategori-row">';
-                
-                // Kategori pertama
-                html += `
-                    <div class="kategori-card" onclick="showProduk(${i})">
-                        <img src="${kategoriData[i].logo}" alt="${kategoriData[i].name}">
-                        <h3>${kategoriData[i].name}</h3>
+            // 5 kategori pertama (Apps Premium)
+            let html1 = '';
+            for (let i = 0; i < 5; i++) {
+                const item = kategoriData[i];
+                html1 += `
+                    <div class="kategori-item" onclick="showProduk(${i})">
+                        <div class="kategori-info">
+                            <h3>${item.name}</h3>
+                            <p>${item.paket}</p>
+                        </div>
+                        <div class="kategori-price">
+                            <div class="harga">${item.produk[0].harga}</div>
+                            <div class="paket">${item.paket}</div>
+                        </div>
                     </div>
                 `;
-                
-                // Kategori kedua (jika ada)
-                if (i + 1 < kategoriData.length) {
-                    html += `
-                        <div class="kategori-card" onclick="showProduk(${i + 1})">
-                            <img src="${kategoriData[i + 1].logo}" alt="${kategoriData[i + 1].name}">
-                            <h3>${kategoriData[i + 1].name}</h3>
-                        </div>
-                    `;
-                } else {
-                    // Tambah div kosong untuk menjaga layout
-                    html += '<div style="flex: 1; max-width: 300px;"></div>';
-                }
-                
-                html += '</div>';
             }
-            
-            kategoriWrapper.innerHTML = html;
+            kategoriGrid.innerHTML = html1;
+
+            // Sisanya (Nokos & Bug)
+            let html2 = '';
+            for (let i = 5; i < kategoriData.length; i++) {
+                const item = kategoriData[i];
+                html2 += `
+                    <div class="kategori-item" onclick="showProduk(${i})">
+                        <div class="kategori-info">
+                            <h3>${item.name}</h3>
+                            <p>${item.paket}</p>
+                        </div>
+                        <div class="kategori-price">
+                            <div class="harga">${item.produk[0].harga}</div>
+                            <div class="paket">${item.paket}</div>
+                        </div>
+                    </div>
+                `;
+            }
+            kategoriGrid2.innerHTML = html2;
         }
 
         // Views management
         const kategoriView = document.getElementById('kategoriView');
         const produkView = document.getElementById('produkView');
         const paymentView = document.getElementById('paymentView');
-        const kategoriTitle = document.getElementById('kategoriTitle');
-        const produkGrid = document.getElementById('produkGrid');
+        const produkDetailContainer = document.getElementById('produkDetailContainer');
 
-        // Show produk by kategori index
+        // Show produk by index
         window.showProduk = (index) => {
             const kategori = kategoriData[index];
-            kategoriTitle.textContent = kategori.name;
             
-            let produkHtml = '';
+            let produkHtml = `
+                <div class="produk-header">
+                    <img src="${kategori.logo}" alt="${kategori.name}">
+                    <h2>${kategori.name}</h2>
+                </div>
+                <div class="produk-paket-list">
+            `;
+            
             kategori.produk.forEach((item, i) => {
                 produkHtml += `
-                    <div class="produk-card" onclick="showPayment('${kategori.name}', ${index}, ${i})">
-                        <div class="produk-header">
-                            <img src="${item.logo}" alt="${item.nama}">
-                            <h3>${item.nama}</h3>
-                        </div>
-                        <div class="produk-detail">
-                            <span>Harga</span>
-                            <span class="harga">${item.harga}</span>
-                        </div>
+                    <div class="paket-item" onclick="showPayment('${kategori.name}', ${index}, ${i})">
+                        <span class="paket-nama">${item.nama}</span>
+                        <span class="paket-harga">${item.harga}</span>
                     </div>
                 `;
             });
             
-            produkGrid.innerHTML = produkHtml;
+            produkHtml += '</div>';
+            produkDetailContainer.innerHTML = produkHtml;
             
             kategoriView.style.display = 'none';
             produkView.style.display = 'block';
             paymentView.style.display = 'none';
         };
 
-        // Show payment page with selected produk
+        // Show payment
         window.showPayment = (kategoriNama, katIndex, prodIndex) => {
             const produk = kategoriData[katIndex].produk[prodIndex];
             
             document.getElementById('selectedProdukInfo').innerHTML = `
                 <h3>${kategoriNama}</h3>
-                <p style="font-size: 1.3rem; margin: 10px 0;">${produk.nama}</p>
-                <p style="font-size: 2rem; color: gold; font-weight: bold;">${produk.harga}</p>
+                <p style="margin: 5px 0;">${produk.nama}</p>
+                <div class="selected-harga">${produk.harga}</div>
             `;
             
             produkView.style.display = 'none';
