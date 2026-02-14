@@ -19,7 +19,7 @@
             color: #fff;
         }
 
-        /* Intro Screen */
+        /* Intro Loading Screen */
         .intro-screen {
             position: fixed;
             top: 0;
@@ -31,7 +31,7 @@
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.8s ease;
         }
 
         .intro-screen.hide {
@@ -42,49 +42,68 @@
         .intro-content {
             text-align: center;
             padding: 20px;
+            max-width: 400px;
         }
 
-        .intro-icon {
-            font-size: 4rem;
+        .loading-icon {
+            font-size: 5rem;
             color: #00ff9d;
-            margin-bottom: 20px;
-            filter: drop-shadow(0 0 20px #00ff9d);
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .typing-wrapper {
-            background: rgba(0, 255, 157, 0.05);
-            border: 2px solid #00ff9d;
-            border-radius: 60px;
-            padding: 15px 30px;
             margin-bottom: 30px;
-            box-shadow: 0 0 30px rgba(0, 255, 157, 0.2);
+            filter: drop-shadow(0 0 30px #00ff9d);
+            animation: pulse 1.5s ease-in-out infinite;
         }
 
-        .typing-text {
-            font-size: 1.8rem;
-            font-weight: 600;
+        @keyframes pulse {
+            0%, 100% { 
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% { 
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        .loading-text {
+            font-size: 2rem;
+            font-weight: bold;
             color: #00ff9d;
-            text-shadow: 0 0 10px #00ff9d;
+            margin-bottom: 30px;
+            text-shadow: 0 0 15px #00ff9d;
+            letter-spacing: 2px;
         }
 
-        .cursor {
-            display: inline-block;
-            width: 3px;
-            height: 1.8rem;
-            background-color: #00ff9d;
-            margin-left: 5px;
-            animation: blink 1s infinite;
+        .loading-bar {
+            width: 300px;
+            height: 10px;
+            background: #1a1e2e;
+            border-radius: 10px;
+            margin: 20px auto;
+            overflow: hidden;
+            border: 1px solid #2a2f45;
         }
 
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
+        .loading-progress {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #00ff9d, #00cc7d);
+            border-radius: 10px;
+            animation: loading 2.5s ease-in-out forwards;
+            box-shadow: 0 0 20px #00ff9d;
+        }
+
+        @keyframes loading {
+            0% { width: 0%; }
+            20% { width: 40%; }
+            50% { width: 70%; }
+            80% { width: 90%; }
+            100% { width: 100%; }
+        }
+
+        .loading-percent {
+            color: #889;
+            font-size: 1rem;
+            margin-top: 15px;
         }
 
         .enter-btn {
@@ -101,7 +120,9 @@
             display: inline-flex;
             align-items: center;
             gap: 10px;
+            margin-top: 30px;
             opacity: 0;
+            transform: translateY(20px);
             animation: fadeInUp 0.8s ease 2.5s forwards;
         }
 
@@ -119,10 +140,6 @@
         }
 
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -166,7 +183,6 @@
             font-size: 1.8rem;
         }
 
-        /* Status Container */
         .status-container {
             background: #0f1322;
             border-radius: 16px;
@@ -586,6 +602,30 @@
             font-size: 0.85rem;
         }
 
+        .suntik-note {
+            background: #0f1322;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+            border: 1px dashed #00ff9d;
+        }
+
+        .suntik-note i {
+            color: #00ff9d;
+            margin-right: 8px;
+        }
+
+        .suntik-note a {
+            color: #00ff9d;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .suntik-note a:hover {
+            text-decoration: underline;
+        }
+
         /* Modal */
         .modal {
             display: none;
@@ -650,16 +690,17 @@
     </style>
 </head>
 <body>
-    <!-- Intro Screen -->
+    <!-- Intro Loading Screen -->
     <div class="intro-screen" id="introScreen">
         <div class="intro-content">
-            <div class="intro-icon">
+            <div class="loading-icon">
                 <i class="fas fa-crown"></i>
             </div>
-            <div class="typing-wrapper">
-                <span class="typing-text" id="typingText"></span>
-                <span class="cursor"></span>
+            <div class="loading-text">Keii Official</div>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
             </div>
+            <div class="loading-percent">Loading Store...</div>
             <button class="enter-btn" id="enterBtn">
                 <span>Masuk ke Store</span>
                 <i class="fas fa-arrow-right"></i>
@@ -722,6 +763,13 @@
                 Nokos & Lainnya
             </div>
             <div class="kategori-grid" id="nokosGrid"></div>
+
+            <!-- Note Suntik Sosmed -->
+            <div class="suntik-note">
+                <i class="fas fa-rocket"></i>
+                Cari Suntik Sosmed ? 
+                <a href="#" onclick="showAdminContact()">PM Admin</a>
+            </div>
         </div>
 
         <!-- PRODUK VIEW -->
@@ -756,7 +804,7 @@
                         </button>
                     </div>
 
-                        <!-- Seabank -->
+                    <!-- Seabank -->
                     <div class="metode-card">
                         <div class="metode-header">
                             <img src="https://images.bukaolshop.com/hosting/181218/0d46bd2ba133491753.png" alt="Seabank">
@@ -829,98 +877,265 @@
     </audio>
 
     <script>
-        // DATA LENGKAP
+        // DATA LENGKAP PRODUK BARU
         const kategoriData = [
-            // Apps Premium
-            { name: "Capcut Premium", paket: "6 Paket", harga: "Rp 8.000", logo: "https://images.bukaolshop.com/hosting/181218/47f862f5ed4a892435.png",
-              produk: [
-                "Sharing 7 Hari Rp 8.000",
-                "Sharing 1 Bulan Rp 11.000",
-                "Sharing 1 Tahun Rp 26.000",
-                "Private 7 Hari Rp 11.000",
-                "Private 1 Bulan Rp 16.000",
-                "Private 1 Tahun Rp 35.000"
-              ] },
-            { name: "ChatGPT Premium", paket: "2 Paket", harga: "Rp 20.000", logo: "https://images.bukaolshop.com/hosting/181218/26f804d66e6e88158.png",
-              produk: [
-                "Sharing 1 Bulan Plus Rp 20.000",
-                "Private 1 Bulan Invite Rp 25.000"
-              ] },
-            { name: "Wink Premium", paket: "2 Paket", harga: "Rp 10.000", logo: "https://images.bukaolshop.com/hosting/181218/1bcea869e27c407235.png",
-              produk: [
-                "Private 7 Hari (buyer) Rp 10.000",
-                "Private 7 Hari (seller) Rp 13.000"
-              ] },
-            { name: "Disney+ Premium", paket: "2 Paket", harga: "Rp 31.000", logo: "https://images.bukaolshop.com/hosting/181218/db9934847fa6433172.png",
-              produk: [
-                "6 User 1 Bulan Rp 31.000",
-                "10 User 1 Bulan Rp 25.000"
-              ] },
-            { name: "Alight Motion Premium", paket: "2 Paket", harga: "Rp 5.000", logo: "https://images.bukaolshop.com/hosting/181218/4a04b8d7e542788237.png",
-              produk: [
-                "Private 1 Thn (seller) Rp 5.000",
-                "Private 1 Thn (buyer) Rp 6.000"
-              ] },
-            // Nokos
-            { name: "Nokos WhatsApp", paket: "5 Paket", harga: "Rp 8.000", logo: "https://images.bukaolshop.com/hosting/181218/60c88b2821bf500477.png",
-              produk: [
-                "Indonesia Rp 8.000",
-                "Filipina Rp 18.500",
-                "Hongkong Rp 10.700",
-                "Malaysia Rp 10.000",
-                "Thailand Rp 20.000"
-              ] },
-            { name: "Nokos Telegram", paket: "4 Paket", harga: "Rp 7.000", logo: "https://images.bukaolshop.com/hosting/181218/450cb4fcb88a174062.png",
-              produk: [
-                "Indonesia Rp 7.000",
-                "Filipina Rp 9.000",
-                "Hongkong Rp 11.000",
-                "Thailand Rp 36.000"
-              ] },
-            // Bug
-            { name: "Bug XCVI V9", paket: "4 Paket", harga: "Rp 20.000", logo: "https://images.bukaolshop.com/hosting/181218/16aea1c112a5636278.png",
-              produk: [
-                "1 Bulan Rp 20.000",
-                "2 Bulan Rp 30.000",
-                "Permanen Rp 50.000",
-                "Reseller Rp 85.000"
-              ] },
-            { name: "Nika V26", paket: "4 Paket", harga: "Rp 25.000", logo: "https://images.bukaolshop.com/hosting/181218/14d64071e23b494337.png",
-              produk: [
-                "Akses 1 Minggu Rp 25.000",
-                "Akses 1 Bulan Rp 35.000",
-                "Akses 2 Bulan Rp 40.000",
-                "Akses Permanen Rp 50.000"
-              ] }
+            // 1. Capcut Premium
+            { 
+                name: "Capcut Premium", 
+                paket: "6 Paket", 
+                harga: "Rp 8.000", 
+                logo: "https://images.bukaolshop.com/hosting/181218/47f862f5ed4a892435.png",
+                produk: [
+                    "Sharing 7 Hari Rp 8.000",
+                    "Sharing 1 Bulan Rp 10.000",
+                    "Sharing 1 Tahun Rp 25.000",
+                    "Private 7 Hari Rp 11.000",
+                    "Private 1 Bulan Rp 16.000",
+                    "Private 1 Tahun Rp 36.000"
+                ] 
+            },
+            
+            // 2. Apple Music Premium
+            { 
+                name: "Apple Music", 
+                paket: "4 Paket", 
+                harga: "Rp 10.000", 
+                logo: "https://images.bukaolshop.com/hosting/181218/0b89f116be8e434425.png",
+                produk: [
+                    "Imees 1 Bulan Rp 10.000",
+                    "Imees 3 Bulan Rp 14.000",
+                    "Indplan 1 Bulan Rp 12.000",
+                    "Famplan 1 Bulan Rp 12.000"
+                ] 
+            },
+            
+            // 3. YouTube Premium
+            { 
+                name: "YouTube Premium", 
+                paket: "2 Paket", 
+                harga: "Rp 5.000", 
+                logo: "https://images.bukaolshop.com/hosting/181218/e1b9eae8982d985428.png",
+                produk: [
+                    "Famplan 1 Bulan Rp 5.000",
+                    "Indplan Norush 1 Bulan Rp 11.000 +2k acc s"
+                ] 
+            },
+            
+            // 4. Wink Premium
+            { 
+                name: "Wink Premium", 
+                paket: "2 Paket", 
+                harga: "Rp 8.000", 
+                logo: "https://images.bukaolshop.com/hosting/181218/1bcea869e27c407235.png",
+                produk: [
+                    "Private 7 Hari (acc b) Rp 8.000",
+                    "Private 7 Hari (acc s) Rp 11.000"
+                ] 
+            },
+            
+            // 5. ChatGPT Premium
+            { 
+                name: "ChatGPT Premium", 
+                paket: "2 Paket", 
+                harga: "Rp 18.000", 
+                logo: "https://images.bukaolshop.com/hosting/181218/26f804d66e6e88158.png",
+                produk: [
+                    "Sharing 1 Bulan Plus Rp 18.000",
+                    "Private 1 Bulan via Invite Rp 20.000"
+                ] 
+            },
+            
+            // 6. Prime Video
+            { 
+                name: "Prime Video", 
+                paket: "3 Paket", 
+                harga: "Rp 14.000", 
+                logo: "https://images.bukaolshop.com/hosting/181218/ad8345f7b9c8953792.png",
+                produk: [
+                    "Sharing 2 User 1 Bulan Rp 16.000",
+                    "Sharing 3 User 1 Bulan Rp 14.000",
+                    "Private 1 Bulan Rp 20.000"
+                ] 
+            },
+            
+            // 7. Vision+ Sport
+            { 
+                name: "Vision+ Sport", 
+                paket: "4 Paket", 
+                harga: "Rp 15.000", 
+                logo: "https://images.bukaolshop.com/hosting/181218/072f4a242c47628279.png",
+                produk: [
+                    "Sharing 1 Bulan Paytv Rp 15.000",
+                    "Sharing 1 Bulan Bkn Paytv Rp 40.000",
+                    "Private 1 Bulan Paytv Rp 32.000",
+                    "Private 1 Bulan Bkn Paytv Rp 40.000"
+                ] 
+            },
+            
+            // 8. Viki Premium
+            { 
+                name: "Viki Premium", 
+                paket: "1 Paket", 
+                harga: "Rp 16.000", 
+                logo: "https://images.bukaolshop.com/hosting/181218/fc34fcbdb564591085.png",
+                produk: [
+                    "Sharing 1 Bulan Rp 16.000"
+                ] 
+            },
+            
+            // 9. Viu Premium
+            { 
+                name: "Viu Premium", 
+                paket: "4 Paket", 
+                harga: "Rp 1.000", 
+                logo: "https://images.bukaolshop.com/hosting/181218/e185c3b3935534665.png",
+                produk: [
+                    "Anlim 1 Bulan Rp 1.000",
+                    "Anlim 1 Tahun Rp 8.000",
+                    "Liftime Rp 9.000",
+                    "Viu+ 1 Bulan Rp 16.000"
+                ] 
+            },
+            
+            // 10. Canva Premium
+            { 
+                name: "Canva Premium", 
+                paket: "4 Paket", 
+                harga: "Rp 150", 
+                logo: "https://images.bukaolshop.com/hosting/181218/26f804d66e6e88158.png",
+                produk: [
+                    "Member 7 Hari Rp 150",
+                    "Member 1 Bulan Rp 1.000",
+                    "Member 1 Tahun Rp 12.500",
+                    "Edu liftime Rp 12.000 (Gar 6b)"
+                ] 
+            },
+            
+            // 11. Alight Motion
+            { 
+                name: "Alight Motion", 
+                paket: "2 Paket", 
+                harga: "Rp 4.300", 
+                logo: "https://images.bukaolshop.com/hosting/181218/4a04b8d7e542788237.png",
+                produk: [
+                    "Private 1 Tahun (acc s) Rp 4.300",
+                    "Private 1 Tahun (acc b) Rp 5.500"
+                ] 
+            },
+            
+            // 12. Lok Lok Premium
+            { 
+                name: "Lok Lok Premium", 
+                paket: "4 Paket", 
+                harga: "Rp 20.000", 
+                logo: "https://images.bukaolshop.com/hosting/181218/281994f16dd4975145.png",
+                produk: [
+                    "Sharing 1 Bulan 3 User Basic No tv Rp 20.000",
+                    "Sharing 1 Bulan 5 User all device Rp 25.000",
+                    "Private 1 Bulan Basic Rp 55.000",
+                    "Private 1 Bulan Standar Rp 80.000"
+                ] 
+            },
+            
+            // 13. Disney Premium
+            { 
+                name: "Disney Premium", 
+                paket: "2 Paket", 
+                harga: "Rp 25.000", 
+                logo: "https://images.bukaolshop.com/hosting/181218/db9934847fa6433172.png",
+                produk: [
+                    "Disney 6 User 1 Bulan Rp 31.000",
+                    "Disney 10 User 1 Bulan Rp 25.000"
+                ] 
+            },
+            
+            // 14. Netflix Premium
+            { 
+                name: "Netflix Premium", 
+                paket: "7 Paket", 
+                harga: "Rp 16.000", 
+                logo: "https://images.bukaolshop.com/hosting/181218/e97361a0f1be36831.png",
+                produk: [
+                    "Sharing 1p1u 7 Hari Rp 17.000",
+                    "Sharing 1p1u 1 Bulan Rp 30.000",
+                    "Sharing 1p2u 7 Hari Rp 16.000",
+                    "Sharing 1p2u 1 Bulan Rp 26.000",
+                    "Semi Privat 7 Hari Rp 22.000",
+                    "Semi Privat 1 Bulan Rp 38.000",
+                    "Private 1 Bulan Rp 200.000"
+                ] 
+            },
+            
+            // 15. Gemini Premium
+            { 
+                name: "Gemini Premium", 
+                paket: "2 Paket", 
+                harga: "Rp 11.000", 
+                logo: "https://images.bukaolshop.com/hosting/181218/4a193950e401725286.png",
+                produk: [
+                    "Private 1 Bulan Rp 11.000",
+                    "Private 1 Tahun Rp 25.000"
+                ] 
+            },
+            
+            // 16. Hbo Max Premium
+            { 
+                name: "Hbo Max", 
+                paket: "4 Paket", 
+                harga: "Rp 19.000", 
+                logo: "https://images.bukaolshop.com/hosting/181218/4f504ab6ac35117507.png",
+                produk: [
+                    "Sharing 1 Bulan Standar Rp 19.000",
+                    "Sharing 1 Bulan Ultimate Rp 23.000",
+                    "Private 1 Bulan Standar Rp 56.000",
+                    "Private 1 Bulan Ultimate Rp 66.000"
+                ] 
+            },
+            
+            // 17. Nokos WhatsApp
+            { 
+                name: "Nokos WhatsApp", 
+                paket: "5 Paket", 
+                harga: "Rp 8.000", 
+                logo: "https://images.bukaolshop.com/hosting/181218/7266732e2e41874360.png",
+                produk: [
+                    "Indonesia Rp 8.000",
+                    "Filipina Rp 19.000",
+                    "Hongkong Rp 11.000",
+                    "Malaysia Rp 10.000",
+                    "Thailand Rp 21.000"
+                ] 
+            },
+            
+            // 18. Top Up Robux Vilog
+            { 
+                name: "Robux Vilog", 
+                paket: "5 Paket", 
+                harga: "Rp 27.600", 
+                logo: "https://images.bukaolshop.com/hosting/181218/c9625b182fcd73437.png",
+                produk: [
+                    "160 Robux Vilog Rp 27.600",
+                    "320 Robux Vilog Rp 55.800",
+                    "500 Robux Vilog Rp 72.000",
+                    "1000 Robux Vilog Rp 135.800",
+                    "2000 Robux Vilog Rp 268.800"
+                ] 
+            }
         ];
+        document.getElementById('totalApps').textContent = kategoriData.length + ' Produk';
 
-        document.getElementById('totalApps').textContent = '31 Produk';
-
-        // Intro Typing
+        // Intro Loading
         const intro = document.getElementById('introScreen');
         const main = document.getElementById('mainContent');
-        const typing = document.getElementById('typingText');
         const enter = document.getElementById('enterBtn');
         const audio = document.getElementById('bgAudio');
-
-        const text = "Keii Official Store";
-        let i = 0;
-        function type() {
-            if (i < text.length) {
-                typing.innerHTML += text.charAt(i);
-                i++;
-                setTimeout(type, 150);
-            }
-        }
-        
-        setTimeout(type, 500);
 
         enter.addEventListener('click', () => {
             intro.classList.add('hide');
             setTimeout(() => {
                 intro.style.display = 'none';
                 main.style.display = 'block';
-            }, 500);
+            }, 800);
             audio.play().catch(e => console.log(e));
         });
 
@@ -938,12 +1153,12 @@
             const currentTime = hours + minutes / 60;
 
             // Jam Siang: 10.30 - 13.00
-            const siangStart = 10 + 30/60; // 10.30
-            const siangEnd = 13 + 0/60; // 13.00
+            const siangStart = 10 + 30/60;
+            const siangEnd = 13 + 0/60;
             
             // Jam Malam: 16.30 - 22.00
-            const malamStart = 16 + 30/60; // 16.30
-            const malamEnd = 22 + 0/60; // 22.00
+            const malamStart = 16 + 30/60;
+            const malamEnd = 22 + 0/60;
 
             const isOnline = (currentTime >= siangStart && currentTime <= siangEnd) || 
                             (currentTime >= malamStart && currentTime <= malamEnd);
@@ -965,7 +1180,6 @@
             }
         }
 
-        // Update status setiap detik
         updateStatus();
         setInterval(updateStatus, 1000);
 
@@ -974,9 +1188,9 @@
         const nokosGrid = document.getElementById('nokosGrid');
 
         function renderKategori() {
-            // 5 apps pertama
+            // Apps pertama (1-16)
             let appsHtml = '';
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < 16; i++) {
                 const item = kategoriData[i];
                 appsHtml += `
                     <div class="kategori-card" onclick="showProduk(${i})">
@@ -993,9 +1207,9 @@
             }
             appsGrid.innerHTML = appsHtml;
 
-            // Sisanya
+            // Sisanya (Nokos & Robux)
             let nokosHtml = '';
-            for (let i = 5; i < kategoriData.length; i++) {
+            for (let i = 16; i < kategoriData.length; i++) {
                 const item = kategoriData[i];
                 nokosHtml += `
                     <div class="kategori-card" onclick="showProduk(${i})">
@@ -1031,11 +1245,13 @@
             `;
             
             item.produk.forEach((p, i) => {
-                const [nama, harga] = p.split('Rp');
+                const parts = p.split('Rp');
+                const nama = parts[0];
+                const harga = 'Rp' + parts[1];
                 html += `
                     <div class="produk-item" onclick="showPayment('${item.name}', '${p}', ${index})">
                         <span class="produk-nama">${nama}</span>
-                        <span class="produk-harga">Rp${harga}</span>
+                        <span class="produk-harga">${harga}</span>
                     </div>
                 `;
             });
@@ -1049,11 +1265,14 @@
         };
 
         window.showPayment = (kategori, produk, index) => {
-            const [nama, harga] = produk.split('Rp');
+            const parts = produk.split('Rp');
+            const nama = parts[0];
+            const harga = 'Rp' + parts[1];
+            
             document.getElementById('selectedInfo').innerHTML = `
                 <h3>${kategori}</h3>
                 <p style="margin: 5px 0;">${nama}</p>
-                <div class="selected-harga">Rp${harga}</div>
+                <div class="selected-harga">${harga}</div>
             `;
             
             produkView.style.display = 'none';
@@ -1084,6 +1303,10 @@
             alert('Nomor DANA: 087753513090');
         };
 
+        window.showAdminContact = () => {
+            alert('Hubungi admin:\nWA: 6285150895395 (Slow)\nTele: @KivoPay1 (Fast)');
+        };
+
         window.onclick = (e) => {
             if (e.target.classList.contains('modal')) {
                 e.target.style.display = 'none';
@@ -1094,4 +1317,3 @@
     </script>
 </body>
 </html>
-  
