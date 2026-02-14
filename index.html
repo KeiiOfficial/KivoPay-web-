@@ -19,14 +19,14 @@
             color: #fff;
         }
 
-        /* INTRO LOADING SUPER KEREN */
+        /* INTRO LOADING SUPER KEREN - UNGU THEME */
         .intro-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 30% 30%, #1a1e2e, #0a0c14);
+            background: radial-gradient(circle at 30% 30%, #2d1b3a, #1a0f24);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -43,7 +43,7 @@
             background: linear-gradient(
                 45deg,
                 transparent 30%,
-                rgba(0, 255, 157, 0.1) 50%,
+                rgba(156, 39, 176, 0.15) 50%,
                 transparent 70%
             );
             animation: shine 3s infinite linear;
@@ -63,8 +63,8 @@
                 0deg,
                 transparent,
                 transparent 2px,
-                rgba(0, 255, 157, 0.03) 2px,
-                rgba(0, 255, 157, 0.03) 4px
+                rgba(156, 39, 176, 0.05) 2px,
+                rgba(156, 39, 176, 0.05) 4px
             );
             pointer-events: none;
         }
@@ -95,7 +95,7 @@
 
         .floating-elements i {
             position: absolute;
-            color: rgba(0, 255, 157, 0.1);
+            color: rgba(156, 39, 176, 0.1);
             animation: float 6s infinite ease-in-out;
         }
 
@@ -113,33 +113,39 @@
             50% { transform: translateY(-30px) rotate(10deg); opacity: 0.2; }
         }
 
-        /* Main Icon */
-        .main-icon {
-            font-size: 6rem;
-            color: #00ff9d;
-            margin-bottom: 20px;
-            filter: drop-shadow(0 0 30px #00ff9d);
+        /* Main Icon - Ganti dengan Logo */
+        .main-logo {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 30px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid #9c27b0;
+            box-shadow: 0 0 50px rgba(156, 39, 176, 0.6);
             animation: pulseRotate 2s infinite;
-            position: relative;
-            z-index: 5;
+            background: #fff;
+            padding: 10px;
         }
 
-        .main-icon i {
+        .main-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
             animation: bounceIn 0.5s ease-out;
         }
 
         @keyframes pulseRotate {
             0%, 100% { 
                 transform: scale(1) rotate(0deg);
-                filter: drop-shadow(0 0 30px #00ff9d);
+                box-shadow: 0 0 50px rgba(156, 39, 176, 0.6);
             }
             33% { 
-                transform: scale(1.1) rotate(5deg);
-                filter: drop-shadow(0 0 50px #00ff9d);
+                transform: scale(1.05) rotate(2deg);
+                box-shadow: 0 0 70px rgba(156, 39, 176, 0.8);
             }
             66% { 
-                transform: scale(0.95) rotate(-5deg);
-                filter: drop-shadow(0 0 40px #00ff9d);
+                transform: scale(0.98) rotate(-2deg);
+                box-shadow: 0 0 60px rgba(156, 39, 176, 0.7);
             }
         }
 
@@ -149,16 +155,17 @@
             font-weight: 800;
             color: #fff;
             margin-bottom: 20px;
-            text-shadow: 0 0 10px #00ff9d;
+            text-shadow: 0 0 15px #9c27b0;
             letter-spacing: 4px;
             position: relative;
             z-index: 5;
         }
 
         .loading-title span {
-            color: #00ff9d;
+            color: #ba68c8;
             display: inline-block;
             animation: wave 2s infinite;
+            text-shadow: 0 0 10px #9c27b0;
         }
 
         .loading-title span:nth-child(1) { animation-delay: 0s; }
@@ -180,28 +187,28 @@
             50% { transform: translateY(-15px); }
         }
 
-        /* Loading Bar Container */
+        /* Loading Bar Container - Ungu */
         .loading-container {
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.4);
             border-radius: 60px;
             padding: 5px;
             margin: 30px 0;
-            border: 2px solid rgba(0, 255, 157, 0.3);
-            box-shadow: 0 0 30px rgba(0, 255, 157, 0.3);
+            border: 2px solid rgba(156, 39, 176, 0.4);
+            box-shadow: 0 0 40px rgba(156, 39, 176, 0.4);
             position: relative;
             z-index: 5;
             overflow: hidden;
         }
 
         .loading-bar {
-            height: 25px;
-            background: linear-gradient(90deg, #00ff9d, #00cc7d, #00ff9d);
-            background-size: 200% 100%;
+            height: 30px;
+            background: linear-gradient(90deg, #9c27b0, #ba68c8, #ab47bc, #9c27b0);
+            background-size: 300% 100%;
             border-radius: 60px;
             width: 0%;
-            animation: loading 3s ease-in-out forwards, gradient 2s infinite linear;
+            animation: loading 3s ease-in-out forwards, gradientMove 2s infinite linear;
             position: relative;
-            box-shadow: 0 0 20px #00ff9d;
+            box-shadow: 0 0 30px #9c27b0;
         }
 
         .loading-bar::after {
@@ -213,7 +220,7 @@
             bottom: 0;
             background: linear-gradient(90deg, 
                 transparent,
-                rgba(255, 255, 255, 0.4),
+                rgba(255, 255, 255, 0.3),
                 transparent
             );
             animation: shimmer 1.5s infinite;
@@ -221,15 +228,15 @@
 
         @keyframes loading {
             0% { width: 0%; }
-            20% { width: 30%; }
-            40% { width: 50%; }
-            60% { width: 70%; }
+            20% { width: 25%; }
+            40% { width: 45%; }
+            60% { width: 65%; }
             80% { width: 85%; }
             90% { width: 95%; }
             100% { width: 100%; }
         }
 
-        @keyframes gradient {
+        @keyframes gradientMove {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
@@ -246,7 +253,7 @@
             justify-content: space-between;
             margin: 15px 0;
             font-size: 0.9rem;
-            color: #889;
+            color: #ba68c8;
         }
 
         .stat-item {
@@ -256,7 +263,7 @@
         }
 
         .stat-item i {
-            color: #00ff9d;
+            color: #ba68c8;
             animation: spin 2s infinite linear;
         }
 
@@ -266,13 +273,19 @@
         }
 
         .percentage {
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: bold;
-            color: #00ff9d;
-            text-shadow: 0 0 10px #00ff9d;
+            color: #ba68c8;
+            text-shadow: 0 0 20px #9c27b0;
             margin: 10px 0;
             position: relative;
             display: inline-block;
+            animation: glow 1.5s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #9c27b0; }
+            to { text-shadow: 0 0 30px #ba68c8; }
         }
 
         .percentage::before {
@@ -280,8 +293,8 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle, rgba(0,255,157,0.3) 0%, transparent 70%);
-            filter: blur(10px);
+            background: radial-gradient(circle, rgba(156,39,176,0.3) 0%, transparent 70%);
+            filter: blur(15px);
             z-index: -1;
         }
 
@@ -295,14 +308,15 @@
         }
 
         .preview-item {
-            background: rgba(0, 255, 157, 0.1);
-            border: 1px solid rgba(0, 255, 157, 0.3);
+            background: rgba(156, 39, 176, 0.15);
+            border: 1px solid rgba(156, 39, 176, 0.4);
             border-radius: 12px;
-            padding: 8px 12px;
-            font-size: 0.8rem;
-            color: #00ff9d;
+            padding: 8px 15px;
+            font-size: 0.85rem;
+            color: #ba68c8;
             animation: fadeInOut 2s infinite;
             backdrop-filter: blur(5px);
+            font-weight: 600;
         }
 
         .preview-item:nth-child(1) { animation-delay: 0s; }
@@ -316,22 +330,21 @@
         .preview-item:nth-child(9) { animation-delay: 1.6s; }
 
         @keyframes fadeInOut {
-            0%, 100% { opacity: 0.3; transform: scale(0.95); }
-            50% { opacity: 1; transform: scale(1); }
+            0%, 100% { opacity: 0.4; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1.05); }
         }
-
-        /* Enter Button */
+         /* Enter Button - Ungu */
         .enter-btn {
-            background: linear-gradient(45deg, #00ff9d, #00cc7d, #00ff9d);
+            background: linear-gradient(45deg, #9c27b0, #ba68c8, #ab47bc);
             background-size: 200% 100%;
-            color: #0a0c14;
+            color: white;
             border: none;
             padding: 18px 60px;
             font-size: 1.4rem;
             font-weight: bold;
             border-radius: 60px;
             cursor: pointer;
-            box-shadow: 0 0 40px #00ff9d;
+            box-shadow: 0 0 40px #9c27b0;
             transition: all 0.3s;
             display: inline-flex;
             align-items: center;
@@ -342,7 +355,7 @@
             animation: fadeInUpScale 0.8s ease 3.2s forwards;
             position: relative;
             overflow: hidden;
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
         }
 
         .enter-btn::before {
@@ -352,7 +365,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
             animation: btnShimmer 2s infinite;
         }
 
@@ -362,7 +375,7 @@
 
         .enter-btn:hover {
             transform: scale(1.05) translateY(-2px);
-            box-shadow: 0 0 60px #00ff9d;
+            box-shadow: 0 0 70px #ba68c8;
             background-position: 100% 50%;
         }
 
@@ -396,9 +409,10 @@
             position: absolute;
             width: 4px;
             height: 4px;
-            background: #00ff9d;
+            background: #ba68c8;
             border-radius: 50%;
             animation: particleFloat 4s infinite;
+            box-shadow: 0 0 10px #9c27b0;
         }
 
         @keyframes particleFloat {
@@ -416,6 +430,128 @@
                 transform: translateY(-100px) translateX(50px) scale(0);
                 opacity: 0;
             }
+        }
+
+        /* Pop Up Join Saluran */
+        .channel-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .channel-popup.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .popup-content {
+            background: linear-gradient(145deg, #2d1b3a, #1a0f24);
+            border-radius: 30px;
+            padding: 30px;
+            max-width: 400px;
+            text-align: center;
+            border: 2px solid #9c27b0;
+            box-shadow: 0 0 50px rgba(156, 39, 176, 0.5);
+            animation: popupScale 0.3s ease;
+        }
+
+        @keyframes popupScale {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .popup-icon {
+            width: 80px;
+            height: 80px;
+            background: #9c27b0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            animation: pulseIcon 2s infinite;
+        }
+
+        @keyframes pulseIcon {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 20px #9c27b0; }
+            50% { transform: scale(1.1); box-shadow: 0 0 40px #ba68c8; }
+        }
+
+        .popup-icon i {
+            font-size: 3rem;
+            color: white;
+        }
+
+        .popup-content h2 {
+            color: #ba68c8;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+
+        .popup-content p {
+            color: #ccc;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .popup-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .popup-btn {
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .popup-btn.join {
+            background: #9c27b0;
+            color: white;
+            box-shadow: 0 0 20px #9c27b0;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .popup-btn.join:hover {
+            background: #ba68c8;
+            transform: scale(1.05);
+            box-shadow: 0 0 30px #ba68c8;
+        }
+
+        .popup-btn.close {
+            background: #333;
+            color: white;
+            border: 1px solid #666;
+        }
+
+        .popup-btn.close:hover {
+            background: #444;
+            transform: scale(0.95);
         }
 
         /* Main Content */
@@ -606,6 +742,7 @@
             gap: 10px;
             margin-bottom: 12px;
         }
+
         .kategori-header img {
             width: 35px;
             height: 35px;
@@ -721,7 +858,6 @@
             margin-left: 10px;
         }
 
-        /* Catatan Khusus */
         .produk-catatan {
             font-size: 0.8rem;
             color: #ff9999;
@@ -737,9 +873,8 @@
             text-align: center;
             margin-bottom: 20px;
             border: 1px solid #00ff9d;
-        }
-
-        .selected-info h3 {
+            }
+         .selected-info h3 {
             color: #00ff9d;
             margin-bottom: 5px;
             font-size: 1.2rem;
@@ -961,7 +1096,7 @@
     </style>
 </head>
 <body>
-    <!-- INTRO LOADING SUPER KEREN -->
+    <!-- INTRO LOADING SUPER KEREN - UNGU -->
     <div class="intro-screen" id="introScreen">
         <!-- Floating Icons -->
         <div class="floating-elements">
@@ -979,9 +1114,9 @@
         <div class="particles" id="particles"></div>
 
         <div class="intro-content">
-            <!-- Main Icon -->
-            <div class="main-icon">
-                <i class="fas fa-crown"></i>
+            <!-- Main Logo - Ganti dengan foto -->
+            <div class="main-logo">
+                <img src="https://images.bukaolshop.com/hosting/181218/5c92165b6226544752.png" alt="Keii Official Logo">
             </div>
 
             <!-- Animated Title -->
@@ -1041,6 +1176,23 @@
                 <span>MASUK STORE</span>
                 <i class="fas fa-arrow-right"></i>
             </button>
+        </div>
+    </div>
+
+    <!-- POP UP JOIN SALURAN -->
+    <div class="channel-popup" id="channelPopup">
+        <div class="popup-content">
+            <div class="popup-icon">
+                <i class="fab fa-whatsapp"></i>
+            </div>
+            <h2>Join Saluran WhatsApp!</h2>
+            <p>Dapatkan info terbaru tentang promo, produk baru, dan update harga langsung dari saluran resmi Keii Official.</p>
+            <div class="popup-buttons">
+                <a href="https://whatsapp.com/channel/0029VbCMhxiLSmbSzw8kOv0q" target="_blank" class="popup-btn join">
+                    <i class="fab fa-whatsapp"></i> Join Saluran
+                </a>
+                <button class="popup-btn close" onclick="closeChannelPopup()">Nanti</button>
+            </div>
         </div>
     </div>
 
@@ -1139,6 +1291,7 @@
                             <i class="fas fa-eye"></i> Tampilkan
                         </button>
                     </div>
+
                     <!-- Seabank -->
                     <div class="metode-card">
                         <div class="metode-header">
@@ -1184,7 +1337,6 @@
             </div>
         </div>
     </div>
-
     <!-- Modals -->
     <div class="modal" id="seabankModal">
         <div class="modal-content">
@@ -1499,7 +1651,6 @@
                 catatan: "Catatan: Sesudah Order Wajib Chat Admin Via Wa/Telegram Dan Sertakan Bukti Transfer !!!"
             }
         ];
-
         document.getElementById('totalApps').textContent = kategoriData.length + ' Kategori';
 
         // Create Particles
@@ -1535,15 +1686,35 @@
         const main = document.getElementById('mainContent');
         const enter = document.getElementById('enterBtn');
         const audio = document.getElementById('bgAudio');
+        const channelPopup = document.getElementById('channelPopup');
 
         enter.addEventListener('click', () => {
             intro.classList.add('hide');
             setTimeout(() => {
                 intro.style.display = 'none';
                 main.style.display = 'block';
+                // Tampilkan popup setelah main content muncul
+                setTimeout(() => {
+                    channelPopup.classList.add('show');
+                }, 500);
             }, 800);
             audio.play().catch(e => console.log(e));
         });
+
+        // Fungsi untuk menutup popup
+        window.closeChannelPopup = () => {
+            channelPopup.classList.remove('show');
+        };
+
+        // Tutup popup jika klik di luar
+        window.onclick = (e) => {
+            if (e.target.classList.contains('channel-popup')) {
+                closeChannelPopup();
+            }
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
+            }
+        };
 
         document.addEventListener('click', () => {
             if (audio.paused && intro.style.display === 'none') {
@@ -1639,7 +1810,7 @@
         window.showProduk = (index) => {
             const item = kategoriData[index];
             
-      let html = `
+            let html = `
                 <div class="produk-header">
                     <img src="${item.logo}" alt="${item.name}">
                     <h2>${item.name}</h2>
@@ -1714,12 +1885,6 @@
 
         window.showAdminContact = () => {
             alert('Hubungi admin:\nWA: 6285150895395 (Slow)\nTele: @KivoPay1 (Fast)');
-        };
-
-        window.onclick = (e) => {
-            if (e.target.classList.contains('modal')) {
-                e.target.style.display = 'none';
-            }
         };
 
         renderKategori();
