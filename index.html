@@ -2,9 +2,9 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>KEII OFFICIAL · PAYMENT</title>
-    <!-- Font Awesome 6 (for icons) -->
+    <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
@@ -15,78 +15,221 @@
         }
 
         body {
-            background: linear-gradient(145deg, #0a0a1a, #12102a);
+            background: #0b0f1a;
             color: #fff;
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1.5rem;
+            overflow-x: hidden;
         }
 
-        /* Container Utama */
-        .payment-card {
-            max-width: 480px;
-            width: 100%;
-            background: rgba(18, 16, 36, 0.8);
+        /* ========== INTRO LOADING UNGU ========== */
+        .intro-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #0f0b1a;
+            background: radial-gradient(circle at 30% 30%, #3d1f6a, #120b1f);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.8s ease;
+            overflow: hidden;
+        }
+
+        .intro-screen.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .floating-elements {
+            position: absolute;
+            width: 100%; height: 100%;
+            top: 0; left: 0;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .floating-elements i {
+            position: absolute;
+            color: rgba(200, 160, 255, 0.1);
+            font-size: 4rem;
+            animation: float 10s infinite ease-in-out;
+        }
+
+        .floating-elements i:nth-child(1) { top: 10%; left: 10%; font-size: 5rem; }
+        .floating-elements i:nth-child(2) { top: 20%; right: 15%; font-size: 6rem; animation-delay: 1s; }
+        .floating-elements i:nth-child(3) { bottom: 15%; left: 20%; font-size: 5.5rem; animation-delay: 2s; }
+        .floating-elements i:nth-child(4) { bottom: 25%; right: 10%; font-size: 7rem; animation-delay: 3s; }
+
+        @keyframes float {
+            0%,100%{ transform: translateY(0) rotate(0deg); }
+            50%{ transform: translateY(-30px) rotate(10deg); }
+        }
+
+        .particles {
+            position: absolute;
+            width: 100%; height: 100%;
+            z-index: 2;
+        }
+        .particle {
+            position: absolute;
+            width: 4px; height: 4px;
+            background: #d9b0ff;
+            border-radius: 50%;
+            animation: particleFloat 5s infinite;
+        }
+        @keyframes particleFloat {
+            0% { transform: translateY(100vh) scale(1); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-10vh) scale(2); opacity: 0; }
+        }
+
+        .intro-card {
+            background: rgba(25, 15, 40, 0.7);
+            backdrop-filter: blur(15px);
+            border: 2px solid #b77cff;
+            border-radius: 60px;
+            padding: 3rem 2.5rem;
+            text-align: center;
+            max-width: 540px;
+            width: 90%;
+            box-shadow: 0 0 100px #b77cff;
+            position: relative;
+            z-index: 10;
+            animation: cardGlow 3s infinite alternate;
+        }
+        @keyframes cardGlow {
+            from { box-shadow: 0 0 50px #8a4fcf; }
+            to { box-shadow: 0 0 120px #d9b0ff; }
+        }
+
+        .intro-logo {
+            width: 140px; height: 140px;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid #b77cff;
+            box-shadow: 0 0 60px #d9b0ff;
+            background: white;
+        }
+        .intro-logo img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+        }
+
+        .intro-title {
+            font-size: 2.2rem; font-weight: 800;
+            color: white;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 20px #b77cff;
+        }
+        .intro-title span { color: #d9b0ff; }
+
+        .typing-container {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 60px;
+            padding: 1rem 1.5rem;
+            margin: 1.8rem 0;
+            border: 1px solid #d9b0ff;
+        }
+        .typing-text {
+            font-size: 1.3rem;
+            color: white;
+            min-height: 3rem;
+        }
+        .typing-cursor {
+            display: inline-block;
+            width: 2px; height: 1.8rem;
+            background: #d9b0ff;
+            margin-left: 5px;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .loader-wrapper { margin: 2rem 0; }
+        .loader-bg {
+            width: 100%; height: 6px;
+            background: #2e1b4a;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .loader-bar {
+            height: 100%; width: 0%;
+            background: linear-gradient(90deg, #b77cff, #d9b0ff, #b77cff);
+            border-radius: 10px;
+            transition: width 0.1s ease;
+            box-shadow: 0 0 20px #d9b0ff;
+        }
+        .loader-text {
+            margin-top: 1rem;
+            color: #d9b0ff;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+        }
+
+        .enter-btn {
+            background: linear-gradient(45deg, #b77cff, #d9b0ff);
+            border: none; color: white;
+            font-weight: 700; font-size: 1.2rem;
+            padding: 1rem 3rem; border-radius: 60px;
+            cursor: pointer; margin-top: 1rem;
+            opacity: 0; transform: translateY(20px);
+            animation: fadeUp 0.6s ease 4.2s forwards;
+            box-shadow: 0 20px 40px #3b1b60;
+        }
+        .enter-btn:hover { transform: scale(1.03) translateY(-2px); }
+        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+        /* ========== HALAMAN PAYMENT ========== */
+        .main-content {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            opacity: 0;
+            animation: fadeMain 0.7s ease 0.3s forwards;
+        }
+        @keyframes fadeMain { to { opacity: 1; } }
+
+        .payment-container {
+            background: rgba(20, 15, 30, 0.8);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(160, 130, 255, 0.3);
+            border: 1px solid rgba(180, 130, 255, 0.3);
             border-radius: 48px;
             padding: 2rem 1.8rem;
-            box-shadow: 0 30px 60px -15px #00000080, 0 0 0 1px rgba(180, 130, 255, 0.2);
-            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 30px 60px -15px #00000080;
         }
 
-        .payment-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 40px 80px -15px #6d4aff, 0 0 0 2px rgba(180, 130, 255, 0.5);
-        }
-
-        /* Header */
-        .header {
+        .payment-header {
             text-align: center;
-            margin-bottom: 2.2rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 2rem;
+            border-bottom: 1px dashed rgba(255,255,255,0.1);
             padding-bottom: 1.5rem;
         }
 
-        .header h1 {
+        .payment-header h1 {
             font-size: 2.2rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #ffffff, #c7b9ff);
+            background: linear-gradient(135deg, #fff, #d9b0ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 0.2rem;
         }
 
-        .header p {
-            color: #9a94c7;
+        .payment-header p {
+            color: #aaa;
             font-size: 0.9rem;
-            letter-spacing: 1px;
         }
 
-        /* Section Title */
         .section-title {
             display: flex;
             align-items: center;
             gap: 10px;
             margin: 1.8rem 0 1rem 0;
-            color: #b4a6ff;
+            color: #d9b0ff;
             font-weight: 600;
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
-        .section-title i {
-            font-size: 1.1rem;
-            color: #8f7ee6;
-        }
-
-        /* Method Cards */
         .method-card {
-            background: rgba(0, 0, 0, 0.25);
+            background: rgba(0,0,0,0.3);
             border: 1px solid rgba(255,255,255,0.05);
             border-radius: 28px;
             padding: 1.2rem 1.5rem;
@@ -95,8 +238,8 @@
         }
 
         .method-card:hover {
-            background: rgba(30, 25, 60, 0.5);
-            border-color: #9a8aff;
+            border-color: #b77cff;
+            background: rgba(100, 70, 150, 0.1);
         }
 
         .method-header {
@@ -108,8 +251,7 @@
 
         .method-header i {
             font-size: 1.5rem;
-            color: #b4a6ff;
-            width: 28px;
+            color: #d9b0ff;
         }
 
         .method-header h3 {
@@ -119,13 +261,11 @@
         }
 
         .method-number {
-            font-family: 'Courier New', monospace;
+            font-family: monospace;
             font-size: 1.5rem;
-            font-weight: 600;
             letter-spacing: 2px;
-            color: #d4caff;
+            color: #d9b0ff;
             margin: 0.5rem 0 1rem 0;
-            word-break: break-all;
             background: rgba(0,0,0,0.2);
             padding: 0.5rem 1rem;
             border-radius: 40px;
@@ -133,13 +273,11 @@
         }
 
         .copy-btn {
-            background: rgba(180, 160, 255, 0.1);
-            border: 1px solid #6d5bb0;
+            background: rgba(180, 130, 255, 0.1);
+            border: 1px solid #b77cff;
             color: white;
             padding: 0.6rem 1.2rem;
             border-radius: 40px;
-            font-size: 0.9rem;
-            font-weight: 500;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
@@ -148,14 +286,12 @@
         }
 
         .copy-btn:hover {
-            background: #8f7ee6;
-            border-color: #b4a6ff;
-            color: #0a0a1a;
+            background: #b77cff;
+            color: #0b0f1a;
         }
 
-        /* QRIS Section */
         .qris-section {
-            background: rgba(0, 0, 0, 0.25);
+            background: rgba(0,0,0,0.3);
             border: 1px solid rgba(255,255,255,0.05);
             border-radius: 28px;
             padding: 1.5rem;
@@ -171,12 +307,7 @@
 
         .qris-header i {
             font-size: 1.5rem;
-            color: #b4a6ff;
-        }
-
-        .qris-header h3 {
-            font-size: 1.2rem;
-            font-weight: 600;
+            color: #d9b0ff;
         }
 
         .qris-image {
@@ -186,19 +317,18 @@
             margin: 1rem 0;
             display: flex;
             justify-content: center;
-            border: 2px solid #b4a6ff;
+            border: 2px solid #b77cff;
+            cursor: pointer;
         }
 
         .qris-image img {
             max-width: 180px;
             width: 100%;
-            height: auto;
-            display: block;
             border-radius: 12px;
         }
 
         .qris-detail {
-            color: #b0a8d9;
+            color: #ccc;
             font-size: 0.9rem;
             line-height: 1.8;
             background: rgba(0,0,0,0.2);
@@ -206,19 +336,17 @@
             border-radius: 20px;
             margin: 1rem 0;
         }
-
-        .qris-detail strong {
-            color: #d4caff;
+            .qris-detail strong {
+            color: #d9b0ff;
         }
 
         .qris-btn {
-            background: #8f7ee6;
+            background: #b77cff;
             border: none;
-            color: #0a0a1a;
+            color: #0b0f1a;
             padding: 0.9rem;
             border-radius: 40px;
             font-weight: 600;
-            font-size: 0.95rem;
             cursor: pointer;
             width: 100%;
             transition: 0.3s;
@@ -229,14 +357,12 @@
         }
 
         .qris-btn:hover {
-            background: #b4a6ff;
-            transform: scale(1.02);
+            background: #d9b0ff;
         }
 
-        /* Footer */
         .footer {
             text-align: center;
-            color: #5e5780;
+            color: #666;
             font-size: 0.8rem;
             margin-top: 1.5rem;
             padding-top: 1.5rem;
@@ -257,14 +383,13 @@
         }
 
         .modal-content {
-            background: #1c1936;
+            background: #1a1530;
             border-radius: 48px;
             padding: 2rem;
             max-width: 450px;
             width: 100%;
             text-align: center;
-            border: 2px solid #b4a6ff;
-            box-shadow: 0 0 50px #8f7ee6;
+            border: 3px solid #b77cff;
         }
 
         .modal-content img {
@@ -272,39 +397,31 @@
             width: 100%;
             margin: 1.5rem 0;
             border-radius: 20px;
-            border: 2px solid #b4a6ff;
+            border: 2px solid #b77cff;
         }
 
         .modal-content h3 {
-            color: #d4caff;
+            color: #d9b0ff;
             font-size: 1.5rem;
         }
 
         .modal-content button {
-            background: #8f7ee6;
+            background: #b77cff;
             border: none;
-            color: #0a0a1a;
+            color: #0b0f1a;
             padding: 0.8rem 2rem;
             border-radius: 40px;
             font-weight: 600;
-            font-size: 1rem;
             cursor: pointer;
-            margin-top: 0.5rem;
-            transition: 0.2s;
         }
 
-        .modal-content button:hover {
-            background: #b4a6ff;
-        }
-
-        /* Toast */
         .toast {
             position: fixed;
             bottom: 2rem;
             left: 50%;
             transform: translateX(-50%);
-            background: #8f7ee6;
-            color: #0a0a1a;
+            background: #d9b0ff;
+            color: #0b0f1a;
             padding: 0.8rem 2rem;
             border-radius: 60px;
             font-weight: 600;
@@ -313,142 +430,210 @@
             transition: opacity 0.3s;
             pointer-events: none;
         }
-
         .toast.show { opacity: 1; }
 
-        /* Audio hidden */
         audio { display: none; }
     </style>
 </head>
 <body>
+    <!-- INTRO LOADING UNGU -->
+    <div class="intro-screen" id="introScreen">
+        <div class="floating-elements">
+            <i class="fas fa-crown"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-gem"></i>
+            <i class="fas fa-crown"></i>
+        </div>
+        <div class="particles" id="particles"></div>
+        <div class="intro-card">
+            <div class="intro-logo">
+                <img src="https://images.bukaolshop.com/hosting/181218/5c92165b6226544752.png" alt="Keii Logo">
+            </div>
+            <div class="intro-title">KEII <span>OFFICIAL</span></div>
+            <div class="typing-container">
+                <div class="typing-text" id="typingText"></div>
+                <span class="typing-cursor"></span>
+            </div>
+            <div class="loader-wrapper">
+                <div class="loader-bg">
+                    <div class="loader-bar" id="loadingBar"></div>
+                </div>
+                <div class="loader-text" id="loadingPercent">0%</div>
+            </div>
+            <button class="enter-btn" id="enterBtn">MASUK PAYMENT</button>
+        </div>
+    </div>
 
-    <!-- MODAL QRIS (POP UP) -->
-    <div class="modal" id="qrisModal" onclick="closeModalOutside(event)">
-        <div class="modal-content" onclick="event.stopPropagation()">
+    <!-- MODAL QRIS -->
+    <div class="modal" id="qrisModal" onclick="if(event.target===this) this.style.display='none'">
+        <div class="modal-content">
             <h3>QRIS KEII OFFICIAL</h3>
             <img src="https://images.bukaolshop.com/hosting/181218/15b9e709ce2931209.png" alt="QRIS">
-            <p style="color:#aaa; margin-bottom:1rem;">Scan QRIS untuk melakukan pembayaran</p>
+            <p style="color:#ccc; margin-bottom:1rem;">Scan untuk melakukan pembayaran</p>
             <button onclick="closeModal()">Tutup</button>
         </div>
     </div>
 
-    <!-- TOAST NOTIFICATION -->
-    <div class="toast" id="toast">✓ Nomor berhasil disalin</div>
+    <!-- TOAST -->
+    <div class="toast" id="toast">✓ Nomor disalin!</div>
 
-    <!-- MAIN PAYMENT CARD -->
-    <div class="payment-card">
-        <div class="header">
-            <h1>KEII OFFICIAL</h1>
-            <p>PEMBAYARAN</p>
-        </div>
-
-        <!-- Transfer Section -->
-        <div class="section-title">
-            <i class="fas fa-university"></i> Transfer Bank & E-Wallet
-        </div>
-
-        <!-- DANA -->
-        <div class="method-card">
-            <div class="method-header">
-                <i class="fas fa-wallet"></i>
-                <h3>DANA</h3>
+    <!-- HALAMAN PAYMENT -->
+    <div class="main-content" id="mainContent" style="display: none;">
+        <div class="payment-container">
+            <div class="payment-header">
+                <h1>KEII OFFICIAL</h1>
+                <p>PEMBAYARAN</p>
             </div>
-            <div class="method-number">0877 5351 3090</div>
-            <button class="copy-btn" onclick="copyNumber('087753513090')">
-                <i class="fas fa-copy"></i> Salin Nomor
-            </button>
-        </div>
 
-        <!-- SEABANK -->
-        <div class="method-card">
-            <div class="method-header">
-                <i class="fas fa-landmark"></i>
-                <h3>SEABANK</h3>
+            <div class="section-title">
+                <i class="fas fa-university"></i> Transfer Bank & E-Wallet
             </div>
-            <div class="method-number">9015 1787 0612</div>
-            <button class="copy-btn" onclick="copyNumber('901517870612')">
-                <i class="fas fa-copy"></i> Salin Nomor
-            </button>
-        </div>
 
-        <!-- QRIS Section -->
-        <div class="section-title">
-            <i class="fas fa-qrcode"></i> QRIS
-        </div>
+            <!-- DANA -->
+            <div class="method-card">
+                <div class="method-header">
+                    <i class="fas fa-wallet"></i>
+                    <h3>DANA</h3>
+                </div>
+                <div class="method-number">0877 5351 3090</div>
+                <button class="copy-btn" onclick="copyNumber('087753513090')">
+                    <i class="fas fa-copy"></i> Salin Nomor
+                </button>
+            </div>
 
-        <div class="qris-section">
-            <div class="qris-header">
-                <i class="fas fa-qrcode"></i>
-                <h3>QRIS</h3>
+            <!-- SEABANK -->
+            <div class="method-card">
+                <div class="method-header">
+                    <i class="fas fa-landmark"></i>
+                    <h3>SEABANK</h3>
+                </div>
+                <div class="method-number">9015 1787 0612</div>
+                <button class="copy-btn" onclick="copyNumber('901517870612')">
+                    <i class="fas fa-copy"></i> Salin Nomor
+                </button>
             </div>
-            <div class="qris-image" onclick="openQrisModal()">
-                <img src="https://images.bukaolshop.com/hosting/181218/15b9e709ce2931209.png" alt="QRIS">
-            </div>
-            <div class="qris-detail">
-                <strong>KEIZO STORE</strong><br>
-                NMID : ID1025386843615<br>
-                SATU QRIS UNTUK SEMUA
-            </div>
-            <button class="qris-btn" onclick="openQrisModal()">
-                <i class="fas fa-search-plus"></i> Perbesar QRIS
-            </button>
-        </div>
 
-        <!-- Footer -->
-        <div class="footer">
-            © 2026 — KEII OFFICIAL Payment Page
+            <div class="section-title">
+                <i class="fas fa-qrcode"></i> QRIS
+            </div>
+
+            <div class="qris-section">
+                <div class="qris-header">
+                    <i class="fas fa-qrcode"></i>
+                    <h3>QRIS</h3>
+                </div>
+                <div class="qris-image" onclick="openQrisModal()">
+                    <img src="https://images.bukaolshop.com/hosting/181218/15b9e709ce2931209.png" alt="QRIS">
+                </div>
+                <div class="qris-detail">
+                    <strong>KEIZO STORE</strong><br>
+                    NMID : ID1025386843615<br>
+                    SATU QRIS UNTUK SEMUA
+                </div>
+                <button class="qris-btn" onclick="openQrisModal()">
+                    <i class="fas fa-search-plus"></i> Perbesar QRIS
+                </button>
+            </div>
+
+            <div class="footer">
+                © 2026 — KEII OFFICIAL Payment Page
+            </div>
         </div>
     </div>
 
-    <!-- AUDIO (Opsional) -->
-    <audio id="bgAudio" loop>
+    <!-- AUDIO -->
+    <audio id="bgAudio" loop preload="auto">
         <source src="https://files.catbox.moe/mog6bq.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        // Copy number function
-        function copyNumber(number) {
+        // ========== INTRO LOADING ==========
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 25; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.animationDelay = Math.random() * 5 + 's';
+                p.style.animationDuration = (3 + Math.random() * 4) + 's';
+                container.appendChild(p);
+            }
+        }
+        createParticles();
+
+        const phrases = ["Keii Official Payment", "DANA • SEABANK • QRIS", "Scan & Bayar"];
+        let pIndex = 0, cIndex = 0, isDeleting = false;
+        const typingEl = document.getElementById('typingText');
+        function typeEffect() {
+            const current = phrases[pIndex];
+            if (!isDeleting && cIndex <= current.length) {
+                typingEl.textContent = current.substring(0, cIndex++);
+                setTimeout(typeEffect, 100);
+            } else if (isDeleting && cIndex >= 0) {
+                typingEl.textContent = current.substring(0, cIndex--);
+                setTimeout(typeEffect, 50);
+            } else {
+                isDeleting = !isDeleting;
+                if (!isDeleting) pIndex = (pIndex + 1) % phrases.length;
+                setTimeout(typeEffect, 1500);
+            }
+        }
+        setTimeout(typeEffect, 500);
+
+        let prog = 0;
+        const bar = document.getElementById('loadingBar');
+        const per = document.getElementById('loadingPercent');
+        const loadInterval = setInterval(() => {
+            if (prog < 100) {
+                prog++;
+                bar.style.width = prog + '%';
+                per.textContent = prog + '%';
+            } else {
+                clearInterval(loadInterval);
+            }
+        }, 35);
+
+        const intro = document.getElementById('introScreen');
+        const main = document.getElementById('mainContent');
+        const enter = document.getElementById('enterBtn');
+        const audio = document.getElementById('bgAudio');
+
+        // Coba putar audio
+        audio.play().catch(() => {});
+
+        enter.addEventListener('click', () => {
+            intro.classList.add('hide');
+            setTimeout(() => { 
+                intro.style.display = 'none'; 
+                main.style.display = 'block';
+                audio.play().catch(() => {});
+            }, 800);
+        });
+
+        // Fallback audio
+        document.addEventListener('click', function playOnce() {
+            if (audio.paused) {
+                audio.play().catch(() => {});
+            }
+            document.removeEventListener('click', playOnce);
+        }, { once: true });
+
+        // ========== PAYMENT FUNCTIONS ==========
+        window.copyNumber = function(number) {
             navigator.clipboard.writeText(number).then(() => {
                 let toast = document.getElementById('toast');
                 toast.classList.add('show');
                 setTimeout(() => toast.classList.remove('show'), 1500);
-            }).catch(() => {
-                alert('Gagal menyalin');
             });
-        }
+        };
 
-        // Modal functions
-        function openQrisModal() {
+        window.openQrisModal = function() {
             document.getElementById('qrisModal').style.display = 'flex';
-        }
+        };
 
-        function closeModal() {
+        window.closeModal = function() {
             document.getElementById('qrisModal').style.display = 'none';
-        }
-
-        function closeModalOutside(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.style.display = 'none';
-            }
-        }
-
-        // Audio play (coba autoplay)
-        window.addEventListener('load', function() {
-            let audio = document.getElementById('bgAudio');
-            audio.play().catch(() => {
-                // Autoplay dicegah, akan diputar setelah interaksi pertama
-                document.addEventListener('click', function playOnce() {
-                    audio.play().catch(() => {});
-                    document.removeEventListener('click', playOnce);
-                }, { once: true });
-            });
-        });
-
-        // Export functions to global
-        window.copyNumber = copyNumber;
-        window.openQrisModal = openQrisModal;
-        window.closeModal = closeModal;
-        window.closeModalOutside = closeModalOutside;
+        };
     </script>
 </body>
-                    </html>
+</html>
