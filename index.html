@@ -1,182 +1,157 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <title>KEIZO SHOP</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KEIZO SHOP</title>
 
-<nav>
-  <h2>KEIZO SHOP</h2>
-  <div>
-    <a href="index.html">Home</a>
-    <a href="about.html">About</a>
-    <a href="contact.html">Contact</a>
-  </div>
-</nav>
-
-<section class="hero">
-  <h1>APPS PREMIUM TERMURAH & TRUSTED</h1>
-  <p>Fast Respon • Aman • Murah</p>
-</section>
-
-<section class="produk">
-  <h2>LIST PRODUK</h2>
-
-  <div id="list"></div>
-
-</section>
-
-<script src="script.js"></script>
-</body>
-</html>
+<style>
 body {
-  font-family: sans-serif;
   margin: 0;
+  font-family: 'Segoe UI', sans-serif;
   background: #0f0f0f;
-  color: white;
+  color: #fff;
 }
 
-nav {
+header {
+  background: #111;
+  padding: 15px 20px;
   display: flex;
   justify-content: space-between;
-  padding: 15px;
-  background: #111;
+  align-items: center;
+}
+
+header h1 {
+  font-size: 18px;
 }
 
 nav a {
-  color: white;
-  margin: 0 10px;
+  color: #aaa;
+  margin-left: 15px;
   text-decoration: none;
 }
 
 .hero {
   text-align: center;
-  padding: 80px 20px;
+  padding: 60px 20px;
 }
 
-.produk {
+.hero h2 {
+  font-size: 28px;
+}
+
+.container {
   padding: 20px;
-  text-align: center;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 15px;
 }
 
 .card {
   background: #1a1a1a;
   padding: 15px;
-  margin: 10px;
-  display: inline-block;
-  border-radius: 10px;
-  width: 250px;
+  border-radius: 12px;
+  transition: 0.2s;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.price {
+  color: #00ff88;
+  margin: 8px 0;
 }
 
 button {
-  padding: 10px;
-  background: #00ffcc;
+  background: #00ff88;
   border: none;
+  padding: 8px;
+  width: 100%;
+  border-radius: 6px;
   cursor: pointer;
-  margin-top: 10px;
 }
-const nomor = "6285657279971"
 
-const produk = [
-"am 1thn acc s/gen | 16perak",
-"am 1thn acc buyer | 100p",
-"melolo 1b shar | 7.000",
-"meitu 7d acc buyer | 1.000",
-"iqiyi 1b standar | 7.000",
-"iqiyi 1b premium | 8.000",
-"bstation 1b shar | 8.000",
-"Netflix 1d 1u | 6.500",
-"Netflix 3d 1u | 8.500",
-"Netflix 7d 1u | 12.000",
-"Netflix 1b 1u | 20.000",
-"Netflix 1d 2u | 5.500",
-"Netflix 3d 2u | 8.900",
-"Netflix 7d 2u | 10.500",
-"Netflix 1b 2u | 14.500",
-"Netflix 1b semi | 28.500",
-"Spotify 1b nogar | 14.000",
-"Spotify 1b fullgar | 21.200",
-"YouTube 1b famplan | 4.000",
-"YouTube 1b indplan | 6.000",
-"chatgpt 1b shar | 8.200",
-"Gemini acc b | 3.500",
-"Gemini acc s | 8.200",
-"loklok 1b basic | 17.000",
-"loklok 1b standar | 19.000",
-"picsart 1b shar | 4.500",
-"picsart 1b priv | 6.000",
-"Ibis paint 7d acc b | 1.000",
-"Ibis paint 1b acc b | 4.000",
-"Canva 1b member | 100p",
-"canva 1thn member | 150p",
-"winkit 3d acc b | 1.850",
-"winkit 6d acc b | 3.500",
-"winkit 12d acc b | 5.000",
-"wink 7d acc b | 2.000",
-"capcut 7d priv | 4.000",
-"capcut 14d priv | 5.000",
-"capcut 21d priv | 6.000",
-"capcut 28d priv | 7.000",
-"capcut 35d priv | 13.000",
-"dramabox 1b shar | 11.000",
-"viu 1thn priv | 19p",
-"viu lifetime | 250p",
-"vidio 1b shar | 16.000",
-"vidio 1b priv | 26.000",
-"vidio 1thn only tv | 4.000",
-"Disney 7d | 13.000"
+footer {
+  text-align: center;
+  padding: 20px;
+  color: #888;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>KEIZO SHOP</h1>
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#produk">Produk</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<section class="hero" id="home">
+  <h2>APPS PREMIUM TERMURAH</h2>
+  <p>Fast • Aman • Trusted</p>
+</section>
+
+<section class="container" id="produk">
+  <h2>LIST PRODUK</h2>
+  <div class="grid" id="list"></div>
+</section>
+
+<section class="container" id="about">
+  <h2>Tentang Kami</h2>
+  <p>KEIZO SHOP menyediakan aplikasi premium murah, cepat, dan terpercaya.</p>
+</section>
+
+<section class="container" id="contact">
+  <h2>Contact</h2>
+  <p>WhatsApp: 6285657279971</p>
+</section>
+
+<footer>
+  © 2026 KEIZO SHOP
+</footer>
+
+<script>
+let nomor = "6285657279971"
+
+let produk = [
+["Netflix 1B 1U","Rp 20.000"],
+["Spotify 1B Fullgar","Rp 21.200"],
+["YouTube 1B Famplan","Rp 4.000"],
+["ChatGPT 1B Shar","Rp 8.200"],
+["Capcut 7D","Rp 4.000"],
+["Vidio 1B","Rp 16.000"],
+["Disney+ 7D","Rp 13.000"],
+["Loklok 1B","Rp 19.000"]
 ]
 
-const list = document.getElementById("list")
+let list = document.getElementById("list")
 
 produk.forEach(p => {
-  let [nama, harga] = p.split("|")
-
   let div = document.createElement("div")
   div.className = "card"
-
   div.innerHTML = `
-    <h3>${nama}</h3>
-    <p>${harga}</p>
-    <button onclick="beli('${nama}')">Beli</button>
+    <h3>${p[0]}</h3>
+    <div class="price">${p[1]}</div>
+    <button onclick="beli('${p[0]}')">Beli</button>
   `
-
   list.appendChild(div)
 })
 
-function beli(nama) {
+function beli(nama){
   let text = `Halo kak, saya mau beli ${nama}`
   let url = `https://wa.me/${nomor}?text=${encodeURIComponent(text)}`
   window.open(url)
-<!DOCTYPE html>
-<html>
-<head>
-  <title>About</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<h2>Tentang Kami</h2>
-<p>KEIZO SHOP adalah penyedia aplikasi premium murah, cepat, dan terpercaya.</p>
-
-<a href="index.html">Kembali</a>
-
-</body>
-</html>
 }
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Contact</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<h2>Contact Support</h2>
-<p>WhatsApp: 6285657279971</p>
-
-<a href="index.html">Kembali</a>
+</script>
 
 </body>
 </html>
