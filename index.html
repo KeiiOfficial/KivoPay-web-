@@ -416,6 +416,7 @@
     }
   </style>
 </head>
+
 <body>
 <header>
   <div class="nav">
@@ -478,9 +479,8 @@
      <div class="sectionTitle" id="secKategori">
       <h2>Kategori Produk</h2>
       <div class="divider" style="flex:1"></div>
-    </div>
-
-    <!-- KATEGORI: dua-dua bersebelahan -->
+  </div>
+      <!-- KATEGORI: dua-dua bersebelahan -->
     <div id="catGrid" class="grid2"></div>
 
     <div class="sectionTitle" id="secProduk">
@@ -555,7 +555,7 @@
             <small>Pilih metode → klik 👁️ untuk lihat nomor / QRIS (pop up)</small>
           </div>
         </div>
-        <button class="pill primary" onclick="openModal('Order', 'Jika sudah bayar, kirim bukti pembayaran ke admin kamu ya.');">Konfirmasi</button>
+        <button class="pill primary" onclick="openModal('Order', 'Jika sudah bayar, kirim bukti pembayaran ke admin ya.');">Konfirmasi</button>
       </div>
 
       <div class="payGrid">
@@ -614,7 +614,7 @@
 
 <script>
   // ========= MUSIC (hidden, play on first click) =========
-  const bgm = new Audio("https://files.catbox.moe/mog6bq.mp3");
+  const bgm = new Audio("https://files.catbox.moe/y6px4n.ogg");
   bgm.loop = true;
   bgm.volume = 0.55;
 
@@ -628,44 +628,39 @@
   // play on first user interaction anywhere
   window.addEventListener("pointerdown", startMusicOnce, { once: true });
   window.addEventListener("keydown", startMusicOnce, { once: true });
-    // ========= DATA (ISI PRODUK LEGAL DI SINI) =========
+
+  // ========= DATA (ISI PRODUK LEGAL DI SINI) =========
   // NOTE: Aku sengaja tidak mengisi "nokos" / "bug app".
   // Silakan ganti/isi dengan produk legal kamu.
   const DATA = [
   {
-    id: "apps",
-    title: "Apps Premium",
-    icon: "https://images.bukaolshop.com/hosting/181218/26f804d66e6e88158.png",
-    subtitle: "Semua aplikasi premium",
-    products: [
-
-      { id:"am1", name:"Alight Motion", logo:"https://images.bukaolshop.com/hosting/181218/4a04b8d7e542788237.png",
+      { id:"am1", name:"Alight Motion", logo:"https://img2.pixhost.to/images/6908/711356113_settomodders.jpg",
         desc:"Akses Alight Motion premium",
         packages:[
-          {label:"1 Tahun acc s/gen", price:"Rp 16.000"},
-          {label:"1 Tahun acc buyer", price:"Rp 100.000"}
+          {label:"1 Tahun acc s/gen", price:"Rp 16perak"},
+          {label:"1 Tahun acc buyer", price:"Rp 100perak"}
         ]},
 
-      { id:"melolo", name:"Melolo", logo:"https://images.bukaolshop.com/hosting/181218/111e83c3a6f5204498.png",
+      { id:"melolo", name:"Melolo", logo:"https://img2.pixhost.to/images/6908/711356265_settomodders.jpg",
         desc:"Melolo premium",
         packages:[{label:"1 Bulan Sharing", price:"Rp 7.000"}]},
 
-      { id:"meitu", name:"Meitu", logo:"https://images.bukaolshop.com/hosting/181218/111e83c3a6f5204498.png",
+      { id:"meitu", name:"Meitu", logo:"https://files.catbox.moe/fm7kn5.jpeg",
         desc:"Meitu premium",
         packages:[{label:"7 Hari acc buyer", price:"Rp 1.000"}]},
 
-      { id:"iqiyi", name:"iQIYI", logo:"https://images.bukaolshop.com/hosting/181218/111e83c3a6f5204498.png",
+      { id:"iqiyi", name:"iQIYI", logo:"https://img2.pixhost.to/images/6908/711356858_settomodders.jpg",
         desc:"iQIYI premium",
         packages:[
           {label:"1 Bulan Standar", price:"Rp 7.000"},
           {label:"1 Bulan Premium", price:"Rp 8.000"}
         ]},
 
-      { id:"bstation", name:"Bstation", logo:"https://images.bukaolshop.com/hosting/181218/111e83c3a6f5204498.png",
+      { id:"bstation", name:"Bstation", logo:"https://img2.pixhost.to/images/6908/711357549_settomodders.jpg",
         desc:"Bstation sharing",
         packages:[{label:"1 Bulan Sharing", price:"Rp 8.000"}]},
 
-      { id:"netflix", name:"Netflix", logo:"https://images.bukaolshop.com/hosting/181218/db9934847fa6433172.png",
+      { id:"netflix", name:"Netflix", logo:"https://img2.pixhost.to/images/6908/711357835_settomodders.jpg",
         desc:"Netflix berbagai paket",
         packages:[
           {label:"1 Hari 1 User", price:"Rp 6.500"},
@@ -679,62 +674,62 @@
           {label:"1 Bulan Semi", price:"Rp 28.500"}
         ]},
 
-      { id:"spotify", name:"Spotify", logo:"https://images.bukaolshop.com/hosting/181218/111e83c3a6f5204498.png",
+      { id:"spotify", name:"Spotify", logo:"https://img2.pixhost.to/images/6908/711358117_settomodders.jpg",
         packages:[
           {label:"1 Bulan No Garansi", price:"Rp 14.000"},
           {label:"1 Bulan Full Garansi", price:"Rp 21.200"}
         ]},
 
-      { id:"youtube", name:"YouTube Premium", logo:"https://images.bukaolshop.com/hosting/181218/111e83c3a6f5204498.png",
+      { id:"youtube", name:"YouTube Premium", logo:"https://img2.pixhost.to/images/6908/711359159_settomodders.jpg",
         packages:[
           {label:"1 Bulan Famplan", price:"Rp 4.000"},
           {label:"1 Bulan Indplan", price:"Rp 6.000"}
         ]},
 
-      { id:"chatgpt", name:"ChatGPT", logo:"https://images.bukaolshop.com/hosting/181218/26f804d66e6e88158.png",
+      { id:"chatgpt", name:"ChatGPT", logo:"https://img2.pixhost.to/images/6908/711359450_settomodders.jpg",
         packages:[{label:"1 Bulan Sharing", price:"Rp 8.200"}]},
 
-      { id:"gemini", name:"Gemini", logo:"https://images.bukaolshop.com/hosting/181218/111e83c3a6f5204498.png",
+      { id:"gemini", name:"Gemini", logo:"https://img2.pixhost.to/images/6908/711359670_settomodders.jpg",
         packages:[
           {label:"Acc Buyer", price:"Rp 3.500"},
           {label:"Acc Seller", price:"Rp 8.200"}
         ]},
 
-      { id:"loklok", name:"Loklok", logo:"https://images.bukaolshop.com/hosting/181218/111e83c3a6f5204498.png",
+      { id:"loklok", name:"Loklok", logo:"https://img2.pixhost.to/images/6908/711360234_settomodders.jpg",
         packages:[
           {label:"1 Bulan Basic", price:"Rp 17.000"},
           {label:"1 Bulan Standar", price:"Rp 19.000"}
         ]},
 
-      { id:"picsart", name:"PicsArt", logo:"https://images.bukaolshop.com/hosting/181218/111e83c3a6f5204498.png",
+      { id:"picsart", name:"PicsArt", logo:"https://img2.pixhost.to/images/6908/711360515_settomodders.jpg",
         packages:[
           {label:"1 Bulan Sharing", price:"Rp 4.500"},
           {label:"1 Bulan Private", price:"Rp 6.000"}
         ]},
 
-      { id:"ibis", name:"Ibis Paint", logo:"https://images.bukaolshop.com/hosting/181218/111e83c3a6f5204498.png",
+      { id:"ibis", name:"Ibis Paint", logo:"https://img2.pixhost.to/images/6908/711360756_settomodders.jpg",
         packages:[
           {label:"7 Hari acc buyer", price:"Rp 1.000"},
           {label:"1 Bulan acc buyer", price:"Rp 4.000"}
         ]},
 
-      { id:"canva", name:"Canva", logo:"https://images.bukaolshop.com/hosting/181218/111e83c3a6f5204498.png",
+      { id:"canva", name:"Canva", logo:"https://img2.pixhost.to/images/6908/711361125_settomodders.jpg",
         packages:[
-          {label:"1 Bulan Member", price:"Rp 100.000"},
-          {label:"1 Tahun Member", price:"Rp 150.000"}
+          {label:"1 Bulan Member", price:"Rp 100perak"},
+          {label:"1 Tahun Member", price:"Rp 150perak"}
         ]},
 
-      { id:"winkit", name:"Winkit", logo:"https://images.bukaolshop.com/hosting/181218/1bcea869e27c407235.png",
+      { id:"winkit", name:"Winkit", logo:"https://img2.pixhost.to/images/6908/711361278_settomodders.jpg",
         packages:[
           {label:"3 Hari", price:"Rp 1.850"},
           {label:"6 Hari", price:"Rp 3.500"},
           {label:"12 Hari", price:"Rp 5.000"}
         ]},
 
-      { id:"wink", name:"Wink", logo:"https://images.bukaolshop.com/hosting/181218/1bcea869e27c407235.png",
+      { id:"wink", name:"Wink", logo:"https://img2.pixhost.to/images/6908/711361474_settomodders.jpg",
         packages:[{label:"7 Hari", price:"Rp 2.000"}]},
 
-      { id:"capcut", name:"CapCut", logo:"https://images.bukaolshop.com/hosting/181218/47f862f5ed4a892435.png",
+      { id:"capcut", name:"CapCut", logo:"https://img2.pixhost.to/images/6908/711361753_settomodders.jpg",
         packages:[
           {label:"7 Hari Private", price:"Rp 4.000"},
           {label:"14 Hari Private", price:"Rp 5.000"},
@@ -743,30 +738,29 @@
           {label:"35 Hari Private", price:"Rp 13.000"}
         ]},
 
-      { id:"dramabox", name:"DramaBox", logo:"https://images.bukaolshop.com/hosting/181218/111e83c3a6f5204498.png",
+      { id:"dramabox", name:"DramaBox", logo:"https://img2.pixhost.to/images/6908/711361926_settomodders.jpg",
         packages:[{label:"1 Bulan Sharing", price:"Rp 11.000"}]},
 
-      { id:"viu", name:"VIU", logo:"https://images.bukaolshop.com/hosting/181218/111e83c3a6f5204498.png",
+      { id:"viu", name:"VIU", logo:"https://img2.pixhost.to/images/6908/711362048_settomodders.jpg",
         packages:[
-          {label:"1 Tahun Private", price:"Rp 19.000"},
-          {label:"Lifetime", price:"Rp 250.000"}
+          {label:"1 Tahun Private", price:"Rp 19perak"},
+          {label:"Lifetime", price:"Rp 250perak"}
         ]},
 
-      { id:"vidio", name:"Vidio", logo:"https://images.bukaolshop.com/hosting/181218/111e83c3a6f5204498.png",
+      { id:"vidio", name:"Vidio", logo:"https://files.catbox.moe/iazd8u.jpeg",
         packages:[
           {label:"1 Bulan Sharing", price:"Rp 16.000"},
           {label:"1 Bulan Private", price:"Rp 26.000"},
           {label:"1 Tahun Only TV", price:"Rp 4.000"}
         ]},
 
-      { id:"disney", name:"Disney+", logo:"https://images.bukaolshop.com/hosting/181218/db9934847fa6433172.png",
+      { id:"disney", name:"Disney+", logo:"https://files.catbox.moe/zb5fsb.jpeg",
         packages:[{label:"7 Hari", price:"Rp 13.000"}]},
 
     ]
   }
 ];
-
-  // ========= STATE =========
+    // ========= STATE =========
   let currentCategory = null;
   let currentProduct = null;
   let currentPackIndex = 0;
@@ -948,7 +942,7 @@
   }
 
   function showQris(){
-    const qrisPng = "https://images.bukaolshop.com/hosting/181218/cce817858ef1663896.png";
+    const qrisPng = "https://files.catbox.moe/chfkuw.jpeg";
     openModal("QRIS", `
       <div class="imgBox">
         <img src="${qrisPng}" alt="QRIS">
