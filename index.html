@@ -1,1553 +1,182 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KEII OFFICIAL | PAYMENT PREMIUM</title>
-    <!-- Font Awesome 6 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- AOS Animation -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
-
-        :root {
-            --ungu: #8a2be2;
-            --ungu-gelap: #4b0082;
-            --biru-cerah: #4169e1;
-            --biru-terang: #00bfff;
-            --gradient-utama: linear-gradient(135deg, #8a2be2, #4169e1, #00bfff);
-            --gradient-berkedip: linear-gradient(45deg, #8a2be2, #4169e1, #00bfff, #8a2be2);
-            --bg-gelap: #0a0a0f;
-            --bg-card: rgba(10, 10, 20, 0.7);
-            --emas: #ffd700;
-        }
-
-        body {
-            background: var(--bg-gelap);
-            color: white;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        /* ===== CUSTOM SCROLLBAR ===== */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--bg-gelap);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #8a2be2, #4169e1);
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, #4169e1, #00bfff);
-        }
-
-        /* ===== BACKGROUND ANIMASI ===== */
-        .background-3d {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -2;
-            overflow: hidden;
-        }
-
-        .gradient-sphere {
-            position: absolute;
-            width: 800px;
-            height: 800px;
-            background: radial-gradient(circle at center, rgba(138,43,226,0.3) 0%, transparent 70%);
-            border-radius: 50%;
-            top: -200px;
-            right: -200px;
-            animation: sphereFloat 20s ease-in-out infinite;
-            filter: blur(50px);
-        }
-
-        .gradient-sphere2 {
-            position: absolute;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle at center, rgba(65,105,225,0.3) 0%, transparent 70%);
-            border-radius: 50%;
-            bottom: -100px;
-            left: -100px;
-            animation: sphereFloat2 25s ease-in-out infinite;
-            filter: blur(50px);
-        }
-
-        @keyframes sphereFloat {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(-100px, 100px) scale(1.2); }
-        }
-
-        @keyframes sphereFloat2 {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(100px, -100px) scale(1.3); }
-        }
-
-        .grid-3d {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(rgba(138,43,226,0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(138,43,226,0.1) 1px, transparent 1px);
-            background-size: 50px 50px;
-            transform: perspective(500px) rotateX(60deg);
-            animation: gridMove 20s linear infinite;
-        }
-
-        @keyframes gridMove {
-            from { background-position: 0 0; }
-            to { background-position: 50px 50px; }
-        }
-
-        /* ===== INTRO LOADING SUPER PREMIUM 3D ===== */
-        .intro-loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background: #000;
-            z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: 1.5s cubic-bezier(0.7, 0, 0.3, 1);
-        }
-
-        .intro-loading.hide {
-            transform: scale(1.5) rotate(10deg);
-            opacity: 0;
-            visibility: hidden;
-            filter: blur(30px);
-        }
-
-        .intro-container {
-            position: relative;
-            width: 700px;
-            height: 700px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            perspective: 1000px;
-        }
-
-        /* 3D CUBE ROTATING */
-        .cube-3d {
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            transform-style: preserve-3d;
-            animation: cubeRotate 10s linear infinite;
-            z-index: 5;
-        }
-
-        .cube-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(138,43,226,0.3), rgba(65,105,225,0.3));
-            border: 2px solid rgba(255,255,255,0.5);
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            color: white;
-            box-shadow: 0 0 30px rgba(138,43,226,0.5);
-        }
-
-        .front  { transform: translateZ(150px); }
-        .back   { transform: rotateY(180deg) translateZ(150px); }
-        .right  { transform: rotateY(90deg) translateZ(150px); }
-        .left   { transform: rotateY(-90deg) translateZ(150px); }
-        .top    { transform: rotateX(90deg) translateZ(150px); }
-        .bottom { transform: rotateX(-90deg) translateZ(150px); }
-
-        @keyframes cubeRotate {
-            0% { transform: rotateX(0deg) rotateY(0deg); }
-            100% { transform: rotateX(360deg) rotateY(360deg); }
-        }
-
-        /* LOGO UTAMA DENGAN FOTO */
-        .intro-logo {
-            position: relative;
-            width: 280px;
-            height: 280px;
-            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-            background: var(--gradient-utama);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            animation: morphing 4s ease-in-out infinite, glow 2s ease-in-out infinite;
-            z-index: 10;
-            overflow: hidden;
-            box-shadow: 0 0 100px rgba(138, 43, 226, 0.7);
-            transform: translateZ(50px);
-        }
-
-        .intro-logo::before {
-            content: '';
-            position: absolute;
-            width: 150%;
-            height: 150%;
-            background: conic-gradient(from 0deg, #8a2be2, #4169e1, #00bfff, #8a2be2);
-            animation: rotate 4s linear infinite;
-        }
-
-        .intro-logo::after {
-            content: '';
-            position: absolute;
-            inset: 5px;
-            background: #050510;
-            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-        }
-
-        .intro-logo-content {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            color: white;
-            padding: 20px;
-        }
-
-        .intro-logo-content img {
-            width: 120px;
-            height: 120px;
-            border-radius: 20px;
-            margin-bottom: 15px;
-            border: 3px solid white;
-            box-shadow: 0 0 50px rgba(255,255,255,0.5);
-            object-fit: cover;
-            animation: pulseImage 2s ease-in-out infinite;
-        }
-
-        @keyframes pulseImage {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .intro-logo-content h1 {
-            font-size: 24px;
-            font-weight: 800;
-            line-height: 1.3;
-            margin-bottom: 5px;
-            background: var(--gradient-utama);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: textGlow 2s ease-in-out infinite;
-        }
-
-        @keyframes textGlow {
-            0%, 100% { text-shadow: 0 0 20px #8a2be2; }
-            50% { text-shadow: 0 0 40px #00bfff; }
-        }
-
-        .intro-logo-content p {
-            font-size: 16px;
-            color: #ccc;
-            letter-spacing: 4px;
-            animation: letterSpacing 2s ease-in-out infinite;
-        }
-
-        @keyframes letterSpacing {
-            0%, 100% { letter-spacing: 4px; }
-            50% { letter-spacing: 8px; }
-        }
-
-        /* ROTATING CRYSTALS */
-        .crystal-ring {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            animation: rotateRing 20s linear infinite;
-            transform-style: preserve-3d;
-        }
-
-        .crystal-ring span {
-            position: absolute;
-            width: 80px;
-            height: 80px;
-            background: var(--gradient-utama);
-            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-            filter: blur(8px);
-            opacity: 0.6;
-            box-shadow: 0 0 30px currentColor;
-            transform: translateZ(100px);
-        }
-
-        .crystal-ring span:nth-child(1) { top: 10%; left: 20%; animation: float3d1 4s ease-in-out infinite; }
-        .crystal-ring span:nth-child(2) { top: 60%; right: 15%; width: 100px; height: 100px; animation: float3d2 5s ease-in-out infinite; }
-        .crystal-ring span:nth-child(3) { bottom: 15%; left: 25%; width: 70px; height: 70px; animation: float3d3 4.5s ease-in-out infinite; }
-        .crystal-ring span:nth-child(4) { top: 25%; right: 25%; width: 90px; height: 90px; animation: float3d4 5.5s ease-in-out infinite; }
-        .crystal-ring span:nth-child(5) { bottom: 30%; right: 30%; width: 60px; height: 60px; animation: float3d1 4.2s ease-in-out infinite; }
-        .crystal-ring span:nth-child(6) { top: 45%; left: 10%; width: 85px; height: 85px; animation: float3d2 4.8s ease-in-out infinite; }
-        .crystal-ring span:nth-child(7) { top: 70%; left: 40%; width: 75px; height: 75px; animation: float3d3 5.2s ease-in-out infinite; }
-        .crystal-ring span:nth-child(8) { bottom: 40%; right: 35%; width: 95px; height: 95px; animation: float3d4 4.6s ease-in-out infinite; }
-
-        @keyframes float3d1 {
-            0%, 100% { transform: translateZ(100px) translate(0, 0) rotate(0deg); }
-            50% { transform: translateZ(150px) translate(-30px, -30px) rotate(180deg); }
-        }
-        @keyframes float3d2 {
-            0%, 100% { transform: translateZ(100px) translate(0, 0) rotate(0deg); }
-            50% { transform: translateZ(200px) translate(30px, -40px) rotate(-180deg); }
-        }
-
-        @keyframes float3d3 {
-            0%, 100% { transform: translateZ(100px) translate(0, 0) rotate(0deg); }
-            50% { transform: translateZ(180px) translate(-40px, 30px) rotate(90deg); }
-        }
-
-        @keyframes float3d4 {
-            0%, 100% { transform: translateZ(100px) translate(0, 0) rotate(0deg); }
-            50% { transform: translateZ(220px) translate(35px, 35px) rotate(-90deg); }
-        }
-
-        @keyframes rotateRing {
-            0% { transform: rotate(0deg) rotateY(0deg); }
-            100% { transform: rotate(360deg) rotateY(360deg); }
-        }
-
-        /* PROGRESS BAR 3D */
-        .intro-progress {
-            position: absolute;
-            bottom: -80px;
-            left: 50%;
-            transform: translateX(-50%) translateZ(50px);
-            width: 500px;
-            text-align: center;
-            background: rgba(0,0,0,0.3);
-            backdrop-filter: blur(10px);
-            padding: 20px;
-            border-radius: 50px;
-            border: 1px solid rgba(138,43,226,0.3);
-        }
-
-        .intro-progress-text {
-            color: white;
-            font-size: 20px;
-            margin-bottom: 15px;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            text-shadow: 0 0 20px var(--ungu);
-        }
-
-        .intro-progress-text span {
-            color: #00bfff;
-            font-weight: bold;
-            font-size: 30px;
-            animation: pulseNumber 1s ease-in-out infinite;
-        }
-
-        .intro-progress-bar {
-            width: 100%;
-            height: 12px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            overflow: hidden;
-            position: relative;
-            box-shadow: 0 0 20px rgba(138,43,226,0.5);
-        }
-
-        .intro-progress-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #8a2be2, #4169e1, #00bfff);
-            position: relative;
-            animation: progressLoading 3s ease-in-out forwards;
-            box-shadow: 0 0 30px #8a2be2;
-        }
-
-        .intro-progress-fill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 40px;
-            height: 100%;
-            background: white;
-            filter: blur(20px);
-            animation: scan 1.5s ease-in-out infinite;
-        }
-
-        /* PERSENTASE ANGKA 3D */
-        .intro-percentage {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) translateZ(200px);
-            font-size: 200px;
-            font-weight: 800;
-            background: var(--gradient-utama);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            opacity: 0.15;
-            z-index: 1;
-            animation: pulse3d 2s ease-in-out infinite;
-            text-shadow: 0 0 50px rgba(138,43,226,0.5);
-            white-space: nowrap;
-        }
-
-        @keyframes pulse3d {
-            0%, 100% { transform: translate(-50%, -50%) translateZ(200px) scale(1); opacity: 0.15; }
-            50% { transform: translate(-50%, -50%) translateZ(250px) scale(1.2); opacity: 0.25; }
-        }
-
-        /* PARTICLE SYSTEM */
-        .particles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: 0;
-        }
-
-        .particle {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: linear-gradient(135deg, #8a2be2, #00bfff);
-            border-radius: 50%;
-            animation: particleFloat3d 15s linear infinite;
-            opacity: 0.5;
-            filter: blur(2px);
-        }
-
-        @keyframes particleFloat3d {
-            0% {
-                transform: translateY(100vh) translateX(0) translateZ(0) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.8;
-                transform: translateY(80vh) translateX(50px) translateZ(100px) rotate(180deg);
-            }
-            90% {
-                opacity: 0.8;
-                transform: translateY(20vh) translateX(-50px) translateZ(200px) rotate(360deg);
-            }
-            100% {
-                transform: translateY(-100vh) translateX(100px) translateZ(300px) rotate(540deg);
-                opacity: 0;
-            }
-        }
-
-        /* ===== MAIN CONTENT ===== */
-        .main-content {
-            opacity: 0;
-            transform: translateY(50px) scale(0.95);
-            transition: all 1.5s cubic-bezier(0.7, 0, 0.3, 1) 0.5s;
-            position: relative;
-            z-index: 1;
-        }
-
-        .main-content.visible {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-
-        /* ===== HEADER PREMIUM ===== */
-        .premium-header {
-            text-align: center;
-            padding: 100px 20px 50px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .premium-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, rgba(138,43,226,0.3) 0%, transparent 70%);
-            animation: headerGlow 5s ease-in-out infinite;
-            pointer-events: none;
-        }
-
-        @keyframes headerGlow {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.6; }
-        }
-
-        .premium-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, rgba(138,43,226,0.2), rgba(65,105,225,0.2));
-            border: 2px solid transparent;
-            border-image: var(--gradient-utama);
-            border-image-slice: 1;
-            padding: 15px 40px;
-            border-radius: 60px;
-            font-size: 18px;
-            margin-bottom: 40px;
-            backdrop-filter: blur(20px);
-            position: relative;
-            overflow: hidden;
-            animation: badgeFloat 3s ease-in-out infinite;
-        }
-
-        @keyframes badgeFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .premium-badge i {
-            color: #00ff00;
-            margin-right: 10px;
-            animation: checkPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes checkPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-        }
-
-        .premium-title {
-            font-size: 80px;
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            position: relative;
-            display: inline-block;
-        }
-
-        .premium-title span {
-            background: var(--gradient-utama);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: inline-block;
-            animation: titleGlitch 3s infinite;
-        }
-
-        @keyframes titleGlitch {
-            0%, 100% { transform: skew(0deg); }
-            95% { transform: skew(0deg); }
-            96% { transform: skew(10deg); }
-            97% { transform: skew(-10deg); }
-            98% { transform: skew(5deg); }
-            99% { transform: skew(-5deg); }
-        }
-
-        .premium-subtitle {
-            color: #ccc;
-            font-size: 22px;
-            max-width: 700px;
-            margin: 0 auto;
-            position: relative;
-            padding: 20px;
-            background: rgba(0,0,0,0.3);
-            backdrop-filter: blur(10px);
-            border-radius: 60px;
-            border: 1px solid rgba(138,43,226,0.3);
-        }
-
-        /* ===== PAYMENT CARDS PREMIUM ===== */
-        .payment-showcase {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-
-        .payment-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 40px;
-            margin-bottom: 60px;
-        }
-
-        .payment-card-premium {
-            background: rgba(10, 10, 20, 0.6);
-            backdrop-filter: blur(20px);
-            border-radius: 50px;
-            padding: 50px 40px;
-            border: 1px solid rgba(138, 43, 226, 0.3);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            text-align: center;
-            transform-style: preserve-3d;
-            perspective: 1000px;
-        }
-
-        .payment-card-premium::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 50% 50%, rgba(138,43,226,0.3) 0%, transparent 70%);
-            opacity: 0;
-            transition: 0.5s;
-        }
-
-        .payment-card-premium:hover {
-            transform: translateY(-20px) rotateX(5deg) rotateY(5deg);
-            border-color: #8a2be2;
-            box-shadow: 
-                0 30px 50px rgba(138,43,226,0.3),
-                0 0 0 2px rgba(138,43,226,0.3);
-        }
-
-        .payment-card-premium:hover::before {
-            opacity: 1;
-        }
-
-        .card-3d-icon {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 30px;
-            background: var(--gradient-utama);
-            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 60px;
-            color: white;
-            animation: morphing 6s ease-in-out infinite, float 3s ease-in-out infinite;
-            transform-style: preserve-3d;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-
-        .card-3d-icon i {
-            filter: drop-shadow(0 0 20px rgba(255,255,255,0.5));
-            transform: translateZ(20px);
-        }
-
-        .payment-card-premium h2 {
-            font-size: 40px;
-            margin-bottom: 20px;
-            background: var(--gradient-utama);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            transform: translateZ(30px);
-        }
-
-        .payment-number-premium {
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 30px;
-            color: white;
-            background: rgba(255,255,255,0.05);
-            padding: 20px;
-            border-radius: 30px;
-            border: 2px solid transparent;
-            border-image: var(--gradient-utama);
-            border-image-slice: 1;
-            letter-spacing: 3px;
-            position: relative;
-            overflow: hidden;
-            transform: translateZ(20px);
-        }
-
-        .payment-number-premium::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(138,43,226,0.3), transparent);
-            animation: shine 3s infinite;
-        }
-
-        @keyframes shine {
-            to { left: 200%; }
-        }
-
-        .copy-btn-premium {
-            display: inline-flex;
-            align-items: center;
-            gap: 15px;
-            padding: 20px 50px;
-            background: var(--gradient-utama);
-            color: white;
-            border: none;
-            border-radius: 60px;
-            font-size: 20px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.5s;
-            position: relative;
-            overflow: hidden;
-            transform: translateZ(40px);
-            box-shadow: 0 10px 30px rgba(138,43,226,0.5);
-        }
-
-        .copy-btn-premium::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: 0.5s;
-        }
-
-        .copy-btn-premium:hover::before {
-            left: 100%;
-        }
-
-        .copy-btn-premium:hover {
-            transform: translateZ(60px) scale(1.1);
-            box-shadow: 0 20px 50px rgba(138,43,226,0.7);
-        }
-
-        .copy-btn-premium i {
-            font-size: 24px;
-            animation: bounce 2s ease-in-out infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-
-        /* ===== QRIS SECTION DENGAN POP UP SUPER BESAR ===== */
-        .qris-showcase {
-            text-align: center;
-            margin: 60px 0;
-        }
-
-        .qris-trigger {
-            display: inline-block;
-            cursor: pointer;
-        }
-
-        .qris-preview {
-            width: 400px;
-            height: 400px;
-            margin: 0 auto 30px;
-            background: white;
-            border-radius: 50px;
-            padding: 30px;
-            border: 5px solid transparent;
-            background: linear-gradient(white, white) padding-box,
-                        var(--gradient-utama) border-box;
-            box-shadow: 0 0 80px rgba(138,43,226,0.6);
-            transition: 0.5s;
-            animation: pulseShadow 2s ease-in-out infinite;
-            cursor: pointer;
-        }
-
-        @keyframes pulseShadow {
-            0%, 100% { box-shadow: 0 0 80px rgba(138,43,226,0.6); }
-            50% { box-shadow: 0 0 150px rgba(65,105,225,0.8); }
-        }
-
-        .qris-preview img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
-        .qris-preview:hover {
-            transform: scale(1.08) rotate(2deg);
-            box-shadow: 0 0 120px rgba(138,43,226,0.8);
-        }
-
-        .qris-preview-text {
-            font-size: 28px;
-            margin-top: 25px;
-            background: var(--gradient-utama);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            font-weight: 600;
-          }
-        .qris-preview-text i {
-            animation: bounce 2s ease-in-out infinite;
-            font-size: 35px;
-        }
-
-        /* MODAL POP UP QRIS SUPER BESAR */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background: rgba(0,0,0,0.9);
-            backdrop-filter: blur(30px);
-            z-index: 10000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: 0.3s;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-            animation: modalFadeIn 0.4s forwards;
-        }
-
-        @keyframes modalFadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .modal-content {
-            background: linear-gradient(135deg, #1a1a2a, #16213e);
-            border-radius: 80px;
-            padding: 80px;
-            max-width: 1100px;
-            width: 95%;
-            position: relative;
-            border: 3px solid transparent;
-            background: linear-gradient(#1a1a2a, #16213e) padding-box,
-                        var(--gradient-utama) border-box;
-            box-shadow: 0 0 150px rgba(138,43,226,0.8);
-            transform: scale(0.9);
-            animation: modalPop 0.5s forwards;
-        }
-
-        @keyframes modalPop {
-            to { transform: scale(1); }
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 40px;
-            right: 40px;
-            width: 60px;
-            height: 60px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: 0.3s;
-            border: 2px solid rgba(138,43,226,0.5);
-            z-index: 10;
-        }
-
-        .modal-close:hover {
-            background: #ff0000;
-            transform: rotate(90deg) scale(1.1);
-            border-color: white;
-        }
-
-        .modal-close i {
-            font-size: 30px;
-            color: white;
-        }
-
-        .modal-title {
-            font-size: 50px;
-            margin-bottom: 40px;
-            text-align: center;
-            background: var(--gradient-utama);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 800;
-        }
-
-        .modal-qris-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 40px;
-        }
-
-        .modal-qris {
-            width: 500px;
-            height: 500px;
-            background: white;
-            border-radius: 60px;
-            padding: 30px;
-            box-shadow: 0 0 100px rgba(138,43,226,0.6);
-            border: 5px solid #8a2be2;
-        }
-
-        .modal-qris img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
-        .modal-info {
-            background: rgba(0,0,0,0.4);
-            border-radius: 50px;
-            padding: 40px;
-            margin-top: 30px;
-            border: 1px solid rgba(138,43,226,0.3);
-        }
-
-        .modal-info p {
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            font-size: 22px;
-            color: white;
-        }
-
-        .modal-info i {
-            width: 40px;
-            font-size: 28px;
-            color: #8a2be2;
-        }
-
-        .modal-info strong {
-            color: #00bfff;
-            font-weight: 600;
-            margin-right: 10px;
-        }
-
-        .modal-btn {
-            display: inline-block;
-            padding: 25px 70px;
-            background: var(--gradient-utama);
-            color: white;
-            text-decoration: none;
-            border-radius: 80px;
-            font-size: 24px;
-            font-weight: 600;
-            margin-top: 40px;
-            transition: 0.3s;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 10px 30px rgba(138,43,226,0.5);
-        }
-
-        .modal-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 60px #8a2be2;
-        }
-
-        /* ===== INSTRUCTIONS PREMIUM ===== */
-        .instructions-premium {
-            max-width: 1000px;
-            margin: 80px auto;
-            background: rgba(10,10,20,0.6);
-            backdrop-filter: blur(20px);
-            border-radius: 60px;
-            padding: 60px;
-            border: 1px solid rgba(138,43,226,0.3);
-        }
-
-        .instructions-premium h3 {
-            font-size: 40px;
-            margin-bottom: 40px;
-            text-align: center;
-            color: #00bfff;
-        }
-
-        .steps-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-        }
-
-        .step-item {
-            text-align: center;
-            padding: 30px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 40px;
-            transition: 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .step-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, rgba(138,43,226,0.3) 0%, transparent 70%);
-            opacity: 0;
-            transition: 0.3s;
-        }
-
-        .step-item:hover::before {
-            opacity: 1;
-        }
-
-        .step-item:hover {
-            transform: translateY(-10px);
-            border-color: #8a2be2;
-        }
-
-        .step-number-badge {
-            width: 70px;
-            height: 70px;
-            background: var(--gradient-utama);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-            font-weight: bold;
-            color: white;
-            margin: 0 auto 20px;
-            animation: pulseNumber 2s ease-in-out infinite;
-        }
-
-        .step-item p {
-            color: #ccc;
-            font-size: 18px;
-            line-height: 1.6;
-        }
-
-        /* ===== FLOATING CONTACT 3D ===== */
-        .floating-contact-3d {
-            position: fixed;
-            bottom: 40px;
-            right: 40px;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            transform-style: preserve-3d;
-            perspective: 1000px;
-        }
-
-        .contact-sphere {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: 0.3s;
-            border: 3px solid white;
-            font-size: 35px;
-            color: white;
-            position: relative;
-            transform-style: preserve-3d;
-            animation: sphereFloat 3s ease-in-out infinite;
-        }
-
-        .contact-sphere::before {
-            content: '';
-            position: absolute;
-            inset: -10px;
-            border-radius: 50%;
-            background: inherit;
-            filter: blur(20px);
-            opacity: 0.5;
-            z-index: -1;
-        }
-
-        .contact-sphere.whatsapp {
-            background: #25D366;
-            animation-delay: 0s;
-        }
-
-        .contact-sphere.telegram {
-            background: #0088cc;
-            animation-delay: 0.5s;
-        }
-
-        .contact-sphere:hover {
-            transform: scale(1.2) translateY(-10px) rotate(360deg);
-        }
-
-        @keyframes sphereFloat {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(10deg); }
-        }
-
-        /* ===== FOOTER PREMIUM ===== */
-        .premium-footer {
-            background: rgba(5,5,10,0.9);
-            backdrop-filter: blur(20px);
-            padding: 80px 5% 30px;
-            margin-top: 100px;
-            border-top: 2px solid transparent;
-            border-image: var(--gradient-utama);
-            border-image-slice: 1;
-        }
-
-        .footer-grid {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 50px;
-        }
-
-        .footer-brand h3 {
-            font-size: 28px;
-            margin-bottom: 20px;
-            background: var(--gradient-utama);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .footer-brand p {
-            color: #888;
-            line-height: 1.8;
-        }
-
-        .footer-links h4 {
-            color: white;
-            margin-bottom: 25px;
-            font-size: 20px;
-        }
-
-        .footer-links p {
-            color: #888;
-            line-height: 1.8;
-            margin-bottom: 15px;
-            transition: 0.3s;
-        }
-
-        .footer-links p:hover {
-            color: #8a2be2;
-            transform: translateX(10px);
-        }
-
-        .footer-links i {
-            color: #8a2be2;
-            margin-right: 10px;
-        }
-
-        .footer-bottom {
-            text-align: center;
-            margin-top: 60px;
-            padding-top: 30px;
-            border-top: 1px solid #222;
-            color: #666;
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 768px) {
-            .intro-container {
-                width: 350px;
-                height: 350px;
-            }
-
-            .intro-logo {
-                width: 180px;
-                height: 180px;
-            }
-
-            .intro-logo-content img {
-                width: 80px;
-                height: 80px;
-            }
-
-            .intro-percentage {
-                font-size: 100px;
-            }
-
-            .premium-title {
-                font-size: 40px;
-            }
-
-            .payment-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .qris-preview {
-                width: 280px;
-                height: 280px;
-                padding: 15px;
-            }
-
-            .qris-preview-text {
-                font-size: 20px;
-            }
-
-            .modal-content {
-                padding: 40px 20px;
-            }
-
-            .modal-qris {
-                width: 280px;
-                height: 280px;
-                padding: 15px;
-            }
-
-            .modal-title {
-                font-size: 32px;
-            }
-
-            .modal-info p {
-                font-size: 16px;
-                gap: 10px;
-        }
-               .modal-btn {
-                padding: 15px 40px;
-                font-size: 18px;
-            }
-
-            .steps-container {
-                grid-template-columns: 1fr;
-            }
-
-            .floating-contact-3d {
-                bottom: 20px;
-                right: 20px;
-            }
-
-            .contact-sphere {
-                width: 50px;
-                height: 50px;
-                font-size: 25px;
-            }
-        }
-    </style>
+  <title>KEIZO SHOP</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- BACKGROUND 3D -->
-    <div class="background-3d">
-        <div class="gradient-sphere"></div>
-        <div class="gradient-sphere2"></div>
-        <div class="grid-3d"></div>
-    </div>
 
-    <!-- INTRO LOADING SUPER PREMIUM -->
-    <div class="intro-loading" id="introLoading">
-        <div class="intro-container">
-            <!-- 3D CUBE -->
-            <div class="cube-3d">
-                <div class="cube-face front"><i class="fas fa-coins"></i></div>
-                <div class="cube-face back"><i class="fas fa-coins"></i></div>
-                <div class="cube-face right"><i class="fas fa-coins"></i></div>
-                <div class="cube-face left"><i class="fas fa-coins"></i></div>
-                <div class="cube-face top"><i class="fas fa-coins"></i></div>
-                <div class="cube-face bottom"><i class="fas fa-coins"></i></div>
-            </div>
+<nav>
+  <h2>KEIZO SHOP</h2>
+  <div>
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</nav>
 
-            <!-- ANGKA PERSENTASE 3D -->
-            <div class="intro-percentage" id="percentageNumber">0%</div>
-            
-            <!-- CRYSTAL RING 3D -->
-            <div class="crystal-ring">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-            
-            <!-- LOGO UTAMA DENGAN FOTO -->
-            <div class="intro-logo">
-                <div class="intro-logo-content">
-                    <img src="https://images.bukaolshop.com/hosting/181218/5f576e0af873494477.png" alt="KEII OFFICIAL">
-                    <h1>WELCOME TO PAYMENT</h1>
-                    <p>KEII OFFICIAL</p>
-                </div>
-            </div>
-            
-            <!-- PROGRESS BAR PREMIUM -->
-            <div class="intro-progress">
-                <div class="intro-progress-text">
-                    LOADING <span id="progressPercent">0%</span>
-                </div>
-                <div class="intro-progress-bar">
-                    <div class="intro-progress-fill" id="progressFill"></div>
-                </div>
-            </div>
+<section class="hero">
+  <h1>APPS PREMIUM TERMURAH & TRUSTED</h1>
+  <p>Fast Respon • Aman • Murah</p>
+</section>
 
-            <!-- PARTICLES 3D -->
-            <div class="particles" id="particles"></div>
-        </div>
-    </div>
+<section class="produk">
+  <h2>LIST PRODUK</h2>
 
-    <!-- MODAL POP UP QRIS SUPER BESAR -->
-    <div class="modal-overlay" id="qrisModal">
-        <div class="modal-content">
-            <div class="modal-close" onclick="closeQRIS()">
-                <i class="fas fa-times"></i>
-            </div>
-            <h2 class="modal-title">QRIS PAYMENT</h2>
-            
-            <!-- QRIS SUPER BESAR -->
-            <div class="modal-qris-container">
-                <div class="modal-qris">
-                    <img src="https://images.bukaolshop.com/hosting/181218/15b9e709ce2931209.png" alt="QRIS KEII OFFICIAL">
-                </div>
-            </div>
-            
-            <!-- INFO QRIS LENGKAP -->
-            <div class="modal-info">
-                <p><i class="fas fa-store"></i> <strong>Merchant:</strong> KEIZO STORE</p>
-                <p><i class="fas fa-id-card"></i> <strong>NMID:</strong> ID1025386843615</p>
-                <p><i class="fas fa-qrcode"></i> <strong>QRIS Standar:</strong> Pembayaran Nasional</p>
-                <p><i class="fas fa-info-circle"></i> <strong>Cara bayar:</strong> Scan QRIS menggunakan aplikasi DANA/OVO/GoPay/m-banking</p>
-                <p><i class="fas fa-check-circle" style="color: #00ff00;"></i> <strong>Status:</strong> Aktif - Satu QRIS untuk semua</p>
-            </div>
-            
-            <!-- TOMBOL TUTUP -->
-            <div style="text-align: center;">
-                <button class="modal-btn" onclick="closeQRIS()">
-                    <i class="fas fa-check"></i> OK, GOT IT
-                </button>
-            </div>
-        </div>
-    </div>
+  <div id="list"></div>
 
-    <!-- FLOATING CONTACT 3D -->
-    <div class="floating-contact-3d">
-        <div class="contact-sphere whatsapp" onclick="window.open('https://wa.me/6287753513090', '_blank')">
-            <i class="fab fa-whatsapp"></i>
-        </div>
-        <div class="contact-sphere telegram" onclick="window.open('https://t.me/keiiofficial', '_blank')">
-            <i class="fab fa-telegram-plane"></i>
-        </div>
-    </div>
+</section>
 
-    <!-- MAIN CONTENT -->
-    <div class="main-content" id="mainContent">
-        <!-- HEADER PREMIUM -->
-        <header class="premium-header">
-            <div class="premium-badge" data-aos="fade-down">
-                <i class="fas fa-shield-alt"></i> KEII OFFICIAL PREMIUM PAYMENT
-            </div>
-            <h1 class="premium-title" data-aos="fade-up">
-                <span>PAYMENT</span> GATEWAY
-            </h1>
-            <div class="premium-subtitle" data-aos="fade-up" data-aos-delay="200">
-                <i class="fas fa-bolt"></i> Super Cepat • Aman • Terpercaya <i class="fas fa-bolt"></i>
-            </div>
-        </header>
-
-        <!-- PAYMENT CARDS PREMIUM -->
-        <section class="payment-showcase">
-            <div class="payment-grid">
-                <!-- DANA CARD -->
-                <div class="payment-card-premium" data-aos="flip-left">
-                    <div class="card-3d-icon">
-                        <i class="fas fa-wallet"></i>
-                    </div>
-                    <h2>DANA</h2>
-                    <div class="payment-number-premium" id="danaNumber">087753513090</div>
-                    <button class="copy-btn-premium" onclick="copyNumber('087753513090', 'DANA')">
-                        <i class="far fa-copy"></i> COPY NUMBER
-                    </button>
-                </div>
-
-                <!-- SEABANK CARD -->
-                <div class="payment-card-premium" data-aos="flip-right">
-                    <div class="card-3d-icon">
-                        <i class="fas fa-university"></i>
-                    </div>
-                    <h2>SEABANK</h2>
-                    <div class="payment-number-premium" id="seabankNumber">901517870612</div>
-                    <button class="copy-btn-premium" onclick="copyNumber('901517870612', 'SEABANK')">
-                        <i class="far fa-copy"></i> COPY NUMBER
-                    </button>
-                </div>
-            </div>
-
-            <!-- QRIS PREVIEW - KLIK UNTUK POP UP (SUPER BESAR) -->
-            <div class="qris-showcase" data-aos="zoom-in">
-                <div class="qris-trigger" onclick="openQRIS()">
-                    <div class="qris-preview">
-                        <img src="https://images.bukaolshop.com/hosting/181218/15b9e709ce2931209.png" alt="QRIS Preview">
-                    </div>
-                    <div class="qris-preview-text">
-                        <i class="fas fa-hand-pointer"></i> KLIK UNTUK LIHAT QRIS SUPER BESAR <i class="fas fa-hand-pointer"></i>
-                    </div>
-                </div>
-            </div>
-
-            <!-- INSTRUCTIONS PREMIUM -->
-            <div class="instructions-premium" data-aos="fade-up">
-                <h3><i class="fas fa-info-circle"></i> CARA BAYAR</h3>
-                <div class="steps-container">
-                    <div class="step-item">
-                        <div class="step-number-badge">1</div>
-                        <p>Pilih metode pembayaran (DANA, SEABANK, atau QRIS)</p>
-                    </div>
-                    <div class="step-item">
-                        <div class="step-number-badge">2</div>
-                        <p>Copy nomor payment atau klik QRIS untuk scan</p>
-                    </div>
-                    <div class="step-item">
-                        <div class="step-number-badge">3</div>
-                        <p>Lakukan transfer sesuai total belanja</p>
-                    </div>
-                    <div class="step-item">
-                        <div class="step-number-badge">4</div>
-                        <p>Simpan bukti transfer (screenshot)</p>
-                    </div>
-                    <div class="step-item">
-                        <div class="step-number-badge">5</div>
-                        <p>Kirim bukti ke admin via WA/Telegram</p>
-                    </div>
-                    <div class="step-item">
-                        <div class="step-number-badge">6</div>
-                        <p>Tunggu konfirmasi maksimal 5 menit</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- FOOTER PREMIUM -->
-        <footer class="premium-footer">
-            <div class="footer-grid">
-                <div class="footer-brand">
-                    <h3>KEII OFFICIAL</h3>
-                    <p>Premium Payment Gateway<br>Terpercaya Sejak 2024<br>Support 24/7</p>
-                </div>
-                <div class="footer-links">
-                    <h4>KONTAK</h4>
-                    <p><i class="fab fa-whatsapp"></i> 0877-5351-3090</p>
-                    <p><i class="fab fa-telegram"></i> @keiiofficial</p>
-                </div>
-                <div class="footer-links">
-                    <h4>METODE</h4>
-                    <p>DANA</p>
-                    <p>SEABANK</p>
-                    <p>QRIS</p>
-                </div>
-                <div class="footer-links">
-                    <h4>JAM OPERASIONAL</h4>
-                    <p>Senin - Minggu</p>
-                    <p>24 Jam Nonstop</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>© 2026 KEII OFFICIAL PREMIUM PAYMENT. All rights reserved.</p>
-            </div>
-        </footer>
-    </div>
-
-    <!-- AOS Animation -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        // INIT AOS
-        AOS.init({
-            duration: 1000,
-            once: true,
-            offset: 100
-        });
-
-        // INTRO LOADING ANIMATION
-        let progress = 0;
-        const progressFill = document.getElementById('progressFill');
-        const progressPercent = document.getElementById('progressPercent');
-        const percentageNumber = document.getElementById('percentageNumber');
-        const mainContent = document.getElementById('mainContent');
-        
-        const interval = setInterval(() => {
-            progress += 1;
-            if (progress <= 100) {
-                progressFill.style.width = progress + '%';
-                progressPercent.textContent = progress + '%';
-                percentageNumber.textContent = progress + '%';
-            } else {
-                clearInterval(interval);
-                setTimeout(() => {
-                    document.getElementById('introLoading').classList.add('hide');
-                    mainContent.classList.add('visible');
-                }, 500);
-            }
-        }, 30);
-
-        // CREATE PARTICLES
-        function createParticles() {
-            const particlesContainer = document.getElementById('particles');
-            for (let i = 0; i < 50; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 10 + 's';
-                particle.style.animationDuration = (Math.random() * 5 + 8) + 's';
-                particlesContainer.appendChild(particle);
-            }
-        }
-        createParticles();
-
-        // QRIS MODAL FUNCTIONS
-        function openQRIS() {
-            document.getElementById('qrisModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeQRIS() {
-            document.getElementById('qrisModal').classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-
-        // Close modal with ESC key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeQRIS();
-            }
-        });
-
-        // COPY NUMBER FUNCTION
-        function copyNumber(number, method) {
-            navigator.clipboard.writeText(number).then(() => {
-                // Create custom alert
-                const alert = document.createElement('div');
-                alert.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    background: linear-gradient(135deg, #8a2be2, #4169e1);
-                    color: white;
-                    padding: 20px 40px;
-                    border-radius: 60px;
-                    font-size: 18px;
-                    font-weight: 600;
-                    z-index: 10001;
-                    box-shadow: 0 0 50px rgba(138,43,226,0.5);
-                    animation: slideIn 0.3s ease-out;
-                `;
-                alert.innerHTML = `<i class="fas fa-check-circle"></i> Nomor ${method} berhasil di-copy!`;
-                document.body.appendChild(alert);
-                
-                setTimeout(() => {
-                    alert.style.animation = 'slideOut 0.3s ease-out';
-                    setTimeout(() => alert.remove(), 300);
-                }, 3000);
-            });
-        }
-
-        // Add keyframe animations
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-            @keyframes slideOut {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(style);
-    </script>
+<script src="script.js"></script>
 </body>
-</html>  
-                            
+</html>
+body {
+  font-family: sans-serif;
+  margin: 0;
+  background: #0f0f0f;
+  color: white;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+  background: #111;
+}
+
+nav a {
+  color: white;
+  margin: 0 10px;
+  text-decoration: none;
+}
+
+.hero {
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.produk {
+  padding: 20px;
+  text-align: center;
+}
+
+.card {
+  background: #1a1a1a;
+  padding: 15px;
+  margin: 10px;
+  display: inline-block;
+  border-radius: 10px;
+  width: 250px;
+}
+
+button {
+  padding: 10px;
+  background: #00ffcc;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+}
+const nomor = "6285657279971"
+
+const produk = [
+"am 1thn acc s/gen | 16perak",
+"am 1thn acc buyer | 100p",
+"melolo 1b shar | 7.000",
+"meitu 7d acc buyer | 1.000",
+"iqiyi 1b standar | 7.000",
+"iqiyi 1b premium | 8.000",
+"bstation 1b shar | 8.000",
+"Netflix 1d 1u | 6.500",
+"Netflix 3d 1u | 8.500",
+"Netflix 7d 1u | 12.000",
+"Netflix 1b 1u | 20.000",
+"Netflix 1d 2u | 5.500",
+"Netflix 3d 2u | 8.900",
+"Netflix 7d 2u | 10.500",
+"Netflix 1b 2u | 14.500",
+"Netflix 1b semi | 28.500",
+"Spotify 1b nogar | 14.000",
+"Spotify 1b fullgar | 21.200",
+"YouTube 1b famplan | 4.000",
+"YouTube 1b indplan | 6.000",
+"chatgpt 1b shar | 8.200",
+"Gemini acc b | 3.500",
+"Gemini acc s | 8.200",
+"loklok 1b basic | 17.000",
+"loklok 1b standar | 19.000",
+"picsart 1b shar | 4.500",
+"picsart 1b priv | 6.000",
+"Ibis paint 7d acc b | 1.000",
+"Ibis paint 1b acc b | 4.000",
+"Canva 1b member | 100p",
+"canva 1thn member | 150p",
+"winkit 3d acc b | 1.850",
+"winkit 6d acc b | 3.500",
+"winkit 12d acc b | 5.000",
+"wink 7d acc b | 2.000",
+"capcut 7d priv | 4.000",
+"capcut 14d priv | 5.000",
+"capcut 21d priv | 6.000",
+"capcut 28d priv | 7.000",
+"capcut 35d priv | 13.000",
+"dramabox 1b shar | 11.000",
+"viu 1thn priv | 19p",
+"viu lifetime | 250p",
+"vidio 1b shar | 16.000",
+"vidio 1b priv | 26.000",
+"vidio 1thn only tv | 4.000",
+"Disney 7d | 13.000"
+]
+
+const list = document.getElementById("list")
+
+produk.forEach(p => {
+  let [nama, harga] = p.split("|")
+
+  let div = document.createElement("div")
+  div.className = "card"
+
+  div.innerHTML = `
+    <h3>${nama}</h3>
+    <p>${harga}</p>
+    <button onclick="beli('${nama}')">Beli</button>
+  `
+
+  list.appendChild(div)
+})
+
+function beli(nama) {
+  let text = `Halo kak, saya mau beli ${nama}`
+  let url = `https://wa.me/${nomor}?text=${encodeURIComponent(text)}`
+  window.open(url)
+<!DOCTYPE html>
+<html>
+<head>
+  <title>About</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h2>Tentang Kami</h2>
+<p>KEIZO SHOP adalah penyedia aplikasi premium murah, cepat, dan terpercaya.</p>
+
+<a href="index.html">Kembali</a>
+
+</body>
+</html>
+}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Contact</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h2>Contact Support</h2>
+<p>WhatsApp: 6285657279971</p>
+
+<a href="index.html">Kembali</a>
+
+</body>
+</html>
