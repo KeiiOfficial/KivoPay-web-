@@ -197,6 +197,13 @@
   overflow:hidden;
   position:relative;
 }
+.pCard img{
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
 
 .pCard:hover{
   transform:translateY(-5px) scale(1.02);
@@ -524,7 +531,7 @@ button{
 }
   </style>
 </head>
-body>
+<body>
 <header>
   <div class="nav">
     
@@ -728,6 +735,9 @@ body>
 </div>
 
 <script>
+function el(id){
+  return document.getElementById(id);
+}
 // ================== DATA ==================
 let cart = [];
 
@@ -766,9 +776,9 @@ function openCart(){
         <b>${i.price}</b>
       </div>
     `).join("") + `
-      <button class="bigPay" onclick="checkoutWA()">
-        Checkout via WhatsApp
-      </button>
+      <button class="bigPay" onclick="goPayment()">
+  Lanjut Payment
+</button>
     `;
   }
 
@@ -801,7 +811,7 @@ function checkoutWA(){
   cart = [];
   document.getElementById("cartCount").textContent = 0;
 }
-// ================== EFFECT ==================
+  // ================== EFFECT ==================
 document.addEventListener("click", function(e){
 
   // SOUND
@@ -980,6 +990,7 @@ document.addEventListener("click", function(e){
     ]
   }
 ];
+
   // ========= STATE =========
   let currentCategory = null;
   let currentProduct = null;
@@ -1105,8 +1116,7 @@ document.addEventListener("click", function(e){
     });
     renderProducts(list);
   });
-
-  // ========= NAV =========
+    // ========= NAV =========
   function showPage(id){
     ["pageHome","pageDetail","pagePay"].forEach(pid=>{
       el(pid).classList.toggle("active", pid===id);
@@ -1132,7 +1142,13 @@ function orderWA(){
     return;
   }
 
-  const pk = currentProduct.packages[currentPackIndex];
+  // 👉 TARUH DI SINI
+  if(!currentProduct.packages || currentProduct.packages.length === 0){
+    alert("Paket produk tidak tersedia");
+    return;
+  }
+
+  const pk = currentProduct.packages[currentPackIndex || 0];
 
   const text = `Halo kak, saya mau order dari KEIZO SHOP:
 
@@ -1239,7 +1255,7 @@ setInterval(showNotif, 6000);
 
 <!-- FLOATING BUTTON -->
 <div class="floating">
-  <button onclick="orderWA()">
+<button onclick="goPayment()">
     <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" width="24">
   </button>
   <button onclick="window.scrollTo({top:0,behavior:'smooth'})">
