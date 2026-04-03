@@ -187,23 +187,22 @@
     @media (max-width:620px){ .products{grid-template-columns:1fr} }
 
     .pCard{
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.06);
-      border-radius: var(--radius);
-      padding:12px;
-      box-shadow: 0 12px 40px rgba(0,0,0,.28);
-      transition:.18s transform,.18s background,.18s border;
-      cursor:pointer;
-      overflow:hidden;
-    }
-    .pCard:hover{transform:translateY(-1px);background: rgba(255,255,255,.09);border-color: rgba(110,168,254,.25)}
-    .pTop{display:flex;gap:10px;align-items:center}
-    .pLogo{
-      width:44px;height:44px;border-radius:14px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.16);
-      overflow:hidden;flex:0 0 auto;
-    }
+  border:1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.06);
+  border-radius: var(--radius);
+  padding:12px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.28);
+  transition:.25s;
+  cursor:pointer;
+  overflow:hidden;
+  position:relative;
+}
+
+.pCard:hover{
+  transform:translateY(-5px) scale(1.02);
+  background: rgba(255,255,255,.10);
+  box-shadow:0 0 25px rgba(110,168,254,.5);
+}
     .pLogo img{width:100%;height:100%;object-fit:cover}
     .pName{min-width:0}
     .pName b{display:block;font-size:13px}
@@ -414,12 +413,121 @@
       text-align:center;
       opacity:.9;
     }
+    #loader{
+  position:fixed;
+  inset:0;
+  background:#070a12;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+  transition:0.5s;
+}
+
+.loader-box{
+  text-align:center;
+  color:#fff;
+}
+
+.spinner{
+  width:50px;
+  height:50px;
+  border:4px solid rgba(255,255,255,0.1);
+  border-top:4px solid #6ea8fe;
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+  margin:auto;
+}
+
+@keyframes spin{
+  to{ transform:rotate(360deg); }
+}
+.floating{
+  position:fixed;
+  right:15px;
+  bottom:15px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  z-index:999;
+}
+
+.floating button{
+  width:50px;
+  height:50px;
+  border:none;
+  border-radius:50%;
+  background:#6ea8fe;
+  color:white;
+  font-size:18px;
+  cursor:pointer;
+  box-shadow:0 5px 20px rgba(0,0,0,0.4);
+  transition:0.2s;
+}
+
+.floating button:hover{
+  transform:scale(1.1);
+}
+@keyframes fadeUp{
+  from{
+    transform:translateY(40px);
+    opacity:0;
+  }
+  to{
+    transform:translateY(0);
+    opacity:1;
+  }
+}
+
+.floating{
+  animation:fadeUp 0.7s ease;
+}
+.floating button:first-child{
+  background:#25D366;
+}
+.notif{
+  position:fixed;
+  left:15px;
+  bottom:15px;
+  background:rgba(0,0,0,0.7);
+  backdrop-filter:blur(10px);
+  color:#fff;
+  padding:10px 14px;
+  border-radius:12px;
+  font-size:12px;
+  opacity:0;
+  transform:translateY(20px);
+  transition:0.4s;
+  z-index:999;
+}
+.notif.show{
+  opacity:1;
+  transform:translateY(0);
+}
+.ripple{
+  position:absolute;
+  border-radius:50%;
+  background:rgba(255,255,255,0.5);
+  transform:scale(0);
+  animation:rippleAnim 0.6s linear;
+}
+
+@keyframes rippleAnim{
+  to{
+    transform:scale(4);
+    opacity:0;
+  }
+}
+button{
+  position:relative;
+  overflow:hidden;
+}
   </style>
 </head>
-
-<body>
+body>
 <header>
   <div class="nav">
+    
     <div class="brand" onclick="goHome()" role="button" style="cursor:pointer">
       <div class="dot"></div>
       <div style="min-width:0">
@@ -433,8 +541,14 @@
         <small>🔎</small>
         <input id="q" placeholder="Cari: capcut, chatgpt, disney..." autocomplete="off" />
       </div>
+
+      <button class="pill" onclick="openCart()">
+  🛒 Cart <span id="cartCount">0</span>
+</button>
+
       <button class="pill primary" onclick="goPayment()">Pembayaran</button>
     </div>
+
   </div>
 </header>
 
@@ -479,8 +593,9 @@
      <div class="sectionTitle" id="secKategori">
       <h2>Kategori Produk</h2>
       <div class="divider" style="flex:1"></div>
-  </div>
-      <!-- KATEGORI: dua-dua bersebelahan -->
+    </div>
+
+    <!-- KATEGORI: dua-dua bersebelahan -->
     <div id="catGrid" class="grid2"></div>
 
     <div class="sectionTitle" id="secProduk">
@@ -529,7 +644,7 @@
           <div class="sumRow"><span>Paket</span><b id="sPack">-</b></div>
           <div class="sumRow"><span>Harga</span><b id="sPrice">-</b></div>
 
-          <button class="bigPay" onclick="goPayment()">
+          <button class="bigPay" onclick="orderWA()">
             <strong>Lanjut ke Pembayaran</strong>
             <small>Pilih Dana / SeaBank / QRIS (pop up)</small>
           </button>
@@ -613,6 +728,104 @@
 </div>
 
 <script>
+// ================== DATA ==================
+let cart = [];
+
+// ================== CART ==================
+function addToCart(){
+  if(!currentProduct) return;
+
+  if(!currentProduct.packages || currentProduct.packages.length === 0){
+    alert("Paket produk tidak tersedia");
+    return;
+  }
+
+  const pk = currentProduct.packages[currentPackIndex || 0];
+
+  cart.push({
+    name: currentProduct.name,
+    pack: pk.label,
+    price: pk.price
+  });
+
+  document.getElementById("cartCount").textContent = cart.length;
+
+  alert("Produk ditambahkan ke keranjang 🛒");
+}
+
+function openCart(){
+  const box = document.getElementById("cartBox");
+  const content = document.getElementById("cartContent");
+
+  if(cart.length === 0){
+    content.innerHTML = "<p>Keranjang kosong</p>";
+  } else {
+    content.innerHTML = cart.map(i => `
+      <div class="sumRow">
+        <span>${i.name} (${i.pack})</span>
+        <b>${i.price}</b>
+      </div>
+    `).join("") + `
+      <button class="bigPay" onclick="checkoutWA()">
+        Checkout via WhatsApp
+      </button>
+    `;
+  }
+
+  box.classList.add("show");
+}
+
+function closeCart(){
+  document.getElementById("cartBox").classList.remove("show");
+}
+
+function checkoutWA(){
+  if(cart.length === 0){
+    alert("Keranjang masih kosong 🗿");
+    return;
+  }
+
+  let text = "Halo kak, saya mau order:\n\n";
+
+  cart.forEach((item, i)=>{
+    text += `${i+1}. ${item.name}\n`;
+    text += `   Paket: ${item.pack}\n`;
+    text += `   Harga: ${item.price}\n\n`;
+  });
+
+  text += "Mohon diproses ya kak 🙏";
+
+  window.open(`https://wa.me/6285657279971?text=${encodeURIComponent(text)}`);
+
+  // RESET DI AKHIR (INI YANG BENAR)
+  cart = [];
+  document.getElementById("cartCount").textContent = 0;
+}
+// ================== EFFECT ==================
+document.addEventListener("click", function(e){
+
+  // SOUND
+  const sound = document.getElementById("clickSound");
+  if(sound){
+    sound.currentTime = 0;
+    sound.play().catch(()=>{});
+  }
+
+  // RIPPLE
+  const btn = e.target.closest("button, .pCard");
+  if(!btn) return;
+
+  const circle = document.createElement("span");
+  circle.classList.add("ripple");
+
+  const rect = btn.getBoundingClientRect();
+  circle.style.left = (e.clientX - rect.left) + "px";
+  circle.style.top = (e.clientY - rect.top) + "px";
+
+  btn.appendChild(circle);
+
+  setTimeout(()=>circle.remove(),600);
+});
   // ========= MUSIC (hidden, play on first click) =========
   const bgm = new Audio("https://files.catbox.moe/y6px4n.ogg");
   bgm.loop = true;
@@ -634,12 +847,13 @@
   // Silakan ganti/isi dengan produk legal kamu.
   const DATA = [
   {
-    id: "apps",
+  
+  id: "apps",
     title: "Apps Premium",
     icon: "https://images.bukaolshop.com/hosting/181218/26f804d66e6e88158.png",
     subtitle: "Semua aplikasi premium",
     products: [
-      
+    
       { id:"am1", name:"Alight Motion", logo:"https://img2.pixhost.to/images/6908/711356113_settomodders.jpg",
         desc:"Akses Alight Motion premium",
         packages:[
@@ -766,7 +980,7 @@
     ]
   }
 ];
-    // ========= STATE =========
+  // ========= STATE =========
   let currentCategory = null;
   let currentProduct = null;
   let currentPackIndex = 0;
@@ -912,6 +1126,22 @@
     box.style.display = (box.style.display==="none" || !box.style.display) ? "block" : "none";
   }
 
+function orderWA(){
+  if(!currentProduct){
+    alert("Pilih produk dulu, jangan asal klik bayar 🗿");
+    return;
+  }
+
+  const pk = currentProduct.packages[currentPackIndex];
+
+  const text = `Halo kak, saya mau order dari KEIZO SHOP:
+
+Produk: ${currentProduct.name}
+Paket: ${pk.label}
+Harga: ${pk.price}`;
+
+  window.open(`https://wa.me/6285657279971?text=${encodeURIComponent(text)}`);
+}
   // ========= MODAL =========
   function openModal(title, html){
     el("mTitle").textContent = title;
@@ -966,7 +1196,73 @@
     renderProducts(allProducts());
   }
   init();
+  const fakeOrders = [
+  "Andi baru saja beli Netflix 1B",
+  "Rizky beli CapCut Premium",
+  "Dina beli Spotify 1 Bulan",
+  "Fajar beli ChatGPT Premium",
+  "Salsa beli Disney+ 7 Hari"
+];
+
+function showNotif(){
+  const notif = document.getElementById("notif");
+  const random = fakeOrders[Math.floor(Math.random()*fakeOrders.length)];
+
+  notif.textContent = random;
+  notif.classList.add("show");
+
+  setTimeout(()=>{
+    notif.classList.remove("show");
+  },3000);
+}
+
+// muncul tiap 6 detik
+setInterval(showNotif, 6000);
+  window.addEventListener("load", ()=>{
+  setTimeout(()=>{
+    document.getElementById("loader").style.opacity = "0";
+    setTimeout(()=>{
+      document.getElementById("loader").style.display = "none";
+    },500);
+  },1500);
+});
 </script>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-box">
+    <div class="spinner"></div>
+    <h2>KEIZO SHOP</h2>
+    <p>Loading store...</p>
+  </div>
+</div>
+
+<!-- FLOATING BUTTON -->
+<div class="floating">
+  <button onclick="orderWA()">
+    <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" width="24">
+  </button>
+  <button onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    ⬆️
+  </button>
+</div>
+
+<!-- NOTIF -->
+<div id="notif" class="notif"></div>
+
+<!-- AUDIO -->
+<audio id="clickSound" src="https://files.catbox.moe/y6px4n.ogg"></audio>
+
+<!-- CART -->
+<div id="cartBox" class="modal">
+  <div class="modalBox">
+    <div class="modalHead">
+      <b>Keranjang 🛒</b>
+      <button class="x" onclick="closeCart()">✕</button>
+    </div>
+    <div class="modalBody" id="cartContent"></div>
+  </div>
+</div>
 
 </body>
 </html>
