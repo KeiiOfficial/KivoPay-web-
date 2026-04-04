@@ -1,692 +1,299 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-  <title>KEIZO SHOP | Premium Store</title>
-  <!-- Font Awesome 6 -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Store Premium</title>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: #fff;
+}
 
-    body {
-      background: radial-gradient(circle at 20% 30%, #0c0620, #020008);
-      min-height: 100vh;
-      color: #ede7ff;
-    }
+header {
+  background: #020617;
+  padding: 15px;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
 
-    /* ========= INTRO LOADING 1-100% ========= */
-    .intro-full {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #070213;
-      z-index: 10000;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      transition: opacity 0.5s ease, visibility 0.5s;
-    }
-    .intro-logo-load {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-    .intro-logo-load img {
-      width: 140px;
-      border-radius: 35px;
-      box-shadow: 0 0 35px #b77cff;
-      border: 2px solid #b77cff;
-    }
-    .loading-bar-container {
-      width: 280px;
-      background: #221c3a;
-      border-radius: 40px;
-      height: 12px;
-      overflow: hidden;
-      margin: 1rem auto;
-      box-shadow: inset 0 1px 3px #00000055;
-    }
-    .loading-fill {
-      width: 0%;
-      height: 100%;
-      background: linear-gradient(90deg, #b77cff, #e3aaff);
-      border-radius: 40px;
-      transition: width 0.08s linear;
-    }
-    .percent-text {
-      font-size: 1.6rem;
-      font-weight: bold;
-      letter-spacing: 2px;
-      color: #cdadff;
-      margin-top: 12px;
-    }
-    .hidden-intro {
-      opacity: 0;
-      visibility: hidden;
-    }
+nav {
+  display: flex;
+  justify-content: space-between;
+}
 
-    /* ========= MAIN APP ========= */
-    .app-wrapper {
-      max-width: 1300px;
-      margin: 0 auto;
-      padding: 1.2rem 1.5rem 3rem;
-      display: none;
-    }
-    .app-wrapper.active {
-      display: block;
-    }
+nav a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 10px;
+}
 
-    /* NAVBAR */
-    .navbar {
-      background: rgba(18, 10, 38, 0.8);
-      backdrop-filter: blur(12px);
-      border-radius: 60px;
-      padding: 0.7rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-bottom: 2rem;
-      border: 1px solid #6a3bcb70;
-    }
-    .logo h2 {
-      background: linear-gradient(130deg, #e9cdff, #bc86ff);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      font-size: 1.5rem;
-    }
-    .nav-buttons {
-      display: flex;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-    }
-    .nav-btn {
-      background: none;
-      border: none;
-      color: #d7c4ff;
-      font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      padding: 6px 0;
-      border-bottom: 2px solid transparent;
-      transition: 0.2s;
-    }
-    .nav-btn.active {
-      color: #cd9eff;
-      border-bottom-color: #b77cff;
-    }
-    .wa-float {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: #25d36620;
-      border-radius: 40px;
-      padding: 5px 14px;
-      cursor: pointer;
-    }
-    .wa-float img {
-      width: 24px;
-      border-radius: 50%;
-    }
+.container {
+  padding: 20px;
+}
 
-    /* PAGE CONTAINER */
-    .page {
-      display: none;
-      animation: fadePage 0.3s ease;
-    }
-    .page.active-page {
-      display: block;
-    }
-    @keyframes fadePage {
-      from { opacity: 0; transform: translateY(10px);}
-      to { opacity: 1; transform: translateY(0);}
-    }
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
+  gap: 15px;
+}
 
-    /* HOME */
-    .hero {
-      background: linear-gradient(145deg, #1c112fcc, #0a0420cc);
-      backdrop-filter: blur(8px);
-      border-radius: 48px;
-      padding: 2rem;
-      text-align: center;
-    }
+.card {
+  background: #1e293b;
+  padding: 15px;
+  border-radius: 10px;
+}
 
-    /* KATEGORI (daftar kategori) */
-    .kategori-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-      gap: 1.5rem;
-      margin-top: 1.5rem;
-    }
-    .kategori-card {
-      background: #1b1238c9;
-      border-radius: 32px;
-      padding: 1.5rem;
-      border: 1px solid #6c45c2;
-      transition: 0.2s;
-      cursor: pointer;
-      text-align: center;
-    }
-    .kategori-card:hover {
-      background: #2a1d52;
-      transform: translateY(-5px);
-      border-color: #ba86ff;
-    }
-    .kategori-icon {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-    }
-    .kategori-nama {
-      font-size: 1.8rem;
-      font-weight: 700;
-    }
-    .kategori-jumlah {
-      font-size: 0.9rem;
-      opacity: 0.8;
-      margin-top: 8px;
-    }
+.card img {
+  width: 100%;
+  border-radius: 8px;
+}
 
-    /* HALAMAN DETAIL PRODUK DALAM KATEGORI (price list) */
-    .back-btn {
-      background: #3f2a73;
-      border: none;
-      padding: 8px 20px;
-      border-radius: 40px;
-      color: white;
-      margin-bottom: 1.2rem;
-      cursor: pointer;
-      font-weight: 600;
-    }
-    .price-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 1.2rem;
-      margin-top: 1rem;
-    }
-    .price-card {
-      background: #130c2ab3;
-      border-radius: 28px;
-      padding: 1rem 1.2rem;
-      border-left: 5px solid #b577ff;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .price-card:hover {
-      background: #221a48;
-      transform: scale(0.99);
-    }
-    .price-title {
-      font-weight: 800;
-      font-size: 1.2rem;
-    }
-    .price-desc {
-      font-size: 0.8rem;
-      color: #c7b3ff;
-      margin: 6px 0;
-    }
-    .price-nominal {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #e5bcff;
-    }
+.card h3 {
+  margin: 10px 0 5px;
+}
 
-    /* HALAMAN PEMBAYARAN */
-    .payment-container {
-      background: #130d2cee;
-      border-radius: 48px;
-      padding: 2rem;
-      max-width: 550px;
-      margin: 0 auto;
-      border: 1px solid #aa77ff;
-    }
-    .payment-detail-box {
-      background: #08031b;
-      border-radius: 28px;
-      padding: 1.3rem;
-      margin: 1rem 0;
-    }
-    .qris-img {
-      width: 180px;
-      margin: 10px auto;
-      display: block;
-      border-radius: 24px;
-      border: 2px solid #b277ff;
-    }
-    .dana-number {
-      background: #282155;
-      padding: 12px;
-      border-radius: 40px;
-      text-align: center;
-      font-weight: bold;
-      margin: 15px 0;
-    }
-    .wa-btn-payment {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      background: #25D366;
-      color: #000;
-      padding: 12px;
-      border-radius: 60px;
-      text-decoration: none;
-      font-weight: bold;
-      margin-top: 20px;
-    }
-    .btn-kembali {
-      background: #402e76;
-      border: none;
-      padding: 10px;
-      border-radius: 40px;
-      width: 100%;
-      margin-top: 16px;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    footer {
-      text-align: center;
-      margin-top: 3rem;
-      font-size: 0.7rem;
-      opacity: 0.7;
-    }
-    @media (max-width: 650px) {
-      .navbar { flex-direction: column; border-radius: 40px; }
-      .kategori-nama { font-size: 1.4rem; }
-    }
-  </style>
+.card button {
+  background: #22c55e;
+  border: none;
+  padding: 10px;
+  width: 100%;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #000;
+}
+
+.form-popup {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #020617;
+  padding: 20px;
+  display: none;
+}
+
+input, textarea, select {
+  width: 100%;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+}
+</style>
 </head>
+
 <body>
-  <!-- INTRO LOADING 1-100% -->
-<div id="introScreen" class="intro-full">
-  <div class="intro-logo-load">
-    <img src="https://files.catbox.moe/iix7ch.jpeg" alt="KEIZO SHOP LOGO">
-  </div>
-  <div class="loading-bar-container">
-    <div class="loading-fill" id="loadingFill"></div>
-  </div>
-  <div class="percent-text" id="percentText">0%</div>
-  <div style="margin-top: 20px; font-size: 12px;">KEIZO SHOP PREMIUM</div>
+
+<header>
+  <nav>
+    <div>STORE</div>
+    <div>
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+</header>
+
+<div class="container" id="home">
+  <h2>Produk Premium</h2>
+  <div class="products" id="productList"></div>
 </div>
 
-<!-- MAIN APP -->
-<div id="appMain" class="app-wrapper">
-  <div class="navbar">
-    <div class="logo"><h2>⚡ KEIZO SHOP APPS</h2></div>
-    <div class="nav-buttons">
-      <button class="nav-btn" data-page="home">🏠 Home</button>
-      <button class="nav-btn" data-page="kategori">📦 Kategori Produk</button>
-      <button class="nav-btn" data-page="about">ℹ️ About</button>
-      <button class="nav-btn" data-page="contact">📞 Support</button>
-    </div>
-    <div class="wa-float" id="supportWaBtn">
-      <img src="https://files.catbox.moe/la0rmg.jpeg" alt="wa"><span>+62 817-7231-9108</span>
-    </div>
-  </div>
-
-  <!-- PAGE HOME -->
-  <div id="homePage" class="page active-page">
-    <div class="hero">
-      <h1 style="font-size: 2rem;">✨ Selamat Datang ✨</h1>
-      <p style="margin: 1rem 0;">Akses berbagai akun premium aplikasi favoritmu dengan harga terbaik.</p>
-      <button class="nav-btn" data-page="kategori" style="background:#7a3eff; padding: 10px 28px; border-radius: 60px; color:white; border:none; margin-top: 10px;">🛒 Lihat Kategori Produk</button>
-    </div>
-    <div style="margin-top: 2rem; text-align: center;">
-      <i class="fas fa-shield-alt"></i> 100% Garansi & Support Cepat
-    </div>
-  </div>
-
-  <!-- PAGE KATEGORI (list kategori) -->
-  <div id="kategoriPage" class="page">
-    <h2><i class="fas fa-th-large"></i> Kategori Layanan</h2>
-    <div class="kategori-grid" id="kategoriGrid"></div>
-  </div>
-
-  <!-- PAGE DETAIL PRODUK (price list per kategori) -->
-  <div id="detailKategoriPage" class="page">
-    <button class="back-btn" id="backToKategori"><i class="fas fa-arrow-left"></i> Kembali ke Kategori</button>
-    <h3 id="detailKategoriTitle" style="margin-bottom: 1rem;"></h3>
-    <div id="priceListContainer" class="price-grid"></div>
-  </div>
-
-  <!-- PAGE PEMBAYARAN -->
-  <div id="paymentPage" class="page">
-    <button class="back-btn" id="backToPrevFromPayment"><i class="fas fa-arrow-left"></i> Kembali ke Produk</button>
-    <div class="payment-container">
-      <h2 style="text-align: center;">💜 Konfirmasi Pembayaran</h2>
-      <div class="payment-detail-box" id="paymentDetailBox">
-        <!-- akan diisi js -->
-      </div>
-      <div class="dana-number">
-        💰 DANA : 087753513090
-      </div>
-      <div style="text-align: center;">
-        <p>QRIS (Scan via Dana/OVO/Gopay)</p>
-        <img src="https://files.catbox.moe/chfkuw.jpeg" class="qris-img" alt="QRIS">
-      </div>
-      <a id="whatsappAdminLink" class="wa-btn-payment" href="#" target="_blank">
-        <img src="https://files.catbox.moe/la0rmg.jpeg" width="26"> Kirim Bukti Transfer ke Admin
-      </a>
-      <button class="btn-kembali" id="closePaymentOnly">Tutup Halaman</button>
-    </div>
-  </div>
-
-  <!-- PAGE ABOUT & CONTACT -->
-  <div id="aboutPage" class="page">
-    <div style="background:#100b27; border-radius: 40px; padding: 2rem;">
-      <h2>💜 Tentang KEIZO SHOP</h2>
-      <p>Store terpercaya menyediakan berbagai layanan akun premium dengan update rutin. Support 24 jam via WhatsApp.</p>
-      <p style="margin-top: 12px;"><i class="fab fa-whatsapp"></i> Admin: +62 856-5727-9971</p>
-    </div>
-  </div>
-  <div id="contactPage" class="page">
-    <div style="background:#100b27; border-radius: 40px; padding: 2rem;">
-      <h2>📞 Contact Support</h2>
-      <div style="display: flex; gap: 15px; align-items: center; margin: 20px 0;">
-        <img src="https://files.catbox.moe/la0rmg.jpeg" width="45" style="border-radius: 50%;">
-        <span style="font-size: 1.4rem;">+62 817-7231-9108</span>
-      </div>
-      <a href="https://wa.me/6281772319108" target="_blank" style="background:#25D366; padding: 10px 20px; border-radius: 40px; color:black; text-decoration: none; display: inline-block;">Chat Support Sekarang</a>
-    </div>
-  </div>
-  <footer>© KEIZO SHOP PREMIUM — semua harga dapat berubah</footer>
+<div class="container" id="about">
+  <h2>About</h2>
+  <p>Jual berbagai akun premium murah dan aman.</p>
 </div>
+
+<div class="container" id="contact">
+  <h2>Contact</h2>
+  <p>WhatsApp: 6285657279971</p>
+</div>
+
+<div class="form-popup" id="formOrder">
+  <h3>Form Order</h3>
+  <input type="text" id="email" placeholder="Email">
+  <input type="text" id="wa" placeholder="Nomor WhatsApp">
+  <input type="text" id="device" placeholder="Device HP">
+  <textarea id="note" placeholder="Catatan (opsional)"></textarea>
+  <button onclick="sendOrder()">Kirim Order</button>
+</div>
+
+<footer>
+  <p>© Store Premium</p>
+</footer>
 
 <script>
-  // ---------- DATA PRODUK BERKATEGORI (dengan durasi + tipe priv/shar) ----------
-  const kategoriData = {
-    "AM": {
-      icon: "🎮",
-      items: [
-        { nama: "AM 1 tahun acc s/gen", detail: "Durasi: 1 tahun | Tipe: Share/Gen", harga: "16000" },
-        { nama: "AM 1 tahun acc buyer", detail: "Durasi: 1 tahun | Tipe: Buyer", harga: "100000" }
-      ]
-    },
-    "CapCut": {
-      icon: "✂️",
-      items: [
-        { nama: "CapCut 7d priv", detail: "Durasi: 7 hari | Privat", harga: "4000" },
-        { nama: "CapCut 14d priv", detail: "Durasi: 14 hari | Privat", harga: "5000" },
-        { nama: "CapCut 21d priv", detail: "Durasi: 21 hari | Privat", harga: "6000" },
-        { nama: "CapCut 28d priv", detail: "Durasi: 28 hari | Privat", harga: "7000" },
-        { nama: "CapCut 35d priv", detail: "Durasi: 35 hari | Privat", harga: "13000" }
-      ]
-    },
-    "Netflix": {
-      icon: "🎬",
-      items: [
-        { nama: "Netflix 1d 1u", detail: "Durasi: 1 hari | 1 user", harga: "6500" },
-        { nama: "Netflix 3d 1u", detail: "Durasi: 3 hari | 1 user", harga: "8500" },
-        { nama: "Netflix 7d 1u", detail: "Durasi: 7 hari | 1 user", harga: "12000" },
-        { nama: "Netflix 1b 1u", detail: "Durasi: 1 bulan | 1 user", harga: "20000" },
-        { nama: "Netflix 1d 2u", detail: "Durasi: 1 hari | 2 user", harga: "5500" },
-        { nama: "Netflix 3d 2u", detail: "Durasi: 3 hari | 2 user", harga: "8900" },
-        { nama: "Netflix 7d 2u", detail: "Durasi: 7 hari | 2 user", harga: "10500" },
-        { nama: "Netflix 1b 2u", detail: "Durasi: 1 bulan | 2 user", harga: "14500" },
-        { nama: "Netflix 1b semi", detail: "Durasi: 1 bulan | Semi Private", harga: "28500" }
-      ]
-    },
-    "Spotify": {
-      icon: "🎧",
-      items: [
-        { nama: "Spotify 1b nogar", detail: "Durasi: 1 bulan | No Garansi", harga: "14000" },
-        { nama: "Spotify 1b fullgar", detail: "Durasi: 1 bulan | Full Garansi", harga: "21200" }
-      ]
-    },
-    "YouTube": {
-      icon: "📺",
-      items: [
-        { nama: "YouTube 1b famplan", detail: "Durasi: 1 bulan | Family Plan", harga: "4000" },
-        { nama: "YouTube 1b indplan", detail: "Durasi: 1 bulan | Individual", harga: "6000" }
-      ]
-    },
-    "ChatGPT & AI": {
-      icon: "🤖",
-      items: [
-        { nama: "ChatGPT 1b shar", detail: "Durasi: 1 bulan | Share", harga: "8200" },
-        { nama: "Gemini acc b", detail: "Durasi: Basic account", harga: "3500" },
-        { nama: "Gemini acc s", detail: "Durasi: Standar", harga: "8200" }
-      ]
-    },
-    "Loklok": {
-      icon: "📽️",
-      items: [
-        { nama: "Loklok 1b basic", detail: "Durasi: 1 bulan | Basic", harga: "17000" },
-        { nama: "Loklok 1b standar", detail: "Durasi: 1 bulan | Standar", harga: "19000" }
-      ]
-    },
-    "Picsart & Ibis": {
-      icon: "🎨",
-      items: [
-        { nama: "Picsart 1b shar", detail: "Durasi: 1 bulan | Share", harga: "4500" },
-        { nama: "Picsart 1b priv", detail: "Durasi: 1 bulan | Private", harga: "6000" },
-        { nama: "Ibis paint 7d acc b", detail: "Durasi: 7 hari | Basic", harga: "1000" },
-        { nama: "Ibis paint 1b acc b", detail: "Durasi: 1 bulan | Basic", harga: "4000" }
-      ]
-    },
-    "Canva": {
-      icon: "🖼️",
-      items: [
-        { nama: "Canva 1b member", detail: "Durasi: 1 bulan | Member", harga: "100000" },
-        { nama: "Canva 1thn member", detail: "Durasi: 1 tahun | Member", harga: "150000" }
-      ]
-    },
-    "Winkit & Wink": {
-      icon: "✨",
-      items: [
-        { nama: "Winkit 3d acc b", detail: "Durasi: 3 hari", harga: "1850" },
-        { nama: "Winkit 6d acc b", detail: "Durasi: 6 hari", harga: "3500" },
-        { nama: "Winkit 12d acc b", detail: "Durasi: 12 hari", harga: "5000" },
-        { nama: "Wink 7d acc b", detail: "Durasi: 7 hari", harga: "2000" }
-      ]
-    },
-    "Viu & Vidio & Disney": {
-      icon: "📺",
-      items: [
-        { nama: "Viu 1thn priv", detail: "Durasi: 1 tahun | Private", harga: "19000" },
-        { nama: "Viu lifetime", detail: "Lifetime access", harga: "250000" },
-        { nama: "Vidio 1b shar", detail: "Durasi: 1 bulan | Share", harga: "16000" },
-        { nama: "Vidio 1b priv", detail: "Durasi: 1 bulan | Private", harga: "26000" },
-        { nama: "Vidio 1thn only tv", detail: "Durasi: 1 tahun | Only TV", harga: "4000" },
-        { nama: "Disney 7d", detail: "Durasi: 7 hari", harga: "13000" }
-      ]
-    },
-    "Lainnya": {
-      icon: "📦",
-      items: [
-        { nama: "Meitu 7d acc buyer", detail: "Durasi: 7 hari | Buyer", harga: "1000" },
-        { nama: "iQiyi 1b standar", detail: "Durasi: 1 bulan | Standar", harga: "7000" },
-        { nama: "iQiyi 1b premium", detail: "Durasi: 1 bulan | Premium", harga: "8000" },
-        { nama: "Bstation 1b shar", detail: "Durasi: 1 bulan | Share", harga: "8000" },
-        { nama: "Melolo 1b shar", detail: "Durasi: 1 bulan | Share", harga: "7000" },
-        { nama: "Dramabox 1b shar", detail: "Durasi: 1 bulan | Share", harga: "11000" }
-      ]
-    }
-  };
-  // konversi ke array untuk grid kategori
-  const kategoriArray = Object.keys(kategoriData).map(key => ({
-    nama: key,
-    icon: kategoriData[key].icon,
-    count: kategoriData[key].items.length
-  }));
+const products = [
+{ id:"am1", name:"Alight Motion", logo:"https://img2.pixhost.to/images/6908/711356113_settomodders.jpg",
+desc:"Akses Alight Motion premium",
+packages:[
+{label:"1 Tahun acc s/gen", price:"Rp 1.000"},
+{label:"1 Tahun acc buyer", price:"Rp 1.000"}
+]},
 
-  let currentKategori = null;          // menyimpan nama kategori yang dipilih
-  let selectedPriceItem = null;        // item { nama, detail, harga }
+{ id:"melolo", name:"Melolo", logo:"https://img2.pixhost.to/images/6908/711356265_settomodders.jpg",  
+    desc:"Melolo premium",  
+    packages:[{label:"1 Bulan Sharing", price:"Rp 7.000"}]},  
 
-  // Helper format rupiah
-  function formatRupiah(angka) {
-    let num = angka.toString().replace(/\D/g, '');
-    return 'Rp ' + new Intl.NumberFormat('id-ID').format(num);
-  }
+  { id:"meitu", name:"Meitu", logo:"https://files.catbox.moe/fm7kn5.jpeg",  
+    desc:"Meitu premium",  
+    packages:[{label:"7 Hari acc buyer", price:"Rp 1.000"}]},  
 
-  // Render halaman kategori
-  function renderKategori() {
-    const grid = document.getElementById('kategoriGrid');
-    if (!grid) return;
-    grid.innerHTML = '';
-    kategoriArray.forEach(kat => {
-      const card = document.createElement('div');
-      card.className = 'kategori-card';
-      card.innerHTML = `
-        <div class="kategori-icon">${kat.icon}</div>
-        <div class="kategori-nama">${kat.nama}</div>
-        <div class="kategori-jumlah">${kat.count} produk</div>
-      `;
-      card.addEventListener('click', () => {
-        // buka halaman detail kategori
-        currentKategori = kat.nama;
-        showDetailKategori(kat.nama);
-      });
-      grid.appendChild(card);
-    });
-  }
+  { id:"iqiyi", name:"iQIYI", logo:"https://img2.pixhost.to/images/6908/711356858_settomodders.jpg",  
+    desc:"iQIYI premium",  
+    packages:[  
+      {label:"1 Bulan Standar", price:"Rp 7.000"},  
+      {label:"1 Bulan Premium", price:"Rp 8.000"}  
+    ]},  
 
-  // menampilkan daftar harga dalam kategori
-  function showDetailKategori(kategoriNama) {
-    const data = kategoriData[kategoriNama];
-    if (!data) return;
-    document.getElementById('detailKategoriTitle').innerHTML = `<i class="fas fa-tag"></i> ${kategoriNama} ${data.icon}`;
-    const container = document.getElementById('priceListContainer');
-    container.innerHTML = '';
-    data.items.forEach(item => {
-      const priceDiv = document.createElement('div');
-      priceDiv.className = 'price-card';
-      priceDiv.innerHTML = `
-        <div class="price-title">${item.nama}</div>
-        <div class="price-desc">${item.detail}</div>
-        <div class="price-nominal">${formatRupiah(item.harga)}</div>
-        <div style="font-size:12px; margin-top:6px;"><i class="fas fa-shopping-cart"></i> klik untuk order</div>
-      `;
-      priceDiv.addEventListener('click', (e) => {
-        e.stopPropagation();
-        // pilih produk ini -> buka halaman pembayaran
-        selectedPriceItem = item;
-        showPaymentPage(item);
-      });
-      container.appendChild(priceDiv);
-    });
-    // pindah ke page detail kategori
-    setActivePage('detailKategori');
-  }
+  { id:"bstation", name:"Bstation", logo:"https://img2.pixhost.to/images/6908/711357549_settomodders.jpg",  
+    desc:"Bstation sharing",  
+    packages:[{label:"1 Bulan Sharing", price:"Rp 8.000"}]},  
 
-  // HALAMAN PEMBAYARAN dengan data produk
-  function showPaymentPage(item) {
-    const now = new Date();
-    const tanggal = now.toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' });
-    const jam = now.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
-    const detailBox = document.getElementById('paymentDetailBox');
-    detailBox.innerHTML = `
-      <p><strong>🛍️ Produk:</strong> ${item.nama}</p>
-      <p><strong>📝 Detail:</strong> ${item.detail}</p>
-      <p><strong>💰 Harga:</strong> ${formatRupiah(item.harga)}</p>
-      <p><strong>📅 Tanggal Order:</strong> ${tanggal}</p>
-      <p><strong>⏰ Jam:</strong> ${jam}</p>
-      <p><strong>💳 Pembayaran ke:</strong> DANA 087753513090 atau QRIS</p>
-    `;
-    // buat link WA untuk kirim bukti ke admin +6285657279971
-    const message = `Halo Admin KEIZO SHOP, saya ingin mengirim bukti transfer.\n\nProduk: ${item.nama}\nDetail: ${item.detail}\nHarga: ${formatRupiah(item.harga)}\nTanggal: ${tanggal} ${jam}\n\nBukti transfer terlampir. Terima kasih.`;
-    const waLink = `https://wa.me/6285657279971?text=${encodeURIComponent(message)}`;
-    document.getElementById('whatsappAdminLink').href = waLink;
-    setActivePage('payment');
-  }
+  { id:"netflix", name:"Netflix", logo:"https://img2.pixhost.to/images/6908/711357835_settomodders.jpg",  
+    desc:"Netflix berbagai paket",  
+    packages:[  
+      {label:"1 Hari 1 User", price:"Rp 6.500"},  
+      {label:"3 Hari 1 User", price:"Rp 8.500"},  
+      {label:"7 Hari 1 User", price:"Rp 12.000"},  
+      {label:"1 Bulan 1 User", price:"Rp 20.000"},  
+      {label:"1 Hari 2 User", price:"Rp 5.500"},  
+      {label:"3 Hari 2 User", price:"Rp 8.900"},  
+      {label:"7 Hari 2 User", price:"Rp 10.500"},  
+      {label:"1 Bulan 2 User", price:"Rp 14.500"},  
+      {label:"1 Bulan Semi", price:"Rp 28.500"}  
+    ]},  
 
-  // Navigasi antar page (home, kategori, detailKategori, payment, about, contact)
-  function setActivePage(pageId) {
-    const pages = ['homePage', 'kategoriPage', 'detailKategoriPage', 'paymentPage', 'aboutPage', 'contactPage'];
-    pages.forEach(pid => {
-      const el = document.getElementById(pid);
-      if (el) {
-        if (pid === pageId) el.classList.add('active-page');
-        else el.classList.remove('active-page');
-      }
-    });
-    // update navbar active style (optional)
-    const pageMap = {
-      homePage: 'home', kategoriPage: 'kategori', aboutPage: 'about', contactPage: 'contact',
-      detailKategoriPage: null, paymentPage: null
-    };
-    if (pageMap[pageId]) {
-      document.querySelectorAll('.nav-btn').forEach(btn => {
-        if (btn.getAttribute('data-page') === pageMap[pageId]) btn.classList.add('active');
-        else btn.classList.remove('active');
-      });
-    } else {
-      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-    }
-  }
+  { id:"spotify", name:"Spotify", logo:"https://img2.pixhost.to/images/6908/711358117_settomodders.jpg",  
+    packages:[  
+      {label:"1 Bulan No Garansi", price:"Rp 14.000"},  
+      {label:"1 Bulan Full Garansi", price:"Rp 21.200"}  
+    ]},  
 
-  // navigasi navbar
-  document.querySelectorAll('.nav-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const targetPage = btn.getAttribute('data-page');
-      if (targetPage === 'home') setActivePage('homePage');
-      if (targetPage === 'kategori') setActivePage('kategoriPage');
-      if (targetPage === 'about') setActivePage('aboutPage');
-      if (targetPage === 'contact') setActivePage('contactPage');
-    });
-  });
+  { id:"youtube", name:"YouTube Premium", logo:"https://img2.pixhost.to/images/6908/711359159_settomodders.jpg",  
+    packages:[  
+      {label:"1 Bulan Famplan", price:"Rp 4.000"},  
+      {label:"1 Bulan Indplan", price:"Rp 6.000"}  
+    ]},  
 
-  // Tombol back dari detail kategori
-  document.getElementById('backToKategori').addEventListener('click', () => {
-    setActivePage('kategoriPage');
-    currentKategori = null;
-  });
-  document.getElementById('backToPrevFromPayment').addEventListener('click', () => {
-    if (currentKategori) {
-      showDetailKategori(currentKategori);
-    } else {
-      setActivePage('kategoriPage');
-    }
-  });
-  document.getElementById('closePaymentOnly').addEventListener('click', () => {
-    if (currentKategori) {
-      showDetailKategori(currentKategori);
-    } else {
-      setActivePage('kategoriPage');
-    }
-  });
+  { id:"chatgpt", name:"ChatGPT", logo:"https://img2.pixhost.to/images/6908/711359450_settomodders.jpg",  
+    packages:[{label:"1 Bulan Sharing", price:"Rp 8.200"}]},  
 
-  // Support WA
-  document.getElementById('supportWaBtn').addEventListener('click', () => {
-    window.open('https://wa.me/6281772319108', '_blank');
-  });
+  { id:"gemini", name:"Gemini", logo:"https://img2.pixhost.to/images/6908/711359670_settomodders.jpg",  
+    packages:[  
+      {label:"Acc Buyer", price:"Rp 3.500"},  
+      {label:"Acc Seller", price:"Rp 8.200"}  
+    ]},  
 
-  // ---------- INTRO LOADING 1-100% dengan durasi yang lebih terasa ----------
-  let progress = 0;
-  const loadingFill = document.getElementById('loadingFill');
-  const percentSpan = document.getElementById('percentText');
-  const interval = setInterval(() => {
-    if (progress < 100) {
-      progress += Math.floor(Math.random() * 8) + 2; // increment variatif
-      if (progress > 100) progress = 100;
-      loadingFill.style.width = progress + '%';
-      percentSpan.innerText = progress + '%';
-    } 
-    if (progress === 100) {
-      clearInterval(interval);
-      setTimeout(() => {
-        const intro = document.getElementById('introScreen');
-        intro.classList.add('hidden-intro');
-        setTimeout(() => {
-          intro.style.display = 'none';
-          document.getElementById('appMain').classList.add('active');
-          // load kategori
-          renderKategori();
-          setActivePage('homePage');
-        }, 600);
-      }, 400);
-    }
-  }, 70); // efek loading agak cepat tapi tetap terlihat naik 1-100%
+  { id:"loklok", name:"Loklok", logo:"https://img2.pixhost.to/images/6908/711360234_settomodders.jpg",  
+    packages:[  
+      {label:"1 Bulan Basic", price:"Rp 17.000"},  
+      {label:"1 Bulan Standar", price:"Rp 19.000"}  
+    ]},  
+
+  { id:"picsart", name:"PicsArt", logo:"https://img2.pixhost.to/images/6908/711360515_settomodders.jpg",  
+    packages:[  
+      {label:"1 Bulan Sharing", price:"Rp 4.500"},  
+      {label:"1 Bulan Private", price:"Rp 6.000"}  
+    ]},  
+
+  { id:"ibis", name:"Ibis Paint", logo:"https://img2.pixhost.to/images/6908/711360756_settomodders.jpg",  
+    packages:[  
+      {label:"7 Hari acc buyer", price:"Rp 1.000"},  
+      {label:"1 Bulan acc buyer", price:"Rp 4.000"}  
+    ]},  
+
+  { id:"canva", name:"Canva", logo:"https://img2.pixhost.to/images/6908/711361125_settomodders.jpg",  
+    packages:[  
+      {label:"1 Bulan Member", price:"Rp 1.000"},  
+      {label:"1 Tahun Member", price:"Rp 1.000"}  
+    ]},  
+
+  { id:"winkit", name:"Winkit", logo:"https://img2.pixhost.to/images/6908/711361278_settomodders.jpg",  
+    packages:[  
+      {label:"3 Hari", price:"Rp 1.850"},  
+      {label:"6 Hari", price:"Rp 3.500"},  
+      {label:"12 Hari", price:"Rp 5.000"}  
+    ]},  
+
+  { id:"wink", name:"Wink", logo:"https://img2.pixhost.to/images/6908/711361474_settomodders.jpg",  
+    packages:[{label:"7 Hari", price:"Rp 2.000"}]},  
+
+  { id:"capcut", name:"CapCut", logo:"https://img2.pixhost.to/images/6908/711361753_settomodders.jpg",  
+    packages:[  
+      {label:"7 Hari Private", price:"Rp 4.000"},  
+      {label:"14 Hari Private", price:"Rp 5.000"},  
+      {label:"21 Hari Private", price:"Rp 6.000"},  
+      {label:"28 Hari Private", price:"Rp 7.000"},  
+      {label:"35 Hari Private", price:"Rp 13.000"}  
+    ]},  
+
+  { id:"dramabox", name:"DramaBox", logo:"https://img2.pixhost.to/images/6908/711361926_settomodders.jpg",  
+    packages:[{label:"1 Bulan Sharing", price:"Rp 11.000"}]},  
+
+  { id:"viu", name:"VIU", logo:"https://img2.pixhost.to/images/6908/711362048_settomodders.jpg",  
+    packages:[  
+      {label:"1 Tahun Private", price:"Rp 1.000"},  
+      {label:"Lifetime", price:"Rp 1.000"}  
+    ]},  
+
+  { id:"vidio", name:"Vidio", logo:"https://files.catbox.moe/iazd8u.jpeg",  
+    packages:[  
+      {label:"1 Bulan Sharing", price:"Rp 16.000"},  
+      {label:"1 Bulan Private", price:"Rp 26.000"},  
+      {label:"1 Tahun Only TV", price:"Rp 4.000"}  
+    ]},  
+
+  { id:"disney", name:"Disney+", logo:"https://files.catbox.moe/zb5fsb.jpeg",  
+    packages:[{label:"7 Hari", price:"Rp 13.000"}]},  
+
+]
+
+}
+];
+  let selectedProduct = "";
+
+const list = document.getElementById("productList");
+
+products.forEach(p => {
+  let card = document.createElement("div");
+  card.className = "card";
+
+  card.innerHTML = `
+    <img src="${p.logo}">
+    <h3>${p.name}</h3>
+    <button onclick="openForm('${p.name}')">Order</button>
+  `;
+
+  list.appendChild(card);
+});
+
+function openForm(name){
+  selectedProduct = name;
+  document.getElementById("formOrder").style.display = "block";
+}
+
+function sendOrder(){
+  let email = document.getElementById("email").value;
+  let wa = document.getElementById("wa").value;
+  let device = document.getElementById("device").value;
+  let note = document.getElementById("note").value;
+
+  let text = `ORDER%0AProduk: ${selectedProduct}%0AEmail: ${email}%0AWA: ${wa}%0ADevice: ${device}%0ACatatan: ${note}`;
+
+  window.open(`https://wa.me/6285657279971?text=${text}`);
+}
 </script>
+
 </body>
 </html>
