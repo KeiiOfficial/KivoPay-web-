@@ -1,299 +1,714 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Store Premium</title>
-<style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #0f172a;
-  color: #fff;
-}
+import React, { useEffect, useMemo, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ShoppingBag, Wallet, QrCode, MessageCircle, Phone, Download, Sparkles, ShieldCheck, ChevronRight, Home, Info, Mail } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
-header {
-  background: #020617;
-  padding: 15px;
-  position: sticky;
-  top: 0;
-  z-index: 999;
-}
+const logoUrl = "https://files.catbox.moe/iix7ch.jpeg";
+const qrisUrl = "https://files.catbox.moe/chfkuw.jpeg";
+const danaNumber = "087753513090";
+const waNumber = "621772319108";
 
-nav {
-  display: flex;
-  justify-content: space-between;
-}
-
-nav a {
-  color: #fff;
-  text-decoration: none;
-  margin: 0 10px;
-}
-
-.container {
-  padding: 20px;
-}
-
-.products {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
-  gap: 15px;
-}
-
-.card {
-  background: #1e293b;
-  padding: 15px;
-  border-radius: 10px;
-}
-
-.card img {
-  width: 100%;
-  border-radius: 8px;
-}
-
-.card h3 {
-  margin: 10px 0 5px;
-}
-
-.card button {
-  background: #22c55e;
-  border: none;
-  padding: 10px;
-  width: 100%;
-  border-radius: 5px;
-  cursor: pointer;
-  color: #000;
-}
-
-.form-popup {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #020617;
-  padding: 20px;
-  display: none;
-}
-
-input, textarea, select {
-  width: 100%;
-  margin: 5px 0;
-  padding: 10px;
-  border-radius: 5px;
-  border: none;
-}
-
-footer {
-  text-align: center;
-  padding: 20px;
-}
-</style>
-</head>
-
-<body>
-
-<header>
-  <nav>
-    <div>STORE</div>
-    <div>
-      <a href="#home">Home</a>
-      <a href="#about">About</a>
-      <a href="#contact">Contact</a>
-    </div>
-  </nav>
-</header>
-
-<div class="container" id="home">
-  <h2>Produk Premium</h2>
-  <div class="products" id="productList"></div>
-</div>
-
-<div class="container" id="about">
-  <h2>About</h2>
-  <p>Jual berbagai akun premium murah dan aman.</p>
-</div>
-
-<div class="container" id="contact">
-  <h2>Contact</h2>
-  <p>WhatsApp: 6285657279971</p>
-</div>
-
-<div class="form-popup" id="formOrder">
-  <h3>Form Order</h3>
-  <input type="text" id="email" placeholder="Email">
-  <input type="text" id="wa" placeholder="Nomor WhatsApp">
-  <input type="text" id="device" placeholder="Device HP">
-  <textarea id="note" placeholder="Catatan (opsional)"></textarea>
-  <button onclick="sendOrder()">Kirim Order</button>
-</div>
-
-<footer>
-  <p>© Store Premium</p>
-</footer>
-
-<script>
 const products = [
-{ id:"am1", name:"Alight Motion", logo:"https://img2.pixhost.to/images/6908/711356113_settomodders.jpg",
-desc:"Akses Alight Motion premium",
-packages:[
-{label:"1 Tahun acc s/gen", price:"Rp 1.000"},
-{label:"1 Tahun acc buyer", price:"Rp 1.000"}
-]},
-
-{ id:"melolo", name:"Melolo", logo:"https://img2.pixhost.to/images/6908/711356265_settomodders.jpg",  
-    desc:"Melolo premium",  
-    packages:[{label:"1 Bulan Sharing", price:"Rp 7.000"}]},  
-
-  { id:"meitu", name:"Meitu", logo:"https://files.catbox.moe/fm7kn5.jpeg",  
-    desc:"Meitu premium",  
-    packages:[{label:"7 Hari acc buyer", price:"Rp 1.000"}]},  
-
-  { id:"iqiyi", name:"iQIYI", logo:"https://img2.pixhost.to/images/6908/711356858_settomodders.jpg",  
-    desc:"iQIYI premium",  
-    packages:[  
-      {label:"1 Bulan Standar", price:"Rp 7.000"},  
-      {label:"1 Bulan Premium", price:"Rp 8.000"}  
-    ]},  
-
-  { id:"bstation", name:"Bstation", logo:"https://img2.pixhost.to/images/6908/711357549_settomodders.jpg",  
-    desc:"Bstation sharing",  
-    packages:[{label:"1 Bulan Sharing", price:"Rp 8.000"}]},  
-
-  { id:"netflix", name:"Netflix", logo:"https://img2.pixhost.to/images/6908/711357835_settomodders.jpg",  
-    desc:"Netflix berbagai paket",  
-    packages:[  
-      {label:"1 Hari 1 User", price:"Rp 6.500"},  
-      {label:"3 Hari 1 User", price:"Rp 8.500"},  
-      {label:"7 Hari 1 User", price:"Rp 12.000"},  
-      {label:"1 Bulan 1 User", price:"Rp 20.000"},  
-      {label:"1 Hari 2 User", price:"Rp 5.500"},  
-      {label:"3 Hari 2 User", price:"Rp 8.900"},  
-      {label:"7 Hari 2 User", price:"Rp 10.500"},  
-      {label:"1 Bulan 2 User", price:"Rp 14.500"},  
-      {label:"1 Bulan Semi", price:"Rp 28.500"}  
-    ]},  
-
-  { id:"spotify", name:"Spotify", logo:"https://img2.pixhost.to/images/6908/711358117_settomodders.jpg",  
-    packages:[  
-      {label:"1 Bulan No Garansi", price:"Rp 14.000"},  
-      {label:"1 Bulan Full Garansi", price:"Rp 21.200"}  
-    ]},  
-
-  { id:"youtube", name:"YouTube Premium", logo:"https://img2.pixhost.to/images/6908/711359159_settomodders.jpg",  
-    packages:[  
-      {label:"1 Bulan Famplan", price:"Rp 4.000"},  
-      {label:"1 Bulan Indplan", price:"Rp 6.000"}  
-    ]},  
-
-  { id:"chatgpt", name:"ChatGPT", logo:"https://img2.pixhost.to/images/6908/711359450_settomodders.jpg",  
-    packages:[{label:"1 Bulan Sharing", price:"Rp 8.200"}]},  
-
-  { id:"gemini", name:"Gemini", logo:"https://img2.pixhost.to/images/6908/711359670_settomodders.jpg",  
-    packages:[  
-      {label:"Acc Buyer", price:"Rp 3.500"},  
-      {label:"Acc Seller", price:"Rp 8.200"}  
-    ]},  
-
-  { id:"loklok", name:"Loklok", logo:"https://img2.pixhost.to/images/6908/711360234_settomodders.jpg",  
-    packages:[  
-      {label:"1 Bulan Basic", price:"Rp 17.000"},  
-      {label:"1 Bulan Standar", price:"Rp 19.000"}  
-    ]},  
-
-  { id:"picsart", name:"PicsArt", logo:"https://img2.pixhost.to/images/6908/711360515_settomodders.jpg",  
-    packages:[  
-      {label:"1 Bulan Sharing", price:"Rp 4.500"},  
-      {label:"1 Bulan Private", price:"Rp 6.000"}  
-    ]},  
-
-  { id:"ibis", name:"Ibis Paint", logo:"https://img2.pixhost.to/images/6908/711360756_settomodders.jpg",  
-    packages:[  
-      {label:"7 Hari acc buyer", price:"Rp 1.000"},  
-      {label:"1 Bulan acc buyer", price:"Rp 4.000"}  
-    ]},  
-
-  { id:"canva", name:"Canva", logo:"https://img2.pixhost.to/images/6908/711361125_settomodders.jpg",  
-    packages:[  
-      {label:"1 Bulan Member", price:"Rp 1.000"},  
-      {label:"1 Tahun Member", price:"Rp 1.000"}  
-    ]},  
-
-  { id:"winkit", name:"Winkit", logo:"https://img2.pixhost.to/images/6908/711361278_settomodders.jpg",  
-    packages:[  
-      {label:"3 Hari", price:"Rp 1.850"},  
-      {label:"6 Hari", price:"Rp 3.500"},  
-      {label:"12 Hari", price:"Rp 5.000"}  
-    ]},  
-
-  { id:"wink", name:"Wink", logo:"https://img2.pixhost.to/images/6908/711361474_settomodders.jpg",  
-    packages:[{label:"7 Hari", price:"Rp 2.000"}]},  
-
-  { id:"capcut", name:"CapCut", logo:"https://img2.pixhost.to/images/6908/711361753_settomodders.jpg",  
-    packages:[  
-      {label:"7 Hari Private", price:"Rp 4.000"},  
-      {label:"14 Hari Private", price:"Rp 5.000"},  
-      {label:"21 Hari Private", price:"Rp 6.000"},  
-      {label:"28 Hari Private", price:"Rp 7.000"},  
-      {label:"35 Hari Private", price:"Rp 13.000"}  
-    ]},  
-
-  { id:"dramabox", name:"DramaBox", logo:"https://img2.pixhost.to/images/6908/711361926_settomodders.jpg",  
-    packages:[{label:"1 Bulan Sharing", price:"Rp 11.000"}]},  
-
-  { id:"viu", name:"VIU", logo:"https://img2.pixhost.to/images/6908/711362048_settomodders.jpg",  
-    packages:[  
-      {label:"1 Tahun Private", price:"Rp 1.000"},  
-      {label:"Lifetime", price:"Rp 1.000"}  
-    ]},  
-
-  { id:"vidio", name:"Vidio", logo:"https://files.catbox.moe/iazd8u.jpeg",  
-    packages:[  
-      {label:"1 Bulan Sharing", price:"Rp 16.000"},  
-      {label:"1 Bulan Private", price:"Rp 26.000"},  
-      {label:"1 Tahun Only TV", price:"Rp 4.000"}  
-    ]},  
-
-  { id:"disney", name:"Disney+", logo:"https://files.catbox.moe/zb5fsb.jpeg",  
-    packages:[{label:"7 Hari", price:"Rp 13.000"}]},  
-
-]
-
-}
+  {
+    id: "am1",
+    name: "Alight Motion",
+    logo: "https://img2.pixhost.to/images/6908/711356113_settomodders.jpg",
+    desc: "Akses Alight Motion premium",
+    packages: [
+      { label: "1 Tahun acc s/gen", price: "Rp 1.000" },
+      { label: "1 Tahun acc buyer", price: "Rp 1.000" },
+    ],
+  },
+  {
+    id: "melolo",
+    name: "Melolo",
+    logo: "https://img2.pixhost.to/images/6908/711356265_settomodders.jpg",
+    desc: "Melolo premium",
+    packages: [{ label: "1 Bulan Sharing", price: "Rp 7.000" }],
+  },
+  {
+    id: "meitu",
+    name: "Meitu",
+    logo: "https://files.catbox.moe/fm7kn5.jpeg",
+    desc: "Meitu premium",
+    packages: [{ label: "7 Hari acc buyer", price: "Rp 1.000" }],
+  },
+  {
+    id: "iqiyi",
+    name: "iQIYI",
+    logo: "https://img2.pixhost.to/images/6908/711356858_settomodders.jpg",
+    desc: "iQIYI premium",
+    packages: [
+      { label: "1 Bulan Standar", price: "Rp 7.000" },
+      { label: "1 Bulan Premium", price: "Rp 8.000" },
+    ],
+  },
+  {
+    id: "bstation",
+    name: "Bstation",
+    logo: "https://img2.pixhost.to/images/6908/711357549_settomodders.jpg",
+    desc: "Bstation sharing",
+    packages: [{ label: "1 Bulan Sharing", price: "Rp 8.000" }],
+  },
+  {
+    id: "netflix",
+    name: "Netflix",
+    logo: "https://img2.pixhost.to/images/6908/711357835_settomodders.jpg",
+    desc: "Netflix berbagai paket",
+    packages: [
+      { label: "1 Hari 1 User", price: "Rp 6.500" },
+      { label: "3 Hari 1 User", price: "Rp 8.500" },
+      { label: "7 Hari 1 User", price: "Rp 12.000" },
+      { label: "1 Bulan 1 User", price: "Rp 20.000" },
+      { label: "1 Hari 2 User", price: "Rp 5.500" },
+      { label: "3 Hari 2 User", price: "Rp 8.900" },
+      { label: "7 Hari 2 User", price: "Rp 10.500" },
+      { label: "1 Bulan 2 User", price: "Rp 14.500" },
+      { label: "1 Bulan Semi", price: "Rp 28.500" },
+    ],
+  },
+  {
+    id: "spotify",
+    name: "Spotify",
+    logo: "https://img2.pixhost.to/images/6908/711358117_settomodders.jpg",
+    desc: "Spotify premium",
+    packages: [
+      { label: "1 Bulan No Garansi", price: "Rp 14.000" },
+      { label: "1 Bulan Full Garansi", price: "Rp 21.200" },
+    ],
+  },
+  {
+    id: "youtube",
+    name: "YouTube Premium",
+    logo: "https://img2.pixhost.to/images/6908/711359159_settomodders.jpg",
+    desc: "YouTube premium",
+    packages: [
+      { label: "1 Bulan Famplan", price: "Rp 4.000" },
+      { label: "1 Bulan Indplan", price: "Rp 6.000" },
+    ],
+  },
+  {
+    id: "chatgpt",
+    name: "ChatGPT",
+    logo: "https://img2.pixhost.to/images/6908/711359450_settomodders.jpg",
+    desc: "ChatGPT sharing",
+    packages: [{ label: "1 Bulan Sharing", price: "Rp 8.200" }],
+  },
+  {
+    id: "gemini",
+    name: "Gemini",
+    logo: "https://img2.pixhost.to/images/6908/711359670_settomodders.jpg",
+    desc: "Gemini account",
+    packages: [
+      { label: "Acc Buyer", price: "Rp 3.500" },
+      { label: "Acc Seller", price: "Rp 8.200" },
+    ],
+  },
+  {
+    id: "loklok",
+    name: "Loklok",
+    logo: "https://img2.pixhost.to/images/6908/711360234_settomodders.jpg",
+    desc: "Loklok premium",
+    packages: [
+      { label: "1 Bulan Basic", price: "Rp 17.000" },
+      { label: "1 Bulan Standar", price: "Rp 19.000" },
+    ],
+  },
+  {
+    id: "picsart",
+    name: "PicsArt",
+    logo: "https://img2.pixhost.to/images/6908/711360515_settomodders.jpg",
+    desc: "PicsArt premium",
+    packages: [
+      { label: "1 Bulan Sharing", price: "Rp 4.500" },
+      { label: "1 Bulan Private", price: "Rp 6.000" },
+    ],
+  },
+  {
+    id: "ibis",
+    name: "Ibis Paint",
+    logo: "https://img2.pixhost.to/images/6908/711360756_settomodders.jpg",
+    desc: "Ibis Paint premium",
+    packages: [
+      { label: "7 Hari acc buyer", price: "Rp 1.000" },
+      { label: "1 Bulan acc buyer", price: "Rp 4.000" },
+    ],
+  },
+  {
+    id: "canva",
+    name: "Canva",
+    logo: "https://img2.pixhost.to/images/6908/711361125_settomodders.jpg",
+    desc: "Canva member",
+    packages: [
+      { label: "1 Bulan Member", price: "Rp 1.000" },
+      { label: "1 Tahun Member", price: "Rp 1.000" },
+    ],
+  },
+  {
+    id: "winkit",
+    name: "Winkit",
+    logo: "https://img2.pixhost.to/images/6908/711361278_settomodders.jpg",
+    desc: "Winkit premium",
+    packages: [
+      { label: "3 Hari", price: "Rp 1.850" },
+      { label: "6 Hari", price: "Rp 3.500" },
+      { label: "12 Hari", price: "Rp 5.000" },
+    ],
+  },
+  {
+    id: "wink",
+    name: "Wink",
+    logo: "https://img2.pixhost.to/images/6908/711361474_settomodders.jpg",
+    desc: "Wink premium",
+    packages: [{ label: "7 Hari", price: "Rp 2.000" }],
+  },
+  {
+    id: "capcut",
+    name: "CapCut",
+    logo: "https://img2.pixhost.to/images/6908/711361753_settomodders.jpg",
+    desc: "CapCut private",
+    packages: [
+      { label: "7 Hari Private", price: "Rp 4.000" },
+      { label: "14 Hari Private", price: "Rp 5.000" },
+      { label: "21 Hari Private", price: "Rp 6.000" },
+      { label: "28 Hari Private", price: "Rp 7.000" },
+      { label: "35 Hari Private", price: "Rp 13.000" },
+    ],
+  },
+  {
+    id: "dramabox",
+    name: "DramaBox",
+    logo: "https://img2.pixhost.to/images/6908/711361926_settomodders.jpg",
+    desc: "DramaBox sharing",
+    packages: [{ label: "1 Bulan Sharing", price: "Rp 11.000" }],
+  },
+  {
+    id: "viu",
+    name: "VIU",
+    logo: "https://img2.pixhost.to/images/6908/711362048_settomodders.jpg",
+    desc: "VIU premium",
+    packages: [
+      { label: "1 Tahun Private", price: "Rp 1.000" },
+      { label: "Lifetime", price: "Rp 1.000" },
+    ],
+  },
+  {
+    id: "vidio",
+    name: "Vidio",
+    logo: "https://files.catbox.moe/iazd8u.jpeg",
+    desc: "Vidio premium",
+    packages: [
+      { label: "1 Bulan Sharing", price: "Rp 16.000" },
+      { label: "1 Bulan Private", price: "Rp 26.000" },
+      { label: "1 Tahun Only TV", price: "Rp 4.000" },
+    ],
+  },
+  {
+    id: "disney",
+    name: "Disney+",
+    logo: "https://files.catbox.moe/zb5fsb.jpeg",
+    desc: "Disney+ premium",
+    packages: [{ label: "7 Hari", price: "Rp 13.000" }],
+  },
 ];
-  let selectedProduct = "";
 
-const list = document.getElementById("productList");
+function Navbar({ page, setPage }) {
+  const items = [
+    { key: "home", label: "Home", icon: Home },
+    { key: "about", label: "About", icon: Info },
+    { key: "payment", label: "Payment", icon: Wallet },
+    { key: "contact", label: "Contact", icon: Mail },
+  ];
 
-products.forEach(p => {
-  let card = document.createElement("div");
-  card.className = "card";
+  return (
+    <div className="sticky top-0 z-40 border-b border-white/10 bg-black/40 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 md:px-6">
+        <button onClick={() => setPage("home")} className="flex items-center gap-3 text-left">
+          <img src={logoUrl} alt="Keii Shop Logo" className="h-11 w-11 rounded-2xl object-cover ring-2 ring-pink-400/40" />
+          <div>
+            <div className="text-lg font-bold tracking-wide text-white">keii shop</div>
+            <div className="text-xs text-white/60">Premium digital account store</div>
+          </div>
+        </button>
 
-  card.innerHTML = `
-    <img src="${p.logo}">
-    <h3>${p.name}</h3>
-    <button onclick="openForm('${p.name}')">Order</button>
-  `;
-
-  list.appendChild(card);
-});
-
-function openForm(name){
-  selectedProduct = name;
-  document.getElementById("formOrder").style.display = "block";
+        <div className="hidden items-center gap-2 md:flex">
+          {items.map((item) => {
+            const Icon = item.icon;
+            const active = page === item.key;
+            return (
+              <button
+                key={item.key}
+                onClick={() => setPage(item.key)}
+                className={`flex items-center gap-2 rounded-2xl px-4 py-2 text-sm transition ${
+                  active
+                    ? "bg-white text-black shadow-lg"
+                    : "bg-white/5 text-white/80 hover:bg-white/10 hover:text-white"
+                }`}
+              >
+                <Icon className="h-4 w-4" />
+                {item.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
 }
 
-function sendOrder(){
-  let email = document.getElementById("email").value;
-  let wa = document.getElementById("wa").value;
-  let device = document.getElementById("device").value;
-  let note = document.getElementById("note").value;
-
-  let text = `ORDER%0AProduk: ${selectedProduct}%0AEmail: ${email}%0AWA: ${wa}%0ADevice: ${device}%0ACatatan: ${note}`;
-
-  window.open(`https://wa.me/6285657279971?text=${text}`);
+function LoadingIntro({ done }) {
+  return (
+    <AnimatePresence>
+      {!done && (
+        <motion.div
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0, scale: 1.04 }}
+          transition={{ duration: 0.6 }}
+          className="fixed inset-0 z-[999] flex items-center justify-center overflow-hidden bg-[#05010a]"
+        >
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(236,72,153,0.25),_transparent_35%),radial-gradient(circle_at_bottom,_rgba(168,85,247,0.2),_transparent_35%)]" />
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="relative flex flex-col items-center gap-6"
+          >
+            <motion.img
+              src={logoUrl}
+              alt="Keii Shop Logo"
+              className="h-28 w-28 rounded-[2rem] object-cover shadow-2xl ring-4 ring-pink-400/40"
+              animate={{ rotate: [0, 5, -5, 0], scale: [1, 1.04, 1] }}
+              transition={{ repeat: Infinity, duration: 2.2 }}
+            />
+            <div className="text-center">
+              <motion.h1
+                initial={{ letterSpacing: "0.35em", opacity: 0 }}
+                animate={{ letterSpacing: "0.08em", opacity: 1 }}
+                transition={{ duration: 1 }}
+                className="text-4xl font-black uppercase tracking-[0.3em] text-white md:text-6xl"
+              >
+                keii shop
+              </motion.h1>
+              <p className="mt-3 text-sm text-pink-100/80 md:text-base">Loading premium vibes...</p>
+            </div>
+            <div className="h-2 w-64 overflow-hidden rounded-full bg-white/10">
+              <motion.div
+                className="h-full rounded-full bg-gradient-to-r from-pink-500 via-fuchsia-400 to-violet-400"
+                initial={{ x: "-100%" }}
+                animate={{ x: "100%" }}
+                transition={{ repeat: Infinity, duration: 1.3, ease: "easeInOut" }}
+              />
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
 }
-</script>
 
-</body>
-</html>
+function FloatingSupport() {
+  return (
+    <a
+      href={`https://wa.me/${waNumber}`}
+      target="_blank"
+      rel="noreferrer"
+      className="fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-full bg-green-500 px-5 py-4 text-sm font-semibold text-white shadow-2xl transition hover:scale-105"
+    >
+      <MessageCircle className="h-5 w-5" />
+      Contact Support
+    </a>
+  );
+}
+
+function Hero({ setPage }) {
+  return (
+    <section className="relative overflow-hidden px-4 pb-16 pt-12 md:px-6 md:pt-16">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(236,72,153,0.18),transparent_25%),radial-gradient(circle_at_80%_10%,rgba(168,85,247,0.18),transparent_28%),radial-gradient(circle_at_50%_90%,rgba(59,130,246,0.12),transparent_30%)]" />
+      <div className="relative mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-[1.2fr_0.8fr]">
+        <div>
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            className="inline-flex items-center gap-2 rounded-full border border-pink-400/30 bg-white/5 px-4 py-2 text-sm text-pink-100"
+          >
+            <Sparkles className="h-4 w-4" />
+            Toko digital premium terpercaya
+          </motion.div>
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            className="mt-6 max-w-3xl text-4xl font-black leading-tight text-white md:text-6xl"
+          >
+            Welcome to <span className="bg-gradient-to-r from-pink-400 to-violet-300 bg-clip-text text-transparent">keii shop</span>
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="mt-5 max-w-2xl text-base leading-7 text-white/75 md:text-lg"
+          >
+            Tempat beli akun premium, streaming, editing, dan tools favorit dengan tampilan modern, proses cepat, dan pembayaran praktis via DANA atau QRIS.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="mt-8 flex flex-wrap gap-4"
+          >
+            <Button onClick={() => setPage("payment")} className="rounded-2xl bg-white px-6 py-6 text-black hover:bg-white/90">
+              Bayar Sekarang
+              <ChevronRight className="ml-2 h-4 w-4" />
+            </Button>
+            <Button
+              onClick={() => setPage("about")}
+              variant="outline"
+              className="rounded-2xl border-white/20 bg-white/5 px-6 py-6 text-white hover:bg-white/10"
+            >
+              Lihat Tentang Shop
+            </Button>
+          </motion.div>
+
+          <div className="mt-10 grid gap-4 sm:grid-cols-3">
+            {[
+              { title: "20+ Produk", desc: "Pilihan akun premium lengkap" },
+              { title: "Fast Response", desc: "Hubungi admin via WhatsApp" },
+              { title: "DANA & QRIS", desc: "Pembayaran fleksibel dan simpel" },
+            ].map((item) => (
+              <Card key={item.title} className="rounded-3xl border-white/10 bg-white/5 backdrop-blur-xl">
+                <CardContent className="p-5">
+                  <div className="text-lg font-bold text-white">{item.title}</div>
+                  <p className="mt-1 text-sm text-white/65">{item.desc}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.15 }}
+          className="relative"
+        >
+          <div className="absolute -inset-3 rounded-[2rem] bg-gradient-to-br from-pink-500/20 via-fuchsia-500/20 to-violet-500/20 blur-2xl" />
+          <Card className="relative overflow-hidden rounded-[2rem] border-white/10 bg-white/8 backdrop-blur-2xl">
+            <CardContent className="p-6 md:p-8">
+              <div className="flex items-center gap-4">
+                <img src={logoUrl} alt="Keii Shop" className="h-16 w-16 rounded-3xl object-cover ring-2 ring-pink-400/40" />
+                <div>
+                  <h3 className="text-2xl font-bold text-white">keii shop</h3>
+                  <p className="text-sm text-white/65">Premium Store Experience</p>
+                </div>
+              </div>
+              <div className="mt-8 space-y-4">
+                {[
+                  "Design website clean + elegan",
+                  "Intro loading animasi premium",
+                  "Support floating WhatsApp",
+                  "Halaman pembayaran dengan QRIS download",
+                ].map((text) => (
+                  <div key={text} className="flex items-center gap-3 rounded-2xl bg-white/5 p-4 text-white/90">
+                    <ShieldCheck className="h-5 w-5 text-pink-300" />
+                    <span>{text}</span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+function ProductSection() {
+  return (
+    <section className="mx-auto max-w-7xl px-4 pb-20 md:px-6">
+      <div className="mb-8 flex items-end justify-between gap-4">
+        <div>
+          <h2 className="text-3xl font-black text-white md:text-4xl">Daftar Produk</h2>
+          <p className="mt-2 text-white/65">Klik WhatsApp setelah memilih paket yang kamu mau.</p>
+        </div>
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        {products.map((product) => {
+          const text = encodeURIComponent(
+            `Halo kak, saya mau order ${product.name}. Mohon info paket yang tersedia ya.`
+          );
+
+          return (
+            <motion.div
+              key={product.id}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.45 }}
+            >
+              <Card className="h-full rounded-[2rem] border-white/10 bg-white/[0.06] shadow-2xl backdrop-blur-xl transition hover:-translate-y-1 hover:bg-white/[0.09]">
+                <CardContent className="p-5">
+                  <div className="flex items-center gap-4">
+                    <img src={product.logo} alt={product.name} className="h-16 w-16 rounded-2xl object-cover" />
+                    <div>
+                      <h3 className="text-xl font-bold text-white">{product.name}</h3>
+                      <p className="text-sm text-white/60">{product.desc || "Paket premium tersedia"}</p>
+                    </div>
+                  </div>
+
+                  <div className="mt-5 space-y-3">
+                    {product.packages.map((pkg, idx) => (
+                      <div key={`${product.id}-${idx}`} className="flex items-center justify-between rounded-2xl border border-white/10 bg-black/20 px-4 py-3">
+                        <div>
+                          <div className="text-sm font-medium text-white">{pkg.label}</div>
+                        </div>
+                        <div className="text-sm font-bold text-pink-300">{pkg.price}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <a
+                    href={`https://wa.me/${waNumber}?text=${text}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-white px-4 py-3 font-semibold text-black transition hover:bg-white/90"
+                  >
+                    <ShoppingBag className="h-4 w-4" />
+                    Order via WhatsApp
+                  </a>
+                </CardContent>
+              </Card>
+            </motion.div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+function AboutPage() {
+  return (
+    <section className="mx-auto max-w-5xl px-4 py-16 md:px-6">
+      <Card className="rounded-[2rem] border-white/10 bg-white/[0.06] backdrop-blur-xl">
+        <CardContent className="grid gap-8 p-6 md:grid-cols-[220px_1fr] md:p-8">
+          <div className="flex flex-col items-center justify-center text-center">
+            <img src={logoUrl} alt="Keii Shop" className="h-36 w-36 rounded-[2rem] object-cover ring-4 ring-pink-400/30" />
+            <h2 className="mt-4 text-3xl font-black text-white">About keii shop</h2>
+          </div>
+          <div className="space-y-5 text-white/75">
+            <p>
+              <span className="font-semibold text-white">keii shop</span> adalah toko digital premium untuk berbagai kebutuhan hiburan, editing, dan tools produktivitas.
+            </p>
+            <p>
+              Website ini dibuat dengan nuansa modern, elegan, dan cepat diakses. Pengunjung bisa melihat produk, memilih paket, lalu langsung lanjut ke admin melalui WhatsApp.
+            </p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {[
+                "Tampilan premium dan clean",
+                "Intro loading yang estetik",
+                "Daftar produk lengkap",
+                "Payment DANA dan QRIS",
+              ].map((item) => (
+                <div key={item} className="rounded-2xl border border-white/10 bg-black/20 p-4 text-white/90">
+                  {item}
+                </div>
+              ))}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </section>
+  );
+}
+
+function PaymentPage() {
+  const [showQris, setShowQris] = useState(false);
+
+  return (
+    <section className="mx-auto max-w-6xl px-4 py-16 md:px-6">
+      <div className="mb-8">
+        <h2 className="text-3xl font-black text-white md:text-4xl">Halaman Pembayaran</h2>
+        <p className="mt-2 text-white/65">Pilih metode pembayaran yang paling mudah untuk kamu.</p>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card className="rounded-[2rem] border-white/10 bg-white/[0.06] backdrop-blur-xl">
+          <CardContent className="p-6 md:p-8">
+            <div className="flex items-center gap-3">
+              <Wallet className="h-6 w-6 text-pink-300" />
+              <h3 className="text-2xl font-bold text-white">Payment DANA</h3>
+            </div>
+            <div className="mt-6 rounded-3xl border border-white/10 bg-black/20 p-5">
+              <div className="text-sm text-white/60">Nomor DANA</div>
+              <div className="mt-2 text-3xl font-black tracking-wide text-white">{danaNumber}</div>
+            </div>
+            <Button
+              onClick={() => navigator.clipboard.writeText(danaNumber)}
+              className="mt-5 rounded-2xl bg-white px-5 py-5 text-black hover:bg-white/90"
+            >
+              Salin Nomor DANA
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-[2rem] border-white/10 bg-white/[0.06] backdrop-blur-xl">
+          <CardContent className="p-6 md:p-8">
+            <div className="flex items-center gap-3">
+              <QrCode className="h-6 w-6 text-pink-300" />
+              <h3 className="text-2xl font-bold text-white">Payment QRIS</h3>
+            </div>
+            <p className="mt-4 text-white/65">Tekan tombol di bawah untuk menampilkan QRIS dan download gambarnya.</p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Button
+                onClick={() => setShowQris((prev) => !prev)}
+                className="rounded-2xl bg-white px-5 py-5 text-black hover:bg-white/90"
+              >
+                Tampilkan QRIS
+              </Button>
+              <a
+                href={qrisUrl}
+                download
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-2xl border border-white/15 bg-white/5 px-5 py-3 text-white transition hover:bg-white/10"
+              >
+                <Download className="h-4 w-4" />
+                Download QRIS
+              </a>
+            </div>
+
+            <AnimatePresence>
+              {showQris && (
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="mt-6"
+                >
+                  <img src={qrisUrl} alt="QRIS Keii Shop" className="w-full max-w-sm rounded-[2rem] border border-white/10 object-cover shadow-2xl" />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card className="mt-6 rounded-[2rem] border-white/10 bg-white/[0.06] backdrop-blur-xl">
+        <CardContent className="flex flex-col gap-4 p-6 md:flex-row md:items-center md:justify-between md:p-8">
+          <div>
+            <div className="text-xl font-bold text-white">Konfirmasi Pembayaran</div>
+            <p className="mt-1 text-white/65">Setelah transfer, langsung kirim bukti pembayaran ke WhatsApp admin.</p>
+          </div>
+          <a
+            href={`https://wa.me/${waNumber}`}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-green-500 px-6 py-4 font-semibold text-white transition hover:scale-[1.02]"
+          >
+            <Phone className="h-4 w-4" />
+            WhatsApp: {waNumber}
+          </a>
+        </CardContent>
+      </Card>
+    </section>
+  );
+}
+
+function ContactPage() {
+  return (
+    <section className="mx-auto max-w-5xl px-4 py-16 md:px-6">
+      <Card className="rounded-[2rem] border-white/10 bg-white/[0.06] backdrop-blur-xl">
+        <CardContent className="p-6 md:p-8">
+          <h2 className="text-3xl font-black text-white md:text-4xl">Contact</h2>
+          <p className="mt-3 max-w-2xl text-white/70">Untuk order, pertanyaan stok, atau konfirmasi pembayaran, hubungi admin langsung lewat WhatsApp.</p>
+          <div className="mt-8 grid gap-4 md:grid-cols-2">
+            <div className="rounded-3xl border border-white/10 bg-black/20 p-5">
+              <div className="text-sm text-white/60">WhatsApp Admin</div>
+              <div className="mt-2 text-2xl font-black text-white">{waNumber}</div>
+            </div>
+            <div className="rounded-3xl border border-white/10 bg-black/20 p-5">
+              <div className="text-sm text-white/60">Support</div>
+              <div className="mt-2 text-lg font-semibold text-white">Fast response via chat</div>
+            </div>
+            </div>
+          <a
+            href={`https://wa.me/${waNumber}`}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-6 inline-flex items-center gap-2 rounded-2xl bg-white px-6 py-4 font-semibold text-black transition hover:bg-white/90"
+          >
+            <MessageCircle className="h-4 w-4" />
+            Hubungi Sekarang
+          </a>
+        </CardContent>
+      </Card>
+    </section>
+  );
+}
+
+function Footer({ setPage }) {
+  return (
+    <footer className="border-t border-white/10 bg-black/30 px-4 py-8 md:px-6">
+      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 md:flex-row">
+        <div className="flex items-center gap-3">
+          <img src={logoUrl} alt="Keii Shop" className="h-10 w-10 rounded-2xl object-cover" />
+          <div>
+            <div className="font-bold text-white">keii shop</div>
+            <div className="text-sm text-white/50">Premium store website</div>
+          </div>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          {[
+            ["home", "Home"],
+            ["about", "About"],
+            ["payment", "Payment"],
+            ["contact", "Contact"],
+          ].map(([key, label]) => (
+            <button
+              key={key}
+              onClick={() => setPage(key)}
+              className="rounded-2xl bg-white/5 px-4 py-2 text-sm text-white/70 transition hover:bg-white/10 hover:text-white"
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+export default function KeiiShopWebsite() {
+  const [page, setPage] = useState("home");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 2600);
+    return () => clearTimeout(timer);
+  }, []);
+  content = useMemo(() => {
+    if (page === "about") return <AboutPage />;
+    if (page === "payment") return <PaymentPage />;
+    if (page === "contact") return <ContactPage />;
+    return (
+      <>
+        <Hero setPage={setPage} />
+        <ProductSection />
+      </>
+    );
+  }, [page]);
+
+  return (
+    <div className="min-h-screen bg-[#05010a] text-white">
+      <LoadingIntro done={!loading} />
+      <div className="relative min-h-screen bg-[linear-gradient(180deg,#090313_0%,#07020f_45%,#040108_100%)]">
+        <Navbar page={page} setPage={setPage} />
+        {content}
+        {page === "home" && <FloatingSupport />}
+        <Footer setPage={setPage} />
+      </div>
+    </div>
+  );
+}
+          
