@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1018">
+  <title>Keii Tools — Sound Sticker Maker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#"><span class="brand-mark">K</span><span>keii<span class="muted">tools</span></span></a>
+    <span class="top-tag">BETA · VIDEO LAB</span>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div class="eyebrow"><span class="pulse"></span> CREATIVE TOOLS</div>
+      <h1>Sound Sticker<br><span>Maker.</span></h1>
+      <p class="sub">Siapkan video pendek dengan audio asli langsung dari browser HP kamu.</p>
+    </section>
+
+    <section class="workspace">
+      <div class="section-head">
+        <div><span class="step">01</span><h2>Masukkan video</h2></div>
+        <span class="format">MP4 · MOV · WEBM</span>
+      </div>
+
+      <label class="dropzone" id="dropzone" for="videoFile">
+        <input id="videoFile" type="file" accept="video/*">
+        <span class="upload-icon">↑</span>
+        <strong>Pilih video dari galeri</strong>
+        <small>Ketuk untuk memilih file video yang memiliki suara</small>
+        <span class="browse">PILIH VIDEO</span>
+      </label>
+
+      <div id="editor" class="editor hidden">
+        <div class="video-shell">
+          <video id="preview" playsinline controls></video>
+          <div class="video-meta"><span id="fileName">video.mp4</span><span id="durationLabel">00:00</span></div>
+        </div>
+
+        <div class="section-head trim-head">
+          <div><span class="step">02</span><h2>Potong video</h2></div>
+          <span class="hint">Maks. 30 detik untuk percobaan</span>
+        </div>
+        <div class="trim-grid">
+          <label>Mulai (detik)<input id="startTime" type="number" min="0" step="0.1" value="0"></label>
+          <label>Akhir (detik)<input id="endTime" type="number" min="0" step="0.1" value="0"></label>
+        </div>
+        <div class="range-wrap">
+          <input id="startRange" type="range" min="0" max="1" step="0.1" value="0" aria-label="Waktu mulai">
+          <input id="endRange" type="range" min="0" max="1" step="0.1" value="1" aria-label="Waktu akhir">
+        </div>
+        <div class="range-labels"><span>AWAL</span><span id="clipLength">Durasi pilihan: —</span><span>AKHIR</span></div>
+
+        <div class="audio-note"><span class="audio-symbol">♫</span><div><b>Audio asli dipertahankan</b><small>Suara video akan ikut direkam selama proses ekspor. Pastikan suara video tidak dibisukan.</small></div></div>
+        <button id="exportBtn" class="primary" type="button">Proses & download video <span>↗</span></button>
+        <button id="resetBtn" class="secondary" type="button">Pilih video lain</button>
+        <div id="progressBox" class="progress-box hidden"><div class="progress-track"><i id="progressBar"></i></div><p id="status">Menyiapkan video…</p></div>
+      </div>
+    </section>
+
+    <section class="notice">
+      <div class="notice-icon">i</div>
+      <div><b>Catatan untuk WhatsApp</b><p>Website ini menyiapkan video dan audio, bukan membuat file Sound Sticker native secara langsung. Setelah diunduh, coba gunakan menu Buat Stiker di WhatsApp jika fitur audio tersedia pada akunmu. Ekspor WebM mungkin perlu dikonversi ke MP4 untuk kompatibilitas perangkat.</p></div>
+    </section>
+    <footer>KEII TOOLS <span>·</span> Dibuat untuk eksperimen kreatif</footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
