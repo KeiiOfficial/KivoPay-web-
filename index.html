@@ -2,7 +2,7 @@
 <html lang="id" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>NexusChat — Social & Siputzx Multi-AI</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,11 +22,11 @@
       <form id="authForm">
         <div class="form-group">
           <label>Nama Panggilan</label>
-          <input type="text" id="setupName" placeholder="Contoh: Raka Pratama" required />
+          <input type="text" id="setupName" placeholder="Contoh: Keii" required />
         </div>
         <div class="form-group">
           <label>Bio Singkat</label>
-          <input type="text" id="setupBio" placeholder="Suka ngoding, kopi & musik indie..." required />
+          <input type="text" id="setupBio" placeholder="Suka ngoding, kopi & musik..." required />
         </div>
         <div class="form-group">
           <label>Pilih Minat Utama</label>
@@ -48,12 +48,22 @@
     <div class="modal-card modal-lg">
       <div class="modal-top">
         <h3><i class="fa-solid fa-sliders"></i> Pengaturan AI & Server</h3>
-        <button class="icon-btn" onclick="closeModal('settingsModal')"><i class="fa-solid fa-xmark"></i></button>
+        <button class="icon-btn" type="button" onclick="closeModal('settingsModal')"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="modal-body">
         <div class="settings-section">
-          <h4><i class="fa-solid fa-robot text-accent"></i> Siputzx Multi-AI Auto-Fallback (Aktif)</h4>
-          <p class="hint">Sudah terpasang otomatis tanpa perlu API Key manual. Sistem akan otomatis berpindah jika salah satu server AI sedang sibuk/down:</p>
+          <h4><i class="fa-solid fa-user-pen text-accent"></i> Edit Profil Kamu</h4>
+          <div class="form-group" style="margin-top:8px;">
+            <label>Nama Tampilan</label>
+            <input type="text" id="editProfileName" placeholder="Nama kamu..." />
+          </div>
+        </div>
+
+        <hr class="divider" />
+
+        <div class="settings-section">
+          <h4><i class="fa-solid fa-robot text-accent"></i> Siputzx Multi-AI Auto-Fallback</h4>
+          <p class="hint">Otomatis berpindah server jika salah satu AI sedang down:</p>
           <div class="fallback-chain-box">
             <div class="chain-step"><span>1. Utama</span> <code>/api/ai/gptoss120b</code></div>
             <div class="chain-step"><span>2. Cadangan 1</span> <code>/api/ai/glm47flash</code></div>
@@ -68,42 +78,42 @@
         <hr class="divider" />
 
         <div class="settings-section">
-          <h4><i class="fa-solid fa-fire text-orange"></i> Real-Time Chat Online (Firebase Realtime DB)</h4>
-          <p class="hint">Kosongkan untuk mode <b>Multi-Tab Real-Time Lokal</b> (langsung jalan di GitHub Pages!). Isi konfigurasi JSON Firebase jika ingin chat online lintas HP/perangkat berbeda.</p>
+          <h4><i class="fa-solid fa-fire text-orange"></i> Real-Time Chat Online Lintas HP (Firebase)</h4>
+          <p class="hint">Kosongkan untuk mode <b>Multi-Tab Lokal</b>. Isi konfigurasi JSON Firebase Realtime Database jika ingin ngobrol real-time antar HP berbeda.</p>
           <div class="form-group">
             <label>Firebase Config JSON (Opsional)</label>
-            <textarea id="firebaseConfigInput" rows="4" placeholder='{"apiKey": "...", "authDomain": "...", "databaseURL": "https://xxx.firebaseio.com", "projectId": "..."}'></textarea>
+            <textarea id="firebaseConfigInput" rows="3" placeholder='{"apiKey": "...", "databaseURL": "https://xxx.firebaseio.com", "projectId": "..."}'></textarea>
           </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn-secondary" onclick="closeModal('settingsModal')">Batal</button>
-        <button class="btn-primary" onclick="saveSettings()"><i class="fa-solid fa-check"></i> Simpan</button>
+        <button type="button" class="btn-secondary" onclick="closeModal('settingsModal')">Tutup</button>
+        <button type="button" class="btn-primary" onclick="saveSettings()"><i class="fa-solid fa-check"></i> Simpan</button>
       </div>
     </div>
   </div>
 
   <!-- Main App Shell -->
-  <div class="app-container">
+  <div class="app-container" id="appContainer">
     <!-- Left Navigation Rail -->
     <nav class="nav-rail">
       <div class="nav-top">
-        <div class="user-avatar-wrap" id="myAvatarBtn" title="Profil Saya">
-          <img id="myAvatarImg" src="https://api.dicebear.com/7.x/avataaars/svg?seed=User" alt="Me" />
+        <div class="user-avatar-wrap" id="myAvatarBtn" onclick="openModal('settingsModal')" title="Profil & Pengaturan">
+          <img id="myAvatarImg" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Keii" alt="Me" />
           <span class="status-dot online"></span>
         </div>
-        <button class="nav-item active" data-tab="chats" onclick="switchTab('chats')" title="Obrolan">
+        <button type="button" class="nav-item active" data-tab="chats" onclick="switchTab('chats')" title="Obrolan">
           <i class="fa-solid fa-message"></i>
         </button>
-        <button class="nav-item" data-tab="discover" onclick="switchTab('discover')" title="Cari Teman">
+        <button type="button" class="nav-item" data-tab="discover" onclick="switchTab('discover')" title="Cari Teman">
           <i class="fa-solid fa-user-plus"></i>
         </button>
       </div>
       <div class="nav-bottom">
-        <button class="nav-item" id="themeToggleBtn" onclick="toggleTheme()" title="Ganti Tema Dark / Light">
+        <button type="button" class="nav-item" id="themeToggleBtn" onclick="toggleTheme()" title="Ganti Tema Dark / Light">
           <i class="fa-solid fa-sun" id="themeIcon"></i>
         </button>
-        <button class="nav-item" onclick="openModal('settingsModal')" title="Pengaturan AI & Server">
+        <button type="button" class="nav-item" onclick="openModal('settingsModal')" title="Pengaturan AI & Server">
           <i class="fa-solid fa-gear"></i>
         </button>
       </div>
@@ -118,7 +128,7 @@
             <i class="fa-solid fa-circle"></i> Multi-AI & Real-Time Aktif
           </span>
         </div>
-        <button class="icon-btn" onclick="openModal('settingsModal')" title="Pengaturan">
+        <button type="button" class="icon-btn" onclick="openModal('settingsModal')" title="Pengaturan">
           <i class="fa-solid fa-sliders"></i>
         </button>
       </div>
@@ -136,11 +146,11 @@
       <!-- Tab: Discover Friends -->
       <div id="discoverPanel" class="sidebar-content hidden">
         <div class="filter-chips" id="interestFilters">
-          <button class="chip active" onclick="filterDiscover('Semua', this)">Semua</button>
-          <button class="chip" onclick="filterDiscover('Teknologi & AI', this)">Teknologi</button>
-          <button class="chip" onclick="filterDiscover('Gaming & Esports', this)">Gaming</button>
-          <button class="chip" onclick="filterDiscover('Musik & Film', this)">Musik</button>
-          <button class="chip" onclick="filterDiscover('Traveling & Kuliner', this)">Traveling</button>
+          <button type="button" class="chip active" onclick="filterDiscover('Semua', this)">Semua</button>
+          <button type="button" class="chip" onclick="filterDiscover('Teknologi & AI', this)">Teknologi</button>
+          <button type="button" class="chip" onclick="filterDiscover('Gaming & Esports', this)">Gaming</button>
+          <button type="button" class="chip" onclick="filterDiscover('Musik & Film', this)">Musik</button>
+          <button type="button" class="chip" onclick="filterDiscover('Traveling & Kuliner', this)">Traveling</button>
         </div>
         <div class="discover-list" id="discoverList"></div>
       </div>
@@ -157,8 +167,8 @@
         <h2>NexusChat Web</h2>
         <p>Ngobrol real-time dengan teman baru atau tanya apa saja ke <b>Siputzx Multi-AI</b> (GPT-OSS 120B • GLM 4.7 Flash • Meta AI).</p>
         <div class="empty-actions">
-          <button class="btn-primary" onclick="selectChat('siputz-ai')"><i class="fa-solid fa-robot"></i> Mulai Chat AI</button>
-          <button class="btn-secondary" onclick="switchTab('discover')"><i class="fa-solid fa-users"></i> Cari Teman Baru</button>
+          <button type="button" class="btn-primary" onclick="selectChat('siputz-ai')"><i class="fa-solid fa-robot"></i> Mulai Chat AI</button>
+          <button type="button" class="btn-secondary" onclick="switchTab('discover')"><i class="fa-solid fa-users"></i> Cari Teman Baru</button>
         </div>
       </div>
 
@@ -166,12 +176,14 @@
       <div id="activeChatWindow" class="active-chat hidden">
         <header class="chat-header">
           <div class="chat-header-left">
-            <button class="icon-btn mobile-back" onclick="closeMobileChat()"><i class="fa-solid fa-arrow-left"></i></button>
+            <button type="button" class="icon-btn mobile-back" onclick="closeMobileChat()" aria-label="Kembali">
+              <i class="fa-solid fa-arrow-left"></i>
+            </button>
             <div class="avatar-wrap">
               <img id="chatAvatar" src="" alt="Avatar" />
               <span class="status-dot online" id="chatStatusDot"></span>
             </div>
-            <div>
+            <div style="min-width:0;">
               <div class="chat-title-row">
                 <h3 id="chatName">Nama Kontak</h3>
                 <span class="ai-tag hidden" id="chatAiBadge">Multi-AI</span>
@@ -180,7 +192,7 @@
             </div>
           </div>
           <div class="chat-header-right">
-            <button class="icon-btn" onclick="clearCurrentChat()" title="Bersihkan Chat">
+            <button type="button" class="icon-btn" onclick="clearCurrentChat()" title="Bersihkan Chat">
               <i class="fa-solid fa-trash-can"></i>
             </button>
           </div>
@@ -189,7 +201,7 @@
         <div class="messages-container" id="messagesContainer"></div>
 
         <footer class="chat-input-area">
-          <button class="icon-btn" onclick="insertEmoji()" title="Emoji"><i class="fa-regular fa-face-smile"></i></button>
+          <button type="button" class="icon-btn" onclick="insertEmoji()" title="Emoji"><i class="fa-regular fa-face-smile"></i></button>
           <form id="messageForm" class="message-form">
             <input type="text" id="messageInput" placeholder="Ketik pesan..." autocomplete="off" />
             <button type="submit" class="send-btn" title="Kirim">
@@ -204,9 +216,6 @@
   <!-- Toast Notification -->
   <div id="toast" class="toast hidden"></div>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

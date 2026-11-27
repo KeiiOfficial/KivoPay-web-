@@ -1,14 +1,14 @@
 // State & Storage Keys
 const STORAGE_KEYS = {
-  PROFILE: 'nexus_user_profile',
-  THEME: 'nexus_theme',
-  SYSTEM_PROMPT: 'nexus_ai_system_prompt',
-  FIREBASE_CFG: 'nexus_firebase_cfg',
-  FRIENDS: 'nexus_friends_list',
-  MESSAGES: 'nexus_chat_messages'
+  PROFILE: 'nexus_user_profile_v3',
+  THEME: 'nexus_theme_v3',
+  SYSTEM_PROMPT: 'nexus_ai_system_prompt_v3',
+  FIREBASE_CFG: 'nexus_firebase_cfg_v3',
+  FRIENDS: 'nexus_friends_list_v3',
+  MESSAGES: 'nexus_chat_messages_v3'
 };
 
-// Siputzx Multi-AI Auto-Fallback Chain (Sesuai endpoint Siputzx tanpa perlu API Key)
+// Siputzx Multi-AI Auto-Fallback Chain
 const SIPUTZ_AI_MODELS = [
   {
     name: 'GPT-OSS 120B',
@@ -27,10 +27,38 @@ const SIPUTZ_AI_MODELS = [
   }
 ];
 
-// BroadcastChannel for Real-Time Multi-Tab Chat (100% Static / GitHub Pages Ready)
-const localBus = new BroadcastChannel('nexus_realtime_bus');
+// Safe BroadcastChannel wrapper (prevents crash on mobile browsers / restricted WebViews)
+let localBus = null;
+try {
+  if (typeof BroadcastChannel !== 'undefined') {
+    localBus = new BroadcastChannel('nexus_realtime_bus');
+  }
+} catch (e) {
+  localBus = null;
+}
 
-let currentUser = JSON.parse(localStorage.getItem(STORAGE_KEYS.PROFILE)) || null;
+// Default profile so the app NEVER freezes on a blank screen
+let currentUser = null;
+try {
+  currentUser = JSON.parse(localStorage.getItem(STORAGE_KEYS.PROFILE));
+} catch (e) {
+  currentUser = null;
+}
+
+if (!currentUser) {
+  currentUser = {
+    id: 'user-' + Date.now(),
+    name: 'Keii',
+    bio: 'Eksplor NexusChat & Siputzx AI',
+    interest: 'Teknologi & AI',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Keii',
+    isDefault: true
+  };
+  try {
+    localStorage.setItem(STORAGE_KEYS.PROFILE, JSON.stringify(currentUser));
+  } catch (e) {}
+}
+
 let activeChatId = null;
 let currentFilter = 'Semua';
 let searchQuery = '';
@@ -67,70 +95,83 @@ const DIRECTORY_USERS = [
   { id: 'usr-tarisa', name: 'Tarisa Melati', bio: 'Nonton film sci-fi & dengerin playlist indie', interest: 'Musik & Film', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Tarisa', online: true }
 ];
 
-// Initialize App
-document.addEventListener('DOMContentLoaded', () => {
+// Initialize App Immediately
+function initApp() {
   initTheme();
+  updateProfileUI();
   loadSettingsInputs();
-  initFirebaseIfConfigured();
 
-  if (!currentUser) {
-    openModal('authModal');
-  } else {
-    updateProfileUI();
-  }
-
-  if (!localStorage.getItem(STORAGE_KEYS.FRIENDS)) {
-    localStorage.setItem(STORAGE_KEYS.FRIENDS, JSON.stringify(['usr-nadia', 'usr-rizky']));
-  }
+  try {
+    if (!localStorage.getItem(STORAGE_KEYS.FRIENDS)) {
+      localStorage.setItem(STORAGE_KEYS.FRIENDS, JSON.stringify(['usr-nadia', 'usr-rizky']));
+    }
+  } catch (e) {}
 
   renderChatList();
   renderDiscoverList();
   setupEventListeners();
-});
+  loadFirebaseSDKIfNeeded();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initApp);
+} else {
+  initApp();
+}
 
 function setupEventListeners() {
-  document.getElementById('authForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = document.getElementById('setupName').value.trim();
-    const bio = document.getElementById('setupBio').value.trim();
-    const interest = document.getElementById('setupInterest').value;
+  const authForm = document.getElementById('authForm');
+  if (authForm) {
+    authForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('setupName').value.trim();
+      const bio = document.getElementById('setupBio').value.trim();
+      const interest = document.getElementById('setupInterest').value;
 
-    currentUser = {
-      id: 'user-' + Date.now(),
-      name,
-      bio,
-      interest,
-      avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name)}`
-    };
-    localStorage.setItem(STORAGE_KEYS.PROFILE, JSON.stringify(currentUser));
-    closeModal('authModal');
-    updateProfileUI();
-    showToast(`Selamat datang, ${name}!`);
-    announcePresence();
-  });
+      currentUser = {
+        id: 'user-' + Date.now(),
+        name,
+        bio,
+        interest,
+        avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name)}`
+      };
+      try {
+        localStorage.setItem(STORAGE_KEYS.PROFILE, JSON.stringify(currentUser));
+      } catch (err) {}
+      closeModal('authModal');
+      updateProfileUI();
+      showToast(`Selamat datang, ${name}!`);
+      announcePresence();
+    });
+  }
 
-  document.getElementById('messageForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const input = document.getElementById('messageInput');
-    const text = input.value.trim();
-    if (!text || !activeChatId) return;
+  const msgForm = document.getElementById('messageForm');
+  if (msgForm) {
+    msgForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const input = document.getElementById('messageInput');
+      const text = input.value.trim();
+      if (!text || !activeChatId) return;
 
-    input.value = '';
-    await sendMessage(activeChatId, text);
-  });
+      input.value = '';
+      await sendMessage(activeChatId, text);
+    });
+  }
 
-  localBus.onmessage = (event) => {
-    const { type, payload } = event.data;
-    if (type === 'NEW_MESSAGE') {
-      saveMessageLocally(payload.chatId, payload.message, false);
-      if (activeChatId === payload.chatId) {
-        renderMessages(activeChatId);
+  if (localBus) {
+    localBus.onmessage = (event) => {
+      const { type, payload } = event.data || {};
+      if (type === 'NEW_MESSAGE') {
+        saveMessageLocally(payload.chatId, payload.message, false);
+        if (activeChatId === payload.chatId) {
+          renderMessages(activeChatId);
+        }
+        renderChatList();
+      } else if (type === 'USER_JOINED' && payload.id !== currentUser?.id) {
+        showToast(`${payload.name} baru saja online!`);
       }
-      renderChatList();
-    } else if (type === 'USER_JOINED' && payload.id !== currentUser?.id) {
-      showToast(`${payload.name} baru saja online!`);
-    }
-  };
+    };
+  }
 
   window.addEventListener('storage', (e) => {
     if (e.key === STORAGE_KEYS.MESSAGES) {
@@ -142,7 +183,9 @@ function setupEventListeners() {
 
 function announcePresence() {
   if (!currentUser) return;
-  localBus.postMessage({ type: 'USER_JOINED', payload: currentUser });
+  if (localBus) {
+    try { localBus.postMessage({ type: 'USER_JOINED', payload: currentUser }); } catch (e) {}
+  }
   if (firebaseDb) {
     firebaseDb.ref('online_users/' + currentUser.id).set({
       ...currentUser,
@@ -153,13 +196,16 @@ function announcePresence() {
 
 function updateProfileUI() {
   if (!currentUser) return;
-  document.getElementById('myAvatarImg').src = currentUser.avatar;
-  document.getElementById('myAvatarBtn').title = `${currentUser.name} (${currentUser.interest})`;
+  const img = document.getElementById('myAvatarImg');
+  const btn = document.getElementById('myAvatarBtn');
+  if (img) img.src = currentUser.avatar;
+  if (btn) btn.title = `${currentUser.name} (${currentUser.interest})`;
 }
 
 // Theme Management
 function initTheme() {
-  const savedTheme = localStorage.getItem(STORAGE_KEYS.THEME) || 'dark';
+  let savedTheme = 'dark';
+  try { savedTheme = localStorage.getItem(STORAGE_KEYS.THEME) || 'dark'; } catch (e) {}
   applyTheme(savedTheme);
 }
 
@@ -172,9 +218,9 @@ function toggleTheme() {
 
 function applyTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
-  localStorage.setItem(STORAGE_KEYS.THEME, theme);
+  try { localStorage.setItem(STORAGE_KEYS.THEME, theme); } catch (e) {}
   const icon = document.getElementById('themeIcon');
-  icon.className = theme === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+  if (icon) icon.className = theme === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
 }
 
 // Tabs & Navigation
@@ -204,7 +250,11 @@ function handleSearch(val) {
 
 // Friends & Contacts Helper
 function getFriendIds() {
-  return JSON.parse(localStorage.getItem(STORAGE_KEYS.FRIENDS)) || [];
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEYS.FRIENDS)) || ['usr-nadia', 'usr-rizky'];
+  } catch (e) {
+    return ['usr-nadia', 'usr-rizky'];
+  }
 }
 
 function getAllActiveContacts() {
@@ -217,9 +267,9 @@ function addFriend(userId) {
   const friendIds = getFriendIds();
   if (!friendIds.includes(userId)) {
     friendIds.push(userId);
-    localStorage.setItem(STORAGE_KEYS.FRIENDS, JSON.stringify(friendIds));
+    try { localStorage.setItem(STORAGE_KEYS.FRIENDS, JSON.stringify(friendIds)); } catch (e) {}
     const user = DIRECTORY_USERS.find(u => u.id === userId);
-    showToast(`${user.name} ditambahkan ke daftar teman!`);
+    if (user) showToast(`${user.name} ditambahkan ke daftar teman!`);
     renderDiscoverList();
     switchTab('chats');
     selectChat(userId);
@@ -229,6 +279,8 @@ function addFriend(userId) {
 // Render Chat Sidebar
 function renderChatList() {
   const listEl = document.getElementById('chatList');
+  if (!listEl) return;
+
   const contacts = getAllActiveContacts().filter(c =>
     c.name.toLowerCase().includes(searchQuery) || c.bio.toLowerCase().includes(searchQuery)
   );
@@ -265,8 +317,9 @@ function renderChatList() {
 // Render Discover Friends
 function renderDiscoverList() {
   const listEl = document.getElementById('discoverList');
-  const friendIds = getFriendIds();
+  if (!listEl) return;
 
+  const friendIds = getFriendIds();
   const filtered = DIRECTORY_USERS.filter(u => {
     const matchInterest = currentFilter === 'Semua' || u.interest === currentFilter;
     const matchSearch = u.name.toLowerCase().includes(searchQuery) || u.bio.toLowerCase().includes(searchQuery);
@@ -277,7 +330,7 @@ function renderDiscoverList() {
     const isFriend = friendIds.includes(user.id);
     return `
       <div class="friend-card">
-        <div style="display:flex; align-items:center; gap:12px;">
+        <div style="display:flex; align-items:center; gap:10px; min-width:0;">
           <div class="avatar-wrap">
             <img src="${user.avatar}" alt="${user.name}" />
             <span class="status-dot online"></span>
@@ -289,8 +342,8 @@ function renderDiscoverList() {
           </div>
         </div>
         ${isFriend
-          ? `<button class="btn-secondary btn-sm" onclick="selectChat('${user.id}')"><i class="fa-solid fa-comment"></i> Chat</button>`
-          : `<button class="btn-primary btn-sm" onclick="addFriend('${user.id}')"><i class="fa-solid fa-user-plus"></i> Tambah</button>`
+          ? `<button type="button" class="btn-secondary btn-sm" onclick="selectChat('${user.id}')"><i class="fa-solid fa-comment"></i> Chat</button>`
+          : `<button type="button" class="btn-primary btn-sm" onclick="addFriend('${user.id}')"><i class="fa-solid fa-user-plus"></i> Tambah</button>`
         }
       </div>
     `;
@@ -312,7 +365,7 @@ function selectChat(chatId) {
 
   document.getElementById('emptyChatState').classList.add('hidden');
   document.getElementById('activeChatWindow').classList.remove('hidden');
-  document.querySelector('.app-container').classList.add('chat-open');
+  document.getElementById('appContainer').classList.add('chat-open');
 
   document.getElementById('chatAvatar').src = contact.avatar;
   document.getElementById('chatName').textContent = contact.name;
@@ -346,12 +399,18 @@ function selectChat(chatId) {
 }
 
 function closeMobileChat() {
-  document.querySelector('.app-container').classList.remove('chat-open');
+  document.getElementById('appContainer').classList.remove('chat-open');
 }
 
 // Messaging Storage & Real-Time Engine
+let memoryMessages = {};
+
 function getAllMessages() {
-  return JSON.parse(localStorage.getItem(STORAGE_KEYS.MESSAGES)) || {};
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEYS.MESSAGES)) || memoryMessages;
+  } catch (e) {
+    return memoryMessages;
+  }
 }
 
 function saveMessageLocally(chatId, message, broadcast = true) {
@@ -360,13 +419,18 @@ function saveMessageLocally(chatId, message, broadcast = true) {
   if (all[chatId].some(m => m.id === message.id)) return;
 
   all[chatId].push(message);
-  localStorage.setItem(STORAGE_KEYS.MESSAGES, JSON.stringify(all));
+  memoryMessages = all;
+  try {
+    localStorage.setItem(STORAGE_KEYS.MESSAGES, JSON.stringify(all));
+  } catch (e) {}
 
-  if (broadcast) {
-    localBus.postMessage({
-      type: 'NEW_MESSAGE',
-      payload: { chatId, message }
-    });
+  if (broadcast && localBus) {
+    try {
+      localBus.postMessage({
+        type: 'NEW_MESSAGE',
+        payload: { chatId, message }
+      });
+    } catch (e) {}
   }
 }
 
@@ -412,8 +476,10 @@ async function fetchWithTimeout(url, timeoutMs = 15000) {
 
 // Siputzx Multi-AI Auto-Fallback Engine
 async function querySiputzMultiAI(userPrompt) {
-  const systemPrompt = localStorage.getItem(STORAGE_KEYS.SYSTEM_PROMPT) ||
-    'Kamu adalah asisten AI yang ramah, asik, cerdas, dan menjawab dalam bahasa Indonesia yang natural.';
+  let systemPrompt = 'Kamu adalah asisten AI yang ramah, asik, cerdas, dan menjawab dalam bahasa Indonesia yang natural.';
+  try {
+    systemPrompt = localStorage.getItem(STORAGE_KEYS.SYSTEM_PROMPT) || systemPrompt;
+  } catch (e) {}
 
   let finalReply = null;
   let activeModelName = '';
@@ -430,7 +496,6 @@ async function querySiputzMultiAI(userPrompt) {
         urlObj.searchParams.set('system', systemPrompt);
         urlObj.searchParams.set('temperature', '0.7');
       } else {
-        // Meta AI uses ?query=...
         urlObj.searchParams.set('query', userPrompt);
       }
 
@@ -441,7 +506,6 @@ async function querySiputzMultiAI(userPrompt) {
 
       const data = await response.json();
 
-      // Extract reply from various Siputzx JSON response structures
       let extracted =
         data?.data?.response ||
         data?.data?.result ||
@@ -461,10 +525,9 @@ async function querySiputzMultiAI(userPrompt) {
 
       finalReply = String(extracted).trim();
       activeModelName = model.name;
-      break; // Berhasil! Keluar dari loop fallback
+      break;
     } catch (err) {
       errorsLog.push(`${model.name}: ${err.message}`);
-      // Lanjut otomatis ke model berikutnya di array
     }
   }
 
@@ -505,6 +568,8 @@ Silakan coba kirim ulang pesan beberapa saat lagi.`,
 
 function renderMessages(chatId) {
   const container = document.getElementById('messagesContainer');
+  if (!container) return;
+
   const msgs = getAllMessages()[chatId] || [];
 
   container.innerHTML = msgs.map(m => {
@@ -536,6 +601,8 @@ function renderMessages(chatId) {
 
 function showTypingIndicator(show, statusText = 'AI sedang mengetik...') {
   const container = document.getElementById('messagesContainer');
+  if (!container) return;
+
   let div = document.getElementById('typingBox');
 
   if (!show) {
@@ -558,47 +625,86 @@ function clearCurrentChat() {
   if (!activeChatId) return;
   const all = getAllMessages();
   delete all[activeChatId];
-  localStorage.setItem(STORAGE_KEYS.MESSAGES, JSON.stringify(all));
+  memoryMessages = all;
+  try { localStorage.setItem(STORAGE_KEYS.MESSAGES, JSON.stringify(all)); } catch (e) {}
   renderMessages(activeChatId);
   renderChatList();
   showToast('Riwayat chat dibersihkan');
 }
 
-// Settings & Firebase Real-Time Sync
+// Settings & Optional Firebase Real-Time Sync
 function loadSettingsInputs() {
-  document.getElementById('aiSystemPrompt').value =
-    localStorage.getItem(STORAGE_KEYS.SYSTEM_PROMPT) ||
-    'Kamu adalah asisten AI yang ramah, asik, cerdas, dan menjawab dalam bahasa Indonesia yang natural.';
-  document.getElementById('firebaseConfigInput').value = localStorage.getItem(STORAGE_KEYS.FIREBASE_CFG) || '';
+  const nameInput = document.getElementById('editProfileName');
+  const sysInput = document.getElementById('aiSystemPrompt');
+  const fbInput = document.getElementById('firebaseConfigInput');
+
+  if (nameInput && currentUser) nameInput.value = currentUser.name;
+  if (sysInput) {
+    try {
+      sysInput.value = localStorage.getItem(STORAGE_KEYS.SYSTEM_PROMPT) ||
+        'Kamu adalah asisten AI yang ramah, asik, cerdas, dan menjawab dalam bahasa Indonesia yang natural.';
+    } catch (e) {}
+  }
+  if (fbInput) {
+    try { fbInput.value = localStorage.getItem(STORAGE_KEYS.FIREBASE_CFG) || ''; } catch (e) {}
+  }
 }
 
 function saveSettings() {
+  const newName = document.getElementById('editProfileName').value.trim();
   const sysPrompt = document.getElementById('aiSystemPrompt').value.trim();
   const fbCfg = document.getElementById('firebaseConfigInput').value.trim();
 
-  localStorage.setItem(STORAGE_KEYS.SYSTEM_PROMPT, sysPrompt);
-  localStorage.setItem(STORAGE_KEYS.FIREBASE_CFG, fbCfg);
+  if (newName && currentUser) {
+    currentUser.name = newName;
+    currentUser.avatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(newName)}`;
+    try { localStorage.setItem(STORAGE_KEYS.PROFILE, JSON.stringify(currentUser)); } catch (e) {}
+    updateProfileUI();
+  }
 
-  initFirebaseIfConfigured();
+  try {
+    localStorage.setItem(STORAGE_KEYS.SYSTEM_PROMPT, sysPrompt);
+    localStorage.setItem(STORAGE_KEYS.FIREBASE_CFG, fbCfg);
+  } catch (e) {}
+
+  loadFirebaseSDKIfNeeded();
   closeModal('settingsModal');
   showToast('Pengaturan berhasil disimpan!');
 }
 
-function initFirebaseIfConfigured() {
-  const raw = localStorage.getItem(STORAGE_KEYS.FIREBASE_CFG);
+function loadFirebaseSDKIfNeeded() {
+  let raw = '';
+  try { raw = localStorage.getItem(STORAGE_KEYS.FIREBASE_CFG) || ''; } catch (e) {}
   const pill = document.getElementById('connectionStatus');
   if (!raw) {
-    pill.innerHTML = '<i class="fa-solid fa-circle"></i> Multi-AI & Real-Time Lokal Aktif';
+    if (pill) pill.innerHTML = '<i class="fa-solid fa-circle"></i> Multi-AI & Real-Time Aktif';
     return;
   }
 
+  if (typeof firebase === 'undefined') {
+    const s1 = document.createElement('script');
+    s1.src = 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js';
+    s1.onload = () => {
+      const s2 = document.createElement('script');
+      s2.src = 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js';
+      s2.onload = () => initFirebase(raw);
+      document.body.appendChild(s2);
+    };
+    document.body.appendChild(s1);
+  } else {
+    initFirebase(raw);
+  }
+}
+
+function initFirebase(raw) {
+  const pill = document.getElementById('connectionStatus');
   try {
     const config = JSON.parse(raw);
     if (!firebase.apps.length) {
       firebase.initializeApp(config);
     }
     firebaseDb = firebase.database();
-    pill.innerHTML = '<i class="fa-solid fa-circle"></i> Multi-AI & Firebase Cloud Aktif';
+    if (pill) pill.innerHTML = '<i class="fa-solid fa-circle"></i> Multi-AI & Firebase Cloud Aktif';
 
     firebaseDb.ref('chats').on('child_added', (chatSnap) => {
       const chatId = chatSnap.key;
@@ -615,7 +721,10 @@ function initFirebaseIfConfigured() {
 }
 
 // Helpers
-function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+function openModal(id) {
+  loadSettingsInputs();
+  document.getElementById(id).classList.remove('hidden');
+}
 function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
 function insertEmoji() {
@@ -639,6 +748,7 @@ function escapeHtml(str) {
 
 function showToast(text) {
   const toast = document.getElementById('toast');
+  if (!toast) return;
   toast.textContent = text;
   toast.classList.remove('hidden');
   setTimeout(() => toast.classList.add('hidden'), 3200);
