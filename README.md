@@ -1,2 +1,0 @@
-# KivoPay-web-
-Website KivoPay
