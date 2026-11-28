@@ -208,109 +208,98 @@
     }
 
 
-    .above-header-video-card {
+    .unified-header {
       position: relative;
       z-index: 3;
-      margin-bottom: 10px;
-      border-radius: var(--radius-lg);
       overflow: hidden;
+      border-radius: var(--radius-lg);
       border: 1px solid var(--border);
       background: var(--bg-card);
       box-shadow: var(--shadow);
+      margin-bottom: 10px;
     }
 
-    .above-header-video {
-      display: block;
+    .header-video-stage {
+      position: relative;
       width: 100%;
-      max-height: 210px;
-      object-fit: cover;
-      background: #090810;
-    }
-
-    .above-header-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      padding: 8px 12px;
-      background: var(--bg-card-solid);
-      border-top: 1px solid var(--border);
-    }
-
-    .above-header-label {
-      font-size: 11.5px;
-      font-weight: 700;
-      color: var(--text-muted);
-    }
-
-    .above-header-actions {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .mini-action-btn,
-    .mini-action-link {
-      padding: 5px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: var(--bg-input);
-      color: var(--text);
-      font-family: inherit;
-      font-size: 11px;
-      font-weight: 700;
-      text-decoration: none;
+      height: 168px;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(255, 77, 148, 0.22), rgba(139, 92, 246, 0.24));
       cursor: pointer;
     }
 
-    .mini-action-btn.unmuted {
-      background: linear-gradient(135deg, var(--primary-1), var(--primary-2));
-      color: #fff;
-      border-color: transparent;
-    }
-
-    .topbar {
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      padding: 10px 12px;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow);
-      margin-bottom: 10px;
-    }
-
-    .topbar-bg-video {
-      position: absolute;
-      inset: 0;
+    .header-stage-video {
+      display: block;
       width: 100%;
       height: 100%;
       object-fit: cover;
       object-position: center;
-      z-index: 0;
       pointer-events: none;
     }
 
-    .topbar-video-overlay {
+    .header-video-gradient {
       position: absolute;
       inset: 0;
-      z-index: 1;
       pointer-events: none;
-      background: linear-gradient(90deg, rgba(12, 10, 24, 0.72), rgba(12, 10, 24, 0.48), rgba(12, 10, 24, 0.72));
+      background: linear-gradient(
+        180deg,
+        rgba(9, 8, 16, 0.08) 0%,
+        rgba(9, 8, 16, 0.28) 62%,
+        rgba(18, 16, 30, 0.94) 100%
+      );
     }
 
-    [data-theme="light"] .topbar-video-overlay {
-      background: linear-gradient(90deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.56), rgba(255, 255, 255, 0.78));
+    [data-theme="light"] .header-video-gradient {
+      background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.04) 0%,
+        rgba(255, 255, 255, 0.25) 62%,
+        rgba(255, 255, 255, 0.95) 100%
+      );
     }
 
-    .topbar-left,
-    .topbar-actions {
+    .floating-sound-pill {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 4;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(14, 12, 26, 0.68);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.32);
+      transition: transform 0.16s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .floating-sound-pill:active {
+      transform: scale(0.94);
+    }
+
+    .floating-sound-pill.unmuted {
+      background: linear-gradient(135deg, var(--primary-1), var(--primary-2));
+      border-color: rgba(255, 255, 255, 0.35);
+      box-shadow: 0 4px 16px rgba(255, 77, 148, 0.45);
+    }
+
+    .topbar-row {
       position: relative;
       z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 10px 12px 12px;
+      margin-top: -14px;
     }
 
     .topbar-left {

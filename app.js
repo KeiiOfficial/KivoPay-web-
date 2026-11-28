@@ -915,60 +915,71 @@
 
   function initAboveHeaderVideo() {
     const vid = $('aboveHeaderVideo');
+    const stage = $('headerVideoStage');
     const soundBtn = $('aboveSoundBtn');
+    const soundIcon = $('aboveSoundIcon');
+    const soundLabel = $('aboveSoundLabel');
     if (!vid) return;
 
     const url = 'https://files.catbox.moe/xf4qv0.mp4';
     if (!vid.getAttribute('src')) {
       vid.src = url;
-      vid.load();
     }
 
-    const syncSoundButton = () => {
-      if (!soundBtn) return;
-      const hasSound = !vid.muted && vid.volume > 0;
-      soundBtn.textContent = hasSound ? '🔇 Matikan Suara' : '🔊 Aktifkan Suara';
-      soundBtn.classList.toggle('unmuted', hasSound);
+    const syncSoundUI = () => {
+      const isOn = !vid.muted && vid.volume > 0;
+      if (soundIcon) soundIcon.textContent = isOn ? '🔊' : '🔇';
+      if (soundLabel) soundLabel.textContent = isOn ? 'Suara Aktif' : 'Tap Suara';
+      if (soundBtn) soundBtn.classList.toggle('unmuted', isOn);
     };
 
-    const startMutedPlayback = () => {
+    const playMutedSafe = () => {
       vid.muted = true;
       const p = vid.play();
       if (p && typeof p.catch === 'function') p.catch(() => {});
-      syncSoundButton();
+      syncSoundUI();
     };
 
-    startMutedPlayback();
+    playMutedSafe();
 
-    const enableSoundFromTap = async () => {
+    const toggleHeaderAudio = async (e) => {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
       try {
-        vid.muted = false;
-        vid.volume = 1.0;
-        await vid.play();
-        syncSoundButton();
-        showToast('Suara video header aktif 🔊');
+        if (vid.muted) {
+          vid.muted = false;
+          vid.volume = 1.0;
+          await vid.play();
+          syncSoundUI();
+          showToast('Suara video aktif 🔊');
+        } else {
+          vid.muted = true;
+          syncSoundUI();
+          showToast('Suara video dimatikan 🔇');
+        }
       } catch (err) {
         vid.muted = true;
-        syncSoundButton();
+        await vid.play().catch(() => {});
+        syncSoundUI();
       }
     };
 
-    if (soundBtn) {
-      soundBtn.addEventListener('click', async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (vid.muted) {
-          await enableSoundFromTap();
-        } else {
-          vid.muted = true;
-          syncSoundButton();
-          showToast('Suara video header dimatikan 🔇');
-        }
-      });
-    }
+    if (soundBtn) soundBtn.addEventListener('click', toggleHeaderAudio);
+    if (stage) stage.addEventListener('click', toggleHeaderAudio);
+    vid.addEventListener('volumechange', syncSoundUI);
 
-    vid.addEventListener('volumechange', syncSoundButton);
-    syncSoundButton();
+    // Ensure playback starts smoothly on mobile if initial autoplay was deferred
+    const ensurePlayingOnTouch = () => {
+      if (vid.paused) {
+        vid.play().catch(() => {});
+      }
+      document.removeEventListener('pointerdown', ensurePlayingOnTouch);
+    };
+    document.addEventListener('pointerdown', ensurePlayingOnTouch, { passive: true });
+
+    syncSoundUI();
   }
 
   // Boot
