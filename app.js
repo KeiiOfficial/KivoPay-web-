@@ -924,7 +924,7 @@
     const fallbackMsg = $('headerFallbackMsg');
     if (!vid) return;
 
-    const primaryUrl = 'https://files.catbox.moe/0q8sz3.mp4';
+    const primaryUrl = 'https://files.catbox.moe/ngfcr9.mp4';
     const secondaryUrl = 'https://files.catbox.moe/ngfcr9.mp4';
     let activeUrl = primaryUrl;
     let triedSecondary = false;
