@@ -2,403 +2,324 @@
 <html lang="id" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Love Hub ✨ Couple Gacha, AI Chat, Downloader &amp; Stalker</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Love Hub — Media Downloader, Profile Stalker, AI Chat & Love Gacha</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="bg-glow bg-glow-1"></div>
-  <div class="bg-glow bg-glow-2"></div>
-  <div class="bg-grid"></div>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow-1" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow-2" aria-hidden="true"></div>
 
-  <!-- Sidebar Drawer (Menu Garis Tiga) -->
-  <div id="sidebarBackdrop" class="sidebar-backdrop hidden"></div>
-  <aside id="sidebarDrawer" class="sidebar-drawer" aria-label="Menu Navigasi">
-    <div class="sidebar-head">
-      <div class="brand">
-        <span class="brand-badge">💖</span>
+  <!-- Sidebar Drawer -->
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+  <aside class="sidebar-drawer" id="sidebarDrawer" aria-label="Navigasi Utama">
+    <div class="drawer-header">
+      <div class="brand-wrap">
+        <div class="brand-logo">💖</div>
         <div>
-          <h2>Love Hub</h2>
-          <p>Gacha &amp; Tools Siputzx</p>
+          <div class="brand-title">Love Hub</div>
+          <div class="brand-sub">All-in-One Tools &amp; AI</div>
         </div>
       </div>
-      <button id="closeSidebarBtn" class="icon-btn small-icon-btn" title="Tutup Menu">✕</button>
+      <button class="icon-btn" id="closeDrawerBtn" aria-label="Tutup Menu">✕</button>
     </div>
 
-    <nav class="nav-menu">
-      <div class="nav-group-label">UTAMA</div>
-      <button class="nav-item active" data-page="gacha">
-        <span class="nav-icon">🎁</span>
-        <div>
-          <strong>Love Gacha</strong>
-          <small>Banner hadiah &amp; hukuman PAP</small>
-        </div>
-      </button>
-
-      <div class="nav-group-label">KATEGORI AI</div>
-      <button class="nav-item" data-page="ai">
-        <span class="nav-icon">🤖</span>
-        <div>
-          <strong>AI Chat &amp; Tools</strong>
-          <small>gptoss120b • deepseekr1 • metaai</small>
-        </div>
-      </button>
-
-      <div class="nav-group-label">DOWNLOADER</div>
-      <button class="nav-item" data-page="downloader">
+    <div class="drawer-section-label">MENU UTAMA</div>
+    <nav class="drawer-nav">
+      <button class="nav-item active" data-tab="downloader">
         <span class="nav-icon">📥</span>
-        <div>
+        <div class="nav-text">
           <strong>Media Downloader</strong>
-          <small>CapCut • TikTok v2 • Douyin • FB</small>
+          <small>CapCut, TikTok, Douyin &amp; FB</small>
         </div>
       </button>
-
-      <div class="nav-group-label">STALKER</div>
-      <button class="nav-item" data-page="stalker">
+      <button class="nav-item" data-tab="stalker">
         <span class="nav-icon">🕵️</span>
-        <div>
+        <div class="nav-text">
           <strong>Profile Stalker</strong>
-          <small>Cek profil TikTok &amp; Twitter</small>
+          <small>Cek Profil TikTok &amp; Twitter</small>
+        </div>
+      </button>
+      <button class="nav-item" data-tab="ai">
+        <span class="nav-icon">🤖</span>
+        <div class="nav-text">
+          <strong>AI Chat &amp; Tools</strong>
+          <small>GPT-OSS • GLM 4.7 • Meta AI</small>
+        </div>
+      </button>
+      <button class="nav-item" data-tab="gacha">
+        <span class="nav-icon">🎰</span>
+        <div class="nav-text">
+          <strong>Love Gacha &amp; Match</strong>
+          <small>Spin Kartu, Nasib &amp; Cek Kecocokan</small>
         </div>
       </button>
     </nav>
 
-    <div class="sidebar-footer">
-      <div class="api-status-chip">
-        <span class="pulse-dot"></span>
-        <span>Siputzx API Ready</span>
+    <div class="drawer-footer">
+      <div class="status-pill">
+        <span class="dot-online"></span>
+        <span>Siputzx Auto-Fallback Ready</span>
       </div>
-      <p class="muted tiny-text">v3.0 • Fast Stream &amp; Full Stalker</p>
     </div>
   </aside>
 
-  <!-- Topbar -->
-  <header class="topbar">
-    <div class="topbar-left">
-      <button id="menuToggleBtn" class="icon-btn" title="Buka Menu">☰</button>
-      <div class="brand">
-        <span class="brand-badge">💖</span>
-        <div>
-          <h1 id="headerTitle">Love Gacha</h1>
-          <p id="headerSubtitle">Banner Spesial Buat Sayang</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="topbar-actions">
-      <button id="soundToggle" class="icon-btn" title="Suara Efek">🔊</button>
-      <button id="themeToggle" class="icon-btn" title="Ganti Tema">☀️</button>
-    </div>
-  </header>
-
-  <main class="container">
-    <!-- ===================================================== -->
-    <!-- PAGE 1: LOVE GACHA                                    -->
-    <!-- ===================================================== -->
-    <section id="page-gacha" class="page-section active">
-      <div class="status-bar card">
-        <div class="ticket-box">
-          <span class="ticket-icon">🎟️</span>
+  <!-- Main App Shell -->
+  <div class="app-shell">
+    <!-- Top Header -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="icon-btn" id="openDrawerBtn" aria-label="Buka Menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round">
+            <line x1="4" y1="6" x2="20" y2="6"></line>
+            <line x1="4" y1="12" x2="20" y2="12"></line>
+            <line x1="4" y1="18" x2="20" y2="18"></line>
+          </svg>
+        </button>
+        <div class="topbar-brand">
+          <div class="topbar-logo" id="headerIcon">📥</div>
           <div>
-            <span class="label">Tiket Gacha Kamu</span>
-            <strong id="ticketCount" class="value">3</strong>
+            <h1 id="headerTitle">Media Downloader</h1>
+            <p id="headerSubtitle">Fast Load &amp; HD No-Watermark</p>
           </div>
         </div>
-
-        <div class="pity-box">
-          <div class="pity-header">
-            <span class="label">🔥 Pity Hadiah Sultan (100K / Boneka)</span>
-            <span id="pityText" class="pity-num">0 / 5</span>
-          </div>
-          <div class="progress-track">
-            <div id="pityBar" class="progress-fill" style="width: 0%"></div>
-          </div>
-        </div>
-
-        <button id="openQuestBtn" class="btn-secondary small-btn">+ Dapet Tiket</button>
       </div>
 
-      <div class="gacha-stage card">
-        <div class="banner-tag">✨ LIMITED COUPLE BANNER ✨</div>
-        <h2>Pilih &amp; Putar Keberuntunganmu!</h2>
-        <p class="subtitle">Setiap tarikan punya kesempatan dapet hadiah beneran atau kena hukuman gemes 😜</p>
+      <div class="topbar-actions">
+        <button class="icon-btn" id="quickStatusBtn" title="Status Endpoint AI" aria-label="Status Endpoint">
+          <span id="activeModelBadge" class="mini-badge">AI OK</span>
+        </button>
+        <button class="icon-btn" id="themeToggleBtn" title="Ganti Tema Gelap / Terang" aria-label="Ganti Tema">
+          <span id="themeIcon">☀️</span>
+        </button>
+      </div>
+    </header>
 
-        <div class="capsule-arena" id="capsuleArena">
-          <div class="capsule-ring"></div>
-          <div class="capsule-core" id="capsuleCore">
-            <span id="capsuleEmoji">🎁</span>
+    <!-- Tab Bar -->
+    <div class="tab-strip" role="tablist">
+      <button class="tab-pill active" data-tab="downloader" role="tab">📥 Downloader</button>
+      <button class="tab-pill" data-tab="stalker" role="tab">🕵️ Stalker</button>
+      <button class="tab-pill" data-tab="ai" role="tab">🤖 AI Chat</button>
+      <button class="tab-pill" data-tab="gacha" role="tab">🎰 Love Gacha</button>
+    </div>
+
+    <!-- Main Viewport -->
+    <main class="main-content">
+
+      <!-- 1. MEDIA DOWNLOADER SECTION -->
+      <section class="panel active" id="panel-downloader">
+        <div class="card hero-card">
+          <div class="badge-row">
+            <span class="pill-badge pink">📥 MEDIA DOWNLOADER</span>
+            <span class="pill-badge cyan">Fast Load &amp; HD No-WM</span>
           </div>
-        </div>
+          <h2>Download Video CapCut, TikTok, Douyin &amp; Facebook</h2>
+          <p class="muted">Tempel link video di bawah. Mendukung pemutar instan ringan + tombol unduh langsung tanpa lag.</p>
 
-        <div class="pull-controls">
-          <button id="pullBtn" class="btn-primary">
-            <span>🎲 Gacha Sekarang (1x)</span>
+          <div class="platform-grid" id="dlPlatformGrid">
+            <button class="plat-btn" data-platform="capcut">✂️ CapCut</button>
+            <button class="plat-btn active" data-platform="tiktok">🎵 TikTok v2</button>
+            <button class="plat-btn" data-platform="douyin">🔥 Douyin</button>
+            <button class="plat-btn" data-platform="facebook">📘 Facebook</button>
+          </div>
+
+          <div class="input-action-row">
+            <input type="url" id="dlUrlInput" placeholder="https://vt.tiktok.com/..." autocomplete="off" />
+            <button class="btn-secondary" id="pasteDlBtn" type="button">📋 Paste</button>
+          </div>
+
+          <button class="btn-primary full-width" id="fetchVideoBtn" type="button">
+            ⬇️ Ambil Video Sekarang
           </button>
         </div>
 
-        <div class="rate-info">
-          <button id="toggleRatesBtn" class="link-btn">Lihat Daftar Hadiah &amp; Drop Rate ▾</button>
-          <div id="ratesPanel" class="rates-panel hidden">
-            <div class="rate-item ssr">
-              <span>🧸 Boneka Lucu</span>
-              <span class="badge">SSR • 10%</span>
-            </div>
-            <div class="rate-item ssr">
-              <span>💸 Transfer Uang Rp 100.000</span>
-              <span class="badge">SSR • 10%</span>
-            </div>
-            <div class="rate-item sr">
-              <span>💎 Top Up 400 Robux</span>
-              <span class="badge">SR • 15%</span>
-            </div>
-            <div class="rate-item sr">
-              <span>💵 Transfer Uang Rp 50.000</span>
-              <span class="badge">SR • 20%</span>
-            </div>
-            <div class="rate-item r">
-              <span>🍦 Beli Es Krim</span>
-              <span class="badge">R • 25%</span>
-            </div>
-            <div class="rate-item zonk">
-              <span>📸 ZONK! Wajib Kirim PAP ke Cowoknya</span>
-              <span class="badge">ZONK • 20%</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="inventory-section card">
-        <div class="section-head">
-          <div>
-            <h3>🎒 Tas Hadiah &amp; Hukuman</h3>
-            <p class="muted">Screenshot atau salin bukti klaim di sini terus kirim ke cowokmu!</p>
-          </div>
-          <button id="clearHistoryBtn" class="text-danger-btn" title="Reset Data">Reset</button>
-        </div>
-
-        <div id="inventoryList" class="inventory-grid">
-          <div class="empty-state">Belum ada hadiah nih. Coba gacha dulu di atas! 👆</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===================================================== -->
-    <!-- PAGE 2: KATEGORI AI (MODERN CHAT UI)                  -->
-    <!-- ===================================================== -->
-    <section id="page-ai" class="page-section hidden">
-      <div class="card chat-shell">
-        <!-- Header Bar Chat -->
-        <div class="chat-header-bar">
-          <div class="chat-bot-identity">
-            <div class="bot-avatar-ring">🤖</div>
+        <div class="card result-card hidden" id="dlResultCard">
+          <div class="result-header">
             <div>
-              <div class="bot-title-row">
-                <strong>Love Hub AI</strong>
-                <span class="online-badge">● Online</span>
+              <h3 id="dlResultTitle">Video TIKTOK</h3>
+              <p class="muted small" id="dlResultMeta">Platform: TIKTOK • 1 link video ditemukan</p>
+            </div>
+            <button class="text-danger-btn" id="closeDlResultBtn" type="button">Tutup</button>
+          </div>
+
+          <div class="video-player-wrap" id="dlPlayerWrap">
+            <video id="dlVideoPlayer" controls playsinline preload="metadata"></video>
+          </div>
+
+          <div class="result-actions" id="dlActionButtons">
+            <a class="btn-primary" id="dlDirectBtn" href="#" target="_blank" rel="noopener noreferrer" download>⬇️ Download Video</a>
+            <button class="btn-secondary" id="copyDlLinkBtn" type="button">📋 Salin Link Video</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. PROFILE STALKER SECTION -->
+      <section class="panel" id="panel-stalker">
+        <div class="card hero-card">
+          <div class="badge-row">
+            <span class="pill-badge pink">🕵️ PROFILE STALKER</span>
+            <span class="pill-badge cyan">Full Detail Profile</span>
+          </div>
+          <h2>Cek Profil TikTok &amp; Twitter</h2>
+          <p class="muted">Masukkan username target tanpa tanda @ untuk melihat info akun lengkap, bio, ID, verifikasi, hingga statistik.</p>
+
+          <div class="platform-grid two-col" id="stalkPlatformGrid">
+            <button class="plat-btn active" data-stalk="tiktok">🎵 TikTok Stalk</button>
+            <button class="plat-btn" data-stalk="twitter">🐦 Twitter Stalk</button>
+          </div>
+
+          <div class="input-action-row">
+            <input type="text" id="stalkUserInput" placeholder="Contoh: manzz_xy1" autocomplete="off" />
+            <button class="btn-primary" id="checkProfileBtn" type="button">🔍 Cek Profil</button>
+          </div>
+        </div>
+
+        <div class="card result-card hidden" id="stalkResultCard">
+          <div class="result-header">
+            <div>
+              <h3 id="stalkHeaderName">Profil Ditemukan</h3>
+              <p class="muted small" id="stalkHeaderHandle">@username • TIKTOK</p>
+            </div>
+            <button class="text-danger-btn" id="closeStalkResultBtn" type="button">Tutup</button>
+          </div>
+
+          <div class="profile-summary">
+            <img id="stalkAvatar" src="" alt="Foto Profil" class="profile-avatar" />
+            <div class="profile-info">
+              <div class="profile-name-row">
+                <strong id="stalkDisplayName">Nama Pengguna</strong>
+                <span class="verified-tag hidden" id="stalkVerified">✓ Verified</span>
               </div>
-              <span id="aiActiveBadge" class="bot-sub-status">Auto Best • gptoss120b</span>
+              <div class="muted small" id="stalkUsernameText">@username</div>
+              <p class="profile-bio" id="stalkBio">Tidak ada bio.</p>
             </div>
           </div>
 
-          <div class="chat-header-actions">
-            <button type="button" id="toggleAiSettingsBtn" class="icon-btn small-icon-btn" title="Pengaturan Model & Prompt">⚙️</button>
-            <button type="button" id="clearChatBtn" class="icon-btn small-icon-btn danger-hover" title="Bersihkan Chat">🗑️</button>
-          </div>
-        </div>
-
-        <!-- Collapsible Settings Panel -->
-        <div id="aiSettingsDrawer" class="ai-settings-drawer hidden">
-          <div class="ai-controls-grid">
-            <div class="field-group">
-              <label for="aiModelSelect">Model AI</label>
-              <select id="aiModelSelect" class="input-control">
-                <option value="auto">⚡ Auto Best (gptoss120b → deepseekr1 → metaai)</option>
-                <option value="gptoss120b">🧠 gptoss120b</option>
-                <option value="deepseekr1">🔬 deepseekr1</option>
-                <option value="metaai">🌐 metaai</option>
-              </select>
+          <div class="stats-grid">
+            <div class="stat-box">
+              <strong id="stalkFollowers">0</strong>
+              <span>Followers</span>
             </div>
-
-            <div class="field-group">
-              <label for="aiTempInput">Kreativitas / Temp (<span id="aiTempVal">0.7</span>)</label>
-              <input type="range" id="aiTempInput" min="0.1" max="1.2" step="0.1" value="0.7" class="range-control" />
+            <div class="stat-box">
+              <strong id="stalkFollowing">0</strong>
+              <span>Following</span>
+            </div>
+            <div class="stat-box">
+              <strong id="stalkLikes">0</strong>
+              <span id="stalkThirdLabel">Total Likes</span>
             </div>
           </div>
 
-          <div class="field-group mt-10">
-            <label for="aiSystemInput">Peran / System Prompt</label>
-            <input type="text" id="aiSystemInput" class="input-control" value="Kamu adalah asisten AI yang ramah, cerdas, ekspresif, dan rapi dalam menjelaskan. Jawab dalam Bahasa Indonesia." />
-          </div>
+          <div class="extra-meta-grid" id="stalkExtraMeta"></div>
         </div>
+      </section>
 
-        <!-- Quick Prompts Strip -->
-        <div class="quick-prompts-strip">
-          <button type="button" class="chip-btn" data-prompt="Buatin 5 ide kencan seru dan hemat buat pasangan!">💡 Ide Nge-date</button>
-          <button type="button" class="chip-btn" data-prompt="Bikinin gombalan receh tapi bikin salting buat pacar.">💘 Gombalan</button>
-          <button type="button" class="chip-btn" data-prompt="Buatin caption TikTok yang aesthetic dan catchy.">🎬 Caption TikTok</button>
-          <button type="button" class="chip-btn" data-prompt="Kasih fun fact unik hari ini.">✨ Fun Fact</button>
-        </div>
-
-        <!-- Area Pesan Chat -->
-        <div id="chatMessages" class="chat-messages">
-          <div class="chat-row bot">
-            <div class="msg-avatar">🤖</div>
-            <div class="msg-content">
-              <div class="chat-bubble">Halo! 👋 Aku asisten AI di <strong>Love Hub</strong>. Bisa bantu cari ide, nulis caption, ngobrol santai, atau jawab apa aja. Mau tanya apa hari ini?</div>
-              <div class="chat-meta-row">
-                <span class="chat-meta">Love Hub AI • Siap</span>
+      <!-- 3. AI CHAT & TOOLS SECTION -->
+      <section class="panel" id="panel-ai">
+        <div class="card chat-shell">
+          <div class="chat-header">
+            <div class="chat-agent-info">
+              <div class="agent-avatar">🤖</div>
+              <div>
+                <div class="agent-title-row">
+                  <strong>Love Hub AI</strong>
+                  <span class="online-tag">• Online</span>
+                </div>
+                <div class="muted small" id="aiModelIndicator">Auto Fallback • gptoss120b → glm47flash → metaai</div>
               </div>
             </div>
+            <div class="chat-header-btns">
+              <button class="icon-btn small-btn" id="cycleModelBtn" title="Ganti Prioritas Model">⚙️</button>
+              <button class="icon-btn small-btn" id="clearChatBtn" title="Bersihkan Riwayat Chat">🗑️</button>
+            </div>
+          </div>
+
+          <div class="prompt-chips">
+            <button class="chip-btn" data-prompt="Kasih 5 ide nge-date yang seru tapi hemat budget">💡 Ide Nge-date</button>
+            <button class="chip-btn" data-prompt="Buatin gombalan maut yang lucu dan nggak garing">💘 Gombalan</button>
+            <button class="chip-btn" data-prompt="Buatin 5 caption TikTok estetik yang FYP">🎬 Caption TikTok</button>
+            <button class="chip-btn" data-prompt="Kasih 1 fun fact unik tentang cinta dan psikologi">✨ Fun Fact</button>
+          </div>
+
+          <div class="chat-messages" id="chatMessages"></div>
+
+          <div class="chat-footer">
+            <div class="chat-status-bar">
+              <span id="aiStatusText">Love Hub AI • Siap</span>
+              <span class="endpoint-chain">gptoss120b • glm47flash • metaai</span>
+            </div>
+            <form class="chat-input-form" id="chatForm">
+              <textarea id="chatInput" rows="1" placeholder="Ketik pesan ke AI..." required></textarea>
+              <button type="submit" class="send-btn" id="sendChatBtn" aria-label="Kirim Pesan">➤</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. LOVE GACHA & MATCH SECTION -->
+      <section class="panel" id="panel-gacha">
+        <div class="card hero-card">
+          <div class="badge-row">
+            <span class="pill-badge pink">🎰 LOVE GACHA &amp; MATCH</span>
+            <span class="pill-badge cyan">SSR / UR / Mythic</span>
+          </div>
+          <h2>Gacha Kartu Cinta &amp; Cek Kecocokan</h2>
+          <p class="muted">Tarik kartu takdir harianmu atau hitung persentase kecocokan nama kamu dan pasangan!</p>
+
+          <div class="gacha-stage" id="gachaStage">
+            <div class="gacha-card-preview" id="gachaCardBox">
+              <div class="gacha-rarity" id="gachaRarity">SIAP SPIN</div>
+              <div class="gacha-emoji" id="gachaEmoji">💝</div>
+              <h3 id="gachaCardTitle">Kartu Takdir Cinta</h3>
+              <p class="muted small" id="gachaCardDesc">Tekan tombol Spin Gacha di bawah untuk membuka kartu keberuntunganmu hari ini.</p>
+            </div>
+          </div>
+
+          <div class="gacha-btn-row">
+            <button class="btn-primary" id="spinSingleBtn" type="button">🎲 Spin 1x Gratis</button>
+            <button class="btn-secondary" id="spinMultiBtn" type="button">✨ Spin 5x Combo</button>
           </div>
         </div>
 
-        <!-- Input Bar -->
-        <form id="aiChatForm" class="chat-composer">
-          <textarea id="aiPromptInput" rows="1" placeholder="Ketik pesan ke AI..." required></textarea>
-          <button type="submit" id="aiSendBtn" class="send-circle-btn" title="Kirim Pesan">➤</button>
-        </form>
-      </div>
-    </section>
-
-    <!-- ===================================================== -->
-    <!-- PAGE 3: DOWNLOADER (FAST VIDEO + DIRECT DOWNLOAD)     -->
-    <!-- ===================================================== -->
-    <section id="page-downloader" class="page-section hidden">
-      <div class="card">
-        <div class="tool-badge-row">
-          <span class="pill-tag">📥 MEDIA DOWNLOADER</span>
-          <span class="pill-tag soft">Fast Load &amp; HD No-WM</span>
-        </div>
-        <h2>Download Video CapCut, TikTok, Douyin &amp; Facebook</h2>
-        <p class="subtitle left-align">
-          Tempel link video di bawah. Mendukung pemutar instan ringan + tombol unduh langsung tanpa lag.
-        </p>
-
-        <div class="platform-tabs" id="dlPlatformTabs">
-          <button type="button" class="plat-btn active" data-platform="capcut">✂️ CapCut</button>
-          <button type="button" class="plat-btn" data-platform="tiktok">🎵 TikTok v2</button>
-          <button type="button" class="plat-btn" data-platform="douyin">🏮 Douyin</button>
-          <button type="button" class="plat-btn" data-platform="facebook">📘 Facebook</button>
-        </div>
-
-        <form id="downloaderForm" class="dl-form">
-          <div class="url-input-wrap">
-            <input type="url" id="dlUrlInput" class="input-control" placeholder="Contoh: https://www.capcut.com/tv2/ZSmm1R7Sd/" required />
-            <button type="button" id="pasteUrlBtn" class="btn-secondary small-btn" title="Tempel dari Clipboard">📋 Paste</button>
+        <div class="card">
+          <h3>💘 Kalkulator Kecocokan Nama</h3>
+          <p class="muted small">Masukkan dua nama untuk melihat skor chemistry dan ramalan singkat.</p>
+          <div class="match-inputs">
+            <input type="text" id="nameOneInput" placeholder="Nama Kamu" />
+            <span class="heart-divider">❤️</span>
+            <input type="text" id="nameTwoInput" placeholder="Nama Dia" />
           </div>
-          <button type="submit" id="dlSubmitBtn" class="btn-primary full-btn">⬇️ Ambil Video Sekarang</button>
-        </form>
-      </div>
+          <button class="btn-primary full-width" id="calcMatchBtn" type="button">💞 Hitung Kecocokan</button>
 
-      <div id="dlResultCard" class="card hidden">
-        <div class="section-head">
-          <div>
-            <h3 id="dlResultTitle">Hasil Video</h3>
-            <p id="dlResultMeta" class="muted">Siap diputar &amp; diunduh</p>
+          <div class="match-result hidden" id="matchResultBox">
+            <div class="match-score-circle">
+              <strong id="matchScoreText">0%</strong>
+            </div>
+            <h4 id="matchVerdictTitle">Hasil Kecocokan</h4>
+            <p class="muted small" id="matchVerdictDesc"></p>
           </div>
-          <button id="dlClearBtn" class="text-danger-btn">Tutup</button>
         </div>
 
-        <div id="dlResultBody" class="dl-result-body"></div>
-      </div>
-    </section>
-
-    <!-- ===================================================== -->
-    <!-- PAGE 4: STALKER (LENGKAP + DEEP PARSER)               -->
-    <!-- ===================================================== -->
-    <section id="page-stalker" class="page-section hidden">
-      <div class="card">
-        <div class="tool-badge-row">
-          <span class="pill-tag">🕵️ PROFILE STALKER</span>
-          <span class="pill-tag soft">Full Detail Profile</span>
-        </div>
-        <h2>Cek Profil TikTok &amp; Twitter</h2>
-        <p class="subtitle left-align">
-          Masukkan username target tanpa tanda <code>@</code> untuk melihat info akun lengkap, bio, ID, verifikasi, statistik, hingga detail tambahan.
-        </p>
-
-        <div class="platform-tabs" id="stalkPlatformTabs">
-          <button type="button" class="stalk-btn active" data-stalk="tiktok">🎵 TikTok Stalk</button>
-          <button type="button" class="stalk-btn" data-stalk="twitter">🐦 Twitter Stalk</button>
-        </div>
-
-        <form id="stalkerForm" class="dl-form">
-          <div class="url-input-wrap">
-            <input type="text" id="stalkUsernameInput" class="input-control" placeholder="Username TikTok (contoh: mrbeast)" required />
-            <button type="submit" id="stalkSubmitBtn" class="btn-primary small-btn">🔍 Cek Profil</button>
+        <div class="card">
+          <div class="result-header">
+            <h3>🗂️ Koleksi Kartu Gacha (<span id="gachaCount">0</span>)</h3>
+            <button class="text-danger-btn" id="clearGachaBtn" type="button">Reset</button>
           </div>
-        </form>
-      </div>
-
-      <div id="stalkResultCard" class="card hidden">
-        <div class="section-head">
-          <div>
-            <h3 id="stalkResultHeading">Detail Profil</h3>
-            <p id="stalkResultSub" class="muted">Data lengkap profil</p>
+          <div class="gacha-inventory" id="gachaInventory">
+            <p class="muted small">Belum ada kartu yang didapat. Yuk spin dulu!</p>
           </div>
-          <button id="stalkClearBtn" class="text-danger-btn">Tutup</button>
         </div>
-        <div id="stalkResultBody"></div>
-      </div>
-    </section>
-  </main>
+      </section>
 
-  <!-- Modal Hasil Gacha -->
-  <div id="resultModal" class="modal hidden">
-    <div class="modal-backdrop"></div>
-    <div class="modal-card" id="resultCard">
-      <div id="resultRarityBadge" class="rarity-pill">SSR</div>
-      <div id="resultIcon" class="result-emoji">💸</div>
-      <h2 id="resultTitle">Transfer Uang 100K!</h2>
-      <p id="resultDesc">Selamat! Kamu hoki banget hari ini.</p>
-      <div class="claim-code-box">
-        <span>Kode Klaim:</span>
-        <strong id="claimCode">LOVE-8821</strong>
-      </div>
-      <div class="modal-actions">
-        <button id="copyProofBtn" class="btn-secondary">📋 Salin Bukti Buat WA</button>
-        <button id="closeResultBtn" class="btn-primary">Simpan ke Tas ✨</button>
-      </div>
-    </div>
+    </main>
   </div>
 
-  <!-- Modal Tambah Tiket -->
-  <div id="questModal" class="modal hidden">
-    <div class="modal-backdrop" id="closeQuestBackdrop"></div>
-    <div class="modal-card">
-      <h3>🎟️ Tambah Tiket Gacha</h3>
-      <p class="muted">Selesaikan misi gemes atau masukin kode rahasia dari cowokmu:</p>
+  <div class="toast" id="toastBox" role="status" aria-live="polite"></div>
 
-      <div class="quest-list">
-        <div class="quest-item">
-          <div>
-            <strong>💬 Bilang "I Love You" di Chat</strong>
-            <small>Klaim harian (+1 Tiket)</small>
-          </div>
-          <button class="btn-primary small-btn" id="dailyClaimBtn">Klaim +1</button>
-        </div>
-
-        <div class="quest-item column">
-          <div>
-            <strong>🔑 Punya Kode Rahasia?</strong>
-            <small>Coba masukin kode dari cowokmu (contoh: <code>SAYANGKU</code>, <code>MAUGACHA</code>, <code>CANTIK</code>)</small>
-          </div>
-          <div class="redeem-row">
-            <input type="text" id="promoInput" placeholder="Ketik kode di sini..." />
-            <button id="redeemBtn" class="btn-secondary small-btn">Tukar</button>
-          </div>
-          <span id="promoFeedback" class="feedback-text"></span>
-        </div>
-      </div>
-
-      <button id="closeQuestBtn" class="btn-secondary full-btn">Tutup</button>
-    </div>
-  </div>
-
-  <canvas id="confettiCanvas"></canvas>
   <script src="app.js"></script>
 </body>
 </html>
