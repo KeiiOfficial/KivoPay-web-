@@ -12,6 +12,7 @@ const ENDPOINTS = {
   downloader: {
     capcut: '/api/d/capcut',
     tiktok: '/api/d/tiktok/v2',
+    tiktokFallback: '/api/d/tiktok',
     douyin: '/api/d/douyin',
     facebook: '/api/d/facebook'
   },
@@ -31,18 +32,27 @@ function buildSiputzUrl(path, params = {}) {
   return url.toString();
 }
 
-async function fetchJsonSafe(url) {
-  const res = await fetch(url, { headers: { Accept: 'application/json, */*' } });
-  const text = await res.text();
+async function fetchJsonSafe(url, timeoutMs = 14000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
+    const res = await fetch(url, {
+      headers: { Accept: 'application/json, */*' },
+      signal: controller.signal
+    });
+    const text = await res.text();
     const json = JSON.parse(text);
     if (!res.ok) {
       throw new Error(json?.message || json?.error || `HTTP ${res.status}`);
     }
     return json;
   } catch (err) {
-    if (!res.ok) throw new Error(`HTTP ${res.status}: ${text.slice(0, 120)}`);
-    throw new Error('Respons API bukan JSON valid.');
+    if (err.name === 'AbortError') {
+      throw new Error('Koneksi ke server terlalu lama (timeout). Coba lagi.');
+    }
+    throw err;
+  } finally {
+    clearTimeout(timer);
   }
 }
 
@@ -109,7 +119,7 @@ const SECRET_CODES = {
 };
 
 const PITY_LIMIT = 5;
-const STORAGE_KEY = 'love_hub_state_v2';
+const STORAGE_KEY = 'love_hub_state_v3';
 
 let state = {
   tickets: 3,
@@ -159,7 +169,7 @@ const PAGE_META = {
   gacha: { title: 'Love Gacha', subtitle: 'Banner Spesial Buat Sayang' },
   ai: { title: 'AI Chat & Tools', subtitle: 'gptoss120b • deepseekr1 • metaai' },
   downloader: { title: 'Media Downloader', subtitle: 'CapCut • TikTok v2 • Douyin • Facebook' },
-  stalker: { title: 'Profile Stalker', subtitle: 'Cek Profil TikTok & Twitter' }
+  stalker: { title: 'Profile Stalker', subtitle: 'Cek Profil TikTok & Twitter Lengkap' }
 };
 
 function switchPage(pageId) {
@@ -493,7 +503,7 @@ document.getElementById('clearHistoryBtn').addEventListener('click', () => {
 });
 
 // ==========================================
-// KATEGORI AI (GPT-OSS-120B, DEEPSEEK-R1, META-AI)
+// KATEGORI AI (MODERN CHAT + MARKDOWN FORMATTER)
 // ==========================================
 const chatMessagesEl = document.getElementById('chatMessages');
 const aiChatForm = document.getElementById('aiChatForm');
@@ -503,11 +513,21 @@ const aiSystemInput = document.getElementById('aiSystemInput');
 const aiTempInput = document.getElementById('aiTempInput');
 const aiTempVal = document.getElementById('aiTempVal');
 const aiActiveBadge = document.getElementById('aiActiveBadge');
+const aiSettingsDrawer = document.getElementById('aiSettingsDrawer');
 
 let conversationHistory = [];
 
+document.getElementById('toggleAiSettingsBtn').addEventListener('click', () => {
+  aiSettingsDrawer.classList.toggle('hidden');
+});
+
 aiTempInput.addEventListener('input', () => {
   aiTempVal.textContent = aiTempInput.value;
+});
+
+aiModelSelect.addEventListener('change', () => {
+  const val = aiModelSelect.value;
+  aiActiveBadge.textContent = val === 'auto' ? 'Auto Best • gptoss120b' : `Model • ${val}`;
 });
 
 document.querySelectorAll('.chip-btn').forEach(btn => {
@@ -520,30 +540,83 @@ document.querySelectorAll('.chip-btn').forEach(btn => {
 document.getElementById('clearChatBtn').addEventListener('click', () => {
   conversationHistory = [];
   chatMessagesEl.innerHTML = `
-    <div class="chat-msg bot">
-      <div class="chat-bubble">Riwayat chat dibersihkan ✨ Silakan mulai obrolan baru!</div>
-      <span class="chat-meta">System • Siap</span>
+    <div class="chat-row bot">
+      <div class="msg-avatar">🤖</div>
+      <div class="msg-content">
+        <div class="chat-bubble">Riwayat chat dibersihkan ✨ Mau ngobrol atau tanya apa lagi?</div>
+        <div class="chat-meta-row"><span class="chat-meta">Love Hub AI • Siap</span></div>
+      </div>
     </div>
   `;
 });
 
-function appendChatBubble(role, text, metaText = '') {
-  const wrapper = document.createElement('div');
-  wrapper.className = `chat-msg ${role}`;
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function formatBotMarkdown(rawText) {
+  let safe = escapeHtml(rawText);
+  safe = safe.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+  safe = safe.replace(/`([^`]+)`/g, '<code>$1</code>');
+  safe = safe.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  safe = safe.replace(/\n/g, '<br>');
+  return safe;
+}
+
+function appendChatRow(role, text, metaText = '', isLoading = false) {
+  const row = document.createElement('div');
+  row.className = `chat-row ${role}`;
+
+  const avatar = document.createElement('div');
+  avatar.className = 'msg-avatar';
+  avatar.textContent = role === 'user' ? '🧑' : '🤖';
+
+  const content = document.createElement('div');
+  content.className = 'msg-content';
 
   const bubble = document.createElement('div');
   bubble.className = 'chat-bubble';
-  bubble.textContent = text;
+
+  if (isLoading) {
+    bubble.innerHTML = `<div class="typing-dots"><span></span><span></span><span></span></div>`;
+  } else if (role === 'bot') {
+    bubble.innerHTML = formatBotMarkdown(text);
+  } else {
+    bubble.textContent = text;
+  }
+
+  const metaRow = document.createElement('div');
+  metaRow.className = 'chat-meta-row';
 
   const meta = document.createElement('span');
   meta.className = 'chat-meta';
   meta.textContent = metaText;
+  metaRow.appendChild(meta);
 
-  wrapper.appendChild(bubble);
-  if (metaText) wrapper.appendChild(meta);
-  chatMessagesEl.appendChild(wrapper);
+  if (role === 'bot' && !isLoading) {
+    const copyBtn = document.createElement('button');
+    copyBtn.type = 'button';
+    copyBtn.className = 'copy-msg-btn';
+    copyBtn.textContent = 'Salin';
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(text);
+      copyBtn.textContent = 'Tersalin ✓';
+      setTimeout(() => { copyBtn.textContent = 'Salin'; }, 1500);
+    });
+    metaRow.appendChild(copyBtn);
+  }
+
+  content.appendChild(bubble);
+  content.appendChild(metaRow);
+  row.appendChild(avatar);
+  row.appendChild(content);
+
+  chatMessagesEl.appendChild(row);
   chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
-  return bubble;
+  return { bubble, meta, metaRow };
 }
 
 function extractAiReply(data) {
@@ -597,7 +670,7 @@ async function querySingleAiModel(modelKey, userPrompt, systemPrompt, temperatur
     });
   }
 
-  const json = await fetchJsonSafe(url);
+  const json = await fetchJsonSafe(url, 16000);
   const reply = extractAiReply(json);
   if (!reply || String(reply).trim() === '') {
     throw new Error(`Respons kosong dari ${modelKey}`);
@@ -617,7 +690,7 @@ async function runAiWithFallback(userPrompt) {
   let lastError = null;
   for (const modelKey of queue) {
     try {
-      aiActiveBadge.textContent = `Model: ${modelKey}`;
+      aiActiveBadge.textContent = `Aktif • ${modelKey}`;
       const reply = await querySingleAiModel(modelKey, userPrompt, systemPrompt, temperature);
       return { reply, usedModel: modelKey };
     } catch (err) {
@@ -633,26 +706,45 @@ aiChatForm.addEventListener('submit', async (e) => {
   if (!prompt) return;
 
   aiPromptInput.value = '';
+  aiPromptInput.style.height = 'auto';
   const sendBtn = document.getElementById('aiSendBtn');
   sendBtn.disabled = true;
 
-  appendChatBubble('user', prompt, 'Kamu');
+  const nowStr = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+  appendChatRow('user', prompt, `Kamu • ${nowStr}`);
   conversationHistory.push({ role: 'user', text: prompt });
 
-  const loadingBubble = appendChatBubble('bot', 'Sedang berpikir...', 'Menghubungi Siputzx AI');
+  const loadingObj = appendChatRow('bot', '', 'Mengetik...', true);
 
   try {
     const { reply, usedModel } = await runAiWithFallback(prompt);
-    loadingBubble.textContent = reply;
-    loadingBubble.nextElementSibling.textContent = `Model: ${usedModel}`;
+    loadingObj.bubble.innerHTML = formatBotMarkdown(reply);
+    loadingObj.meta.textContent = `${usedModel} • ${new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}`;
+
+    const copyBtn = document.createElement('button');
+    copyBtn.type = 'button';
+    copyBtn.className = 'copy-msg-btn';
+    copyBtn.textContent = 'Salin';
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(reply);
+      copyBtn.textContent = 'Tersalin ✓';
+      setTimeout(() => { copyBtn.textContent = 'Salin'; }, 1500);
+    });
+    loadingObj.metaRow.appendChild(copyBtn);
+
     conversationHistory.push({ role: 'bot', text: reply });
   } catch (err) {
-    loadingBubble.textContent = `Maaf, AI sedang gangguan: ${err.message}`;
-    loadingBubble.nextElementSibling.textContent = 'Error';
+    loadingObj.bubble.textContent = `Maaf, AI sedang gangguan: ${err.message}`;
+    loadingObj.meta.textContent = 'Gagal terhubung';
   } finally {
     sendBtn.disabled = false;
     aiPromptInput.focus();
   }
+});
+
+aiPromptInput.addEventListener('input', () => {
+  aiPromptInput.style.height = 'auto';
+  aiPromptInput.style.height = `${Math.min(aiPromptInput.scrollHeight, 110)}px`;
 });
 
 aiPromptInput.addEventListener('keydown', (e) => {
@@ -663,7 +755,7 @@ aiPromptInput.addEventListener('keydown', (e) => {
 });
 
 // ==========================================
-// DOWNLOADER (CAPCUT, TIKTOK V2, DOUYIN, FB)
+// DOWNLOADER (FAST LOAD + NO-WM PRIORITY)
 // ==========================================
 let currentDlPlatform = 'capcut';
 const dlUrlInput = document.getElementById('dlUrlInput');
@@ -700,40 +792,57 @@ document.getElementById('dlClearBtn').addEventListener('click', () => {
   dlResultBody.innerHTML = '';
 });
 
-function findVideoUrls(obj, found = new Set()) {
-  if (!obj) return found;
+function collectMediaLinks(obj, result = { videos: [], audios: [], cover: '', title: '' }) {
+  if (!obj) return result;
   if (typeof obj === 'string') {
-    if (
-      obj.startsWith('http') &&
-      (obj.includes('.mp4') || obj.includes('video') || obj.includes('play') || obj.includes('download'))
-    ) {
-      found.add(obj);
+    if (obj.startsWith('http')) {
+      if (obj.includes('.mp3') || obj.includes('music') || obj.includes('audio')) {
+        if (!result.audios.includes(obj)) result.audios.push(obj);
+      } else if (obj.includes('.mp4') || obj.includes('video') || obj.includes('play') || obj.includes('download')) {
+        if (!result.videos.includes(obj)) result.videos.push(obj);
+      }
     }
-    return found;
+    return result;
   }
   if (Array.isArray(obj)) {
-    obj.forEach(item => findVideoUrls(item, found));
-    return found;
+    obj.forEach(item => collectMediaLinks(item, result));
+    return result;
   }
   if (typeof obj === 'object') {
+    if (!result.title) {
+      const t = obj.title || obj.desc || obj.caption || obj.name;
+      if (typeof t === 'string' && t.trim()) result.title = t.trim();
+    }
+    if (!result.cover) {
+      const c = obj.cover || obj.thumbnail || obj.origin_cover || obj.poster || obj.dynamic_cover;
+      if (typeof c === 'string' && c.startsWith('http')) result.cover = c;
+    }
+
+    // Prioritaskan URL video ringan / No-Watermark terlebih dahulu agar cepat dimuat
+    const priorityKeys = ['play', 'nowm', 'no_watermark', 'video_no_watermark', 'hdplay', 'wmplay', 'video', 'url', 'download'];
+    for (const pk of priorityKeys) {
+      for (const [k, v] of Object.entries(obj)) {
+        if (k.toLowerCase().includes(pk) && typeof v === 'string' && v.startsWith('http')) {
+          if (!/cover|avatar|thumb|music|audio|mp3/i.test(k) && !result.videos.includes(v)) {
+            result.videos.push(v);
+          }
+        }
+      }
+    }
+
     Object.entries(obj).forEach(([k, v]) => {
       if (typeof v === 'string' && v.startsWith('http')) {
-        if (/video|play|hd|wm|nowm|download|url|media/i.test(k) && !/cover|avatar|thumb|music|audio|mp3/i.test(k)) {
-          found.add(v);
+        if (/music|audio|mp3/i.test(k) && !result.audios.includes(v)) {
+          result.audios.push(v);
+        } else if (/video|play|hd|wm|nowm|download|media/i.test(k) && !/cover|avatar|thumb/i.test(k)) {
+          if (!result.videos.includes(v)) result.videos.push(v);
         }
-      } else {
-        findVideoUrls(v, found);
+      } else if (typeof v === 'object') {
+        collectMediaLinks(v, result);
       }
     });
   }
-  return found;
-}
-
-function extractTitleAndCover(data) {
-  const d = data?.data || data?.result || data || {};
-  const title = d.title || d.desc || d.caption || d.name || `Video ${currentDlPlatform.toUpperCase()}`;
-  const cover = d.cover || d.thumbnail || d.origin_cover || d.poster || '';
-  return { title, cover };
+  return result;
 }
 
 document.getElementById('downloaderForm').addEventListener('submit', async (e) => {
@@ -743,55 +852,84 @@ document.getElementById('downloaderForm').addEventListener('submit', async (e) =
 
   const submitBtn = document.getElementById('dlSubmitBtn');
   submitBtn.disabled = true;
-  submitBtn.textContent = '⏳ Mengambil video...';
+  submitBtn.textContent = '⚡ Mengambil link tercepat...';
 
   dlResultCard.classList.remove('hidden');
   document.getElementById('dlResultTitle').textContent = `Memproses ${currentDlPlatform.toUpperCase()}...`;
-  document.getElementById('dlResultMeta').textContent = 'Menghubungi endpoint Siputzx';
+  document.getElementById('dlResultMeta').textContent = 'Mengambil metadata video';
   dlResultBody.innerHTML = `<div class="empty-state">Sedang mengambil link video...</div>`;
 
   try {
-    const endpointPath = ENDPOINTS.downloader[currentDlPlatform];
-    const apiUrl = buildSiputzUrl(endpointPath, { url: targetUrl });
-    const rawData = await fetchJsonSafe(apiUrl);
+    let rawData = null;
+    if (currentDlPlatform === 'tiktok') {
+      // Coba TikTok v2 & fallback paralel/cepat
+      try {
+        rawData = await fetchJsonSafe(buildSiputzUrl(ENDPOINTS.downloader.tiktok, { url: targetUrl }), 9000);
+      } catch {
+        rawData = await fetchJsonSafe(buildSiputzUrl(ENDPOINTS.downloader.tiktokFallback, { url: targetUrl }), 10000);
+      }
+    } else {
+      const endpointPath = ENDPOINTS.downloader[currentDlPlatform];
+      rawData = await fetchJsonSafe(buildSiputzUrl(endpointPath, { url: targetUrl }), 12000);
+    }
 
-    const videoList = Array.from(findVideoUrls(rawData));
-    const { title, cover } = extractTitleAndCover(rawData);
+    const media = collectMediaLinks(rawData);
+    const title = media.title || `Video ${currentDlPlatform.toUpperCase()}`;
 
     document.getElementById('dlResultTitle').textContent = title;
-    document.getElementById('dlResultMeta').textContent = `Platform: ${currentDlPlatform.toUpperCase()} • ${videoList.length} link video ditemukan`;
+    document.getElementById('dlResultMeta').textContent = `Platform: ${currentDlPlatform.toUpperCase()} • ${media.videos.length} kualitas video siap`;
 
-    if (!videoList.length) {
+    if (!media.videos.length) {
       dlResultBody.innerHTML = `
         <div class="info-box">
-          Link video tidak ditemukan otomatis pada respons API. Coba periksa kembali URL atau gunakan link video publik.
+          Link video tidak ditemukan otomatis. Pastikan link video bersifat publik dan valid.
         </div>
       `;
     } else {
-      const primaryVideo = videoList[0];
-      const buttonsHtml = videoList
-        .map((vUrl, idx) => `
-          <a href="${vUrl}" target="_blank" rel="noopener noreferrer" download class="btn-primary small-btn">
-            ⬇️ Download Video ${videoList.length > 1 ? `#${idx + 1}` : ''}
-          </a>
-        `)
-        .join('');
+      const primaryVideo = media.videos[0];
+      const videoBtns = media.videos.slice(0, 3).map((vUrl, idx) => `
+        <a href="${vUrl}" target="_blank" rel="noopener noreferrer" download class="btn-primary small-btn">
+          ⬇️ Download Video ${idx === 0 ? '(Cepat / No WM)' : `#${idx + 1}`}
+        </a>
+      `).join('');
 
+      const audioBtn = media.audios.length
+        ? `<a href="${media.audios[0]}" target="_blank" rel="noopener noreferrer" download class="btn-secondary small-btn">🎵 Download Audio</a>`
+        : '';
+
+      // Render thumbnail poster dulu agar tidak memblokir bandwidth saat tombol download sudah siap dipakai!
       dlResultBody.innerHTML = `
-        <div class="video-player-box">
-          <video controls playsinline preload="metadata" ${cover ? `poster="${cover}"` : ''} src="${primaryVideo}"></video>
+        <div class="video-player-box" id="videoPreviewContainer">
+          ${media.cover ? `
+            <div class="video-poster-overlay" id="loadVideoTrigger" title="Klik untuk memutar preview video">
+              <img src="${media.cover}" alt="Thumbnail Video" />
+              <div class="play-overlay-btn">▶️ Putar Preview Video</div>
+            </div>
+          ` : `
+            <video controls playsinline preload="none" src="${primaryVideo}"></video>
+          `}
         </div>
         <div class="dl-actions-grid">
-          ${buttonsHtml}
-          <button type="button" class="btn-secondary small-btn" id="copyDlLinkBtn">📋 Salin Link Video</button>
+          ${videoBtns}
+          ${audioBtn}
+          <button type="button" class="btn-secondary small-btn" id="copyDlLinkBtn">📋 Salin Link</button>
         </div>
       `;
+
+      const trigger = document.getElementById('loadVideoTrigger');
+      if (trigger) {
+        trigger.addEventListener('click', () => {
+          document.getElementById('videoPreviewContainer').innerHTML = `
+            <video controls autoplay playsinline preload="metadata" poster="${media.cover}" src="${primaryVideo}"></video>
+          `;
+        });
+      }
 
       document.getElementById('copyDlLinkBtn').addEventListener('click', () => {
         navigator.clipboard.writeText(primaryVideo);
         const cBtn = document.getElementById('copyDlLinkBtn');
         cBtn.textContent = '✅ Tersalin!';
-        setTimeout(() => { cBtn.textContent = '📋 Salin Link Video'; }, 1600);
+        setTimeout(() => { cBtn.textContent = '📋 Salin Link'; }, 1600);
       });
     }
   } catch (err) {
@@ -804,7 +942,7 @@ document.getElementById('downloaderForm').addEventListener('submit', async (e) =
 });
 
 // ==========================================
-// STALKER (TIKTOK & TWITTER)
+// STALKER LENGKAP (DEEP OBJECT EXTRACTOR)
 // ==========================================
 let currentStalkPlatform = 'tiktok';
 const stalkResultCard = document.getElementById('stalkResultCard');
@@ -828,11 +966,56 @@ document.getElementById('stalkClearBtn').addEventListener('click', () => {
 });
 
 function formatCompactNum(num) {
-  if (num === undefined || num === null || Number.isNaN(Number(num))) return '-';
+  if (num === undefined || num === null || num === '' || Number.isNaN(Number(num))) return '-';
   const n = Number(num);
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000_000_000) return `${(n / 1_000_000_000).toFixed(2)}B`;
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(2)}M`;
   if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
-  return String(n);
+  return n.toLocaleString('id-ID');
+}
+
+function flattenProfileData(root) {
+  const flat = {};
+  function walk(node, depth = 0) {
+    if (!node || typeof node !== 'object' || depth > 4) return;
+    for (const [k, v] of Object.entries(node)) {
+      if (v === null || v === undefined || v === '') continue;
+      if (typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean') {
+        if (flat[k] === undefined) flat[k] = v;
+      } else if (typeof v === 'object' && !Array.isArray(v)) {
+        walk(v, depth + 1);
+      }
+    }
+  }
+  walk(root);
+  return flat;
+}
+
+function pickFirst(flat, keys, fallback = null) {
+  for (const k of keys) {
+    if (flat[k] !== undefined && flat[k] !== null && String(flat[k]).trim() !== '') {
+      return flat[k];
+    }
+  }
+  return fallback;
+}
+
+function formatDateIfPossible(val) {
+  if (!val) return null;
+  if (typeof val === 'number') {
+    const ms = val < 1e12 ? val * 1000 : val;
+    const d = new Date(ms);
+    if (!Number.isNaN(d.getTime()) && d.getFullYear() > 2005) {
+      return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+  }
+  if (typeof val === 'string' && val.length >= 8) {
+    const d = new Date(val);
+    if (!Number.isNaN(d.getTime()) && d.getFullYear() > 2005) {
+      return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+  }
+  return String(val);
 }
 
 document.getElementById('stalkerForm').addEventListener('submit', async (e) => {
@@ -847,7 +1030,7 @@ document.getElementById('stalkerForm').addEventListener('submit', async (e) => {
   stalkResultCard.classList.remove('hidden');
   document.getElementById('stalkResultHeading').textContent = `Mencari @${cleanUser}...`;
   document.getElementById('stalkResultSub').textContent = `Platform: ${currentStalkPlatform.toUpperCase()}`;
-  stalkResultBody.innerHTML = `<div class="empty-state">Mengambil data profil...</div>`;
+  stalkResultBody.innerHTML = `<div class="empty-state">Mengambil detail profil lengkap...</div>`;
 
   try {
     const path = ENDPOINTS.stalker[currentStalkPlatform];
@@ -856,34 +1039,52 @@ document.getElementById('stalkerForm').addEventListener('submit', async (e) => {
       : { user: cleanUser };
 
     const apiUrl = buildSiputzUrl(path, params);
-    const json = await fetchJsonSafe(apiUrl);
-    const profile = json?.data || json?.result || json || {};
-    const userObj = profile.user || profile.profile || profile;
-    const statsObj = profile.stats || userObj;
+    const json = await fetchJsonSafe(apiUrl, 12000);
+    const flat = flattenProfileData(json);
 
-    const nickname = userObj.nickname || userObj.name || userObj.displayName || `@${cleanUser}`;
-    const username = userObj.uniqueId || userObj.username || userObj.screen_name || cleanUser;
-    const bio = userObj.signature || userObj.bio || userObj.description || 'Tidak ada bio.';
-    const avatar = userObj.avatarLarger || userObj.avatarMedium || userObj.avatar || userObj.profile_image_url || '';
+    const nickname = pickFirst(flat, ['nickname', 'name', 'displayName', 'full_name'], `@${cleanUser}`);
+    const username = pickFirst(flat, ['uniqueId', 'username', 'screen_name', 'user_name'], cleanUser);
+    const bio = pickFirst(flat, ['signature', 'bio', 'description'], 'Tidak ada bio.');
+    const avatar = pickFirst(flat, ['avatarLarger', 'avatarMedium', 'avatarThumb', 'avatar', 'profile_image_url_https', 'profile_image_url'], '');
+    const userId = pickFirst(flat, ['id', 'id_str', 'uid', 'userId', 'secUid']);
+    const region = pickFirst(flat, ['region', 'country', 'location', 'language']);
+    const verified = Boolean(pickFirst(flat, ['verified', 'is_verified', 'isVerified'], false));
+    const isPrivate = Boolean(pickFirst(flat, ['privateAccount', 'isPrivate', 'protected', 'is_private'], false));
+    const bioLink = pickFirst(flat, ['link', 'url', 'bioLink', 'website', 'external_url']);
+    const createdAt = formatDateIfPossible(pickFirst(flat, ['createTime', 'created_at', 'create_time', 'joined']));
 
-    const followers = statsObj.followerCount ?? statsObj.followers_count ?? statsObj.followers;
-    const following = statsObj.followingCount ?? statsObj.friends_count ?? statsObj.following;
-    const postsOrLikes = currentStalkPlatform === 'tiktok'
-      ? (statsObj.heartCount ?? statsObj.likes ?? statsObj.videoCount)
-      : (statsObj.statuses_count ?? statsObj.tweets ?? statsObj.favourites_count);
+    const followers = pickFirst(flat, ['followerCount', 'followers_count', 'followers']);
+    const following = pickFirst(flat, ['followingCount', 'friends_count', 'following']);
+    const likes = pickFirst(flat, ['heartCount', 'heart', 'likes', 'favourites_count', 'diggCount']);
+    const videosOrTweets = pickFirst(flat, ['videoCount', 'videos', 'statuses_count', 'tweets', 'media_count']);
 
-    const thirdLabel = currentStalkPlatform === 'tiktok' ? 'Total Likes' : 'Total Tweets';
+    const profileUrl = currentStalkPlatform === 'tiktok'
+      ? `https://www.tiktok.com/@${username}`
+      : `https://x.com/${username}`;
 
     document.getElementById('stalkResultHeading').textContent = nickname;
     document.getElementById('stalkResultSub').textContent = `@${username} • ${currentStalkPlatform.toUpperCase()}`;
 
+    const extraRows = [
+      userId ? { label: 'User ID', value: userId } : null,
+      region ? { label: 'Region / Lokasi', value: String(region).toUpperCase() } : null,
+      createdAt ? { label: 'Akun Dibuat / Bergabung', value: createdAt } : null,
+      { label: 'Status Akun', value: isPrivate ? '🔒 Privat' : '🌍 Publik' },
+      { label: 'Centang Biru / Verified', value: verified ? '✅ Terverifikasi' : 'Tidak' },
+      bioLink ? { label: 'Tautan Bio', value: bioLink } : null
+    ].filter(Boolean);
+
     stalkResultBody.innerHTML = `
       <div class="stalk-profile-card">
         ${avatar ? `<img src="${avatar}" alt="${username}" class="stalk-avatar" />` : `<div class="stalk-avatar" style="display:grid;place-items:center;font-size:1.8rem;">👤</div>`}
-        <div style="flex:1;min-width:200px;">
-          <div style="font-weight:800;font-size:1.05rem;">${nickname}</div>
-          <div class="muted">@${username}</div>
-          <p style="font-size:0.86rem;margin-top:6px;line-height:1.45;">${bio}</p>
+        <div style="flex:1;min-width:210px;">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+            <strong style="font-size:1.08rem;">${escapeHtml(nickname)}</strong>
+            ${verified ? `<span class="verified-badge">✓ Verified</span>` : ''}
+            ${isPrivate ? `<span class="private-badge">🔒 Private</span>` : ''}
+          </div>
+          <div class="muted" style="margin-top:2px;">@${escapeHtml(username)}</div>
+          <p style="font-size:0.86rem;margin-top:8px;line-height:1.45;">${escapeHtml(bio)}</p>
         </div>
       </div>
 
@@ -897,11 +1098,45 @@ document.getElementById('stalkerForm').addEventListener('submit', async (e) => {
           <span>Following</span>
         </div>
         <div class="stat-box">
-          <strong>${formatCompactNum(postsOrLikes)}</strong>
-          <span>${thirdLabel}</span>
+          <strong>${formatCompactNum(likes)}</strong>
+          <span>${currentStalkPlatform === 'tiktok' ? 'Total Likes' : 'Likes'}</span>
+        </div>
+        <div class="stat-box">
+          <strong>${formatCompactNum(videosOrTweets)}</strong>
+          <span>${currentStalkPlatform === 'tiktok' ? 'Total Video' : 'Total Post'}</span>
         </div>
       </div>
+
+      <div class="stalk-detail-grid">
+        ${extraRows.map(r => `
+          <div class="detail-kv-card">
+            <span>${r.label}</span>
+            <strong>${escapeHtml(String(r.value))}</strong>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="stalk-actions-row">
+        <a href="${profileUrl}" target="_blank" rel="noopener noreferrer" class="btn-primary small-btn">🔗 Buka Profil Asli</a>
+        <button type="button" class="btn-secondary small-btn" id="copyStalkSummaryBtn">📋 Salin Info Profil</button>
+      </div>
     `;
+
+    document.getElementById('copyStalkSummaryBtn').addEventListener('click', () => {
+      const summary = [
+        `Profil ${currentStalkPlatform.toUpperCase()}: ${nickname} (@${username})`,
+        `Followers: ${formatCompactNum(followers)} | Following: ${formatCompactNum(following)}`,
+        `Likes: ${formatCompactNum(likes)} | Post/Video: ${formatCompactNum(videosOrTweets)}`,
+        userId ? `ID: ${userId}` : '',
+        region ? `Region: ${region}` : '',
+        `Bio: ${bio}`
+      ].filter(Boolean).join('\n');
+
+      navigator.clipboard.writeText(summary);
+      const btn = document.getElementById('copyStalkSummaryBtn');
+      btn.textContent = '✅ Tersalin!';
+      setTimeout(() => { btn.textContent = '📋 Salin Info Profil'; }, 1600);
+    });
   } catch (err) {
     document.getElementById('stalkResultHeading').textContent = 'Gagal Mengambil Profil';
     stalkResultBody.innerHTML = `<div class="info-box">Error: ${err.message}</div>`;

@@ -69,9 +69,9 @@
     <div class="sidebar-footer">
       <div class="api-status-chip">
         <span class="pulse-dot"></span>
-        <span>Siputzx API Ready (No Key Needed)</span>
+        <span>Siputzx API Ready</span>
       </div>
-      <p class="muted tiny-text">100% Static • Tinggal Upload ke GitHub Pages</p>
+      <p class="muted tiny-text">v3.0 • Fast Stream &amp; Full Stalker</p>
     </div>
   </aside>
 
@@ -186,83 +186,95 @@
     </section>
 
     <!-- ===================================================== -->
-    <!-- PAGE 2: KATEGORI AI (3 API ENDPOINT)                  -->
+    <!-- PAGE 2: KATEGORI AI (MODERN CHAT UI)                  -->
     <!-- ===================================================== -->
     <section id="page-ai" class="page-section hidden">
-      <div class="card tool-header-card">
-        <div class="tool-badge-row">
-          <span class="pill-tag">🤖 KATEGORI AI</span>
-          <span class="pill-tag soft">Auto-Fallback Ready</span>
-        </div>
-        <h2>AI Chat &amp; Asisten Serbaguna</h2>
-        <p class="subtitle left-align">
-          Ngobrol santai, minta ide, nulis caption, atau tanya apa aja. Mendukung 3 model Siputzx (<code>gptoss120b</code>, <code>deepseekr1</code>, <code>metaai</code>) dengan fallback otomatis jika satu endpoint sedang sibuk.
-        </p>
-
-        <div class="ai-controls-grid">
-          <div class="field-group">
-            <label for="aiModelSelect">Pilih Model AI</label>
-            <select id="aiModelSelect" class="input-control">
-              <option value="auto">⚡ Auto Best (gptoss120b → deepseekr1 → metaai)</option>
-              <option value="gptoss120b">🧠 gptoss120b (/api/ai/gptoss120b)</option>
-              <option value="deepseekr1">🔬 deepseekr1 (/api/ai/deepseekr1)</option>
-              <option value="metaai">🌐 metaai (/api/ai/metaai)</option>
-            </select>
+      <div class="card chat-shell">
+        <!-- Header Bar Chat -->
+        <div class="chat-header-bar">
+          <div class="chat-bot-identity">
+            <div class="bot-avatar-ring">🤖</div>
+            <div>
+              <div class="bot-title-row">
+                <strong>Love Hub AI</strong>
+                <span class="online-badge">● Online</span>
+              </div>
+              <span id="aiActiveBadge" class="bot-sub-status">Auto Best • gptoss120b</span>
+            </div>
           </div>
 
-          <div class="field-group">
-            <label for="aiTempInput">Temperature (<span id="aiTempVal">0.7</span>)</label>
-            <input type="range" id="aiTempInput" min="0.1" max="1.2" step="0.1" value="0.7" class="range-control" />
+          <div class="chat-header-actions">
+            <button type="button" id="toggleAiSettingsBtn" class="icon-btn small-icon-btn" title="Pengaturan Model & Prompt">⚙️</button>
+            <button type="button" id="clearChatBtn" class="icon-btn small-icon-btn danger-hover" title="Bersihkan Chat">🗑️</button>
           </div>
         </div>
 
-        <div class="field-group mt-12">
-          <label for="aiSystemInput">System Prompt / Peran AI</label>
-          <input type="text" id="aiSystemInput" class="input-control" value="You are a helpful, friendly, and creative assistant. Reply in Indonesian unless asked otherwise." />
+        <!-- Collapsible Settings Panel -->
+        <div id="aiSettingsDrawer" class="ai-settings-drawer hidden">
+          <div class="ai-controls-grid">
+            <div class="field-group">
+              <label for="aiModelSelect">Model AI</label>
+              <select id="aiModelSelect" class="input-control">
+                <option value="auto">⚡ Auto Best (gptoss120b → deepseekr1 → metaai)</option>
+                <option value="gptoss120b">🧠 gptoss120b</option>
+                <option value="deepseekr1">🔬 deepseekr1</option>
+                <option value="metaai">🌐 metaai</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label for="aiTempInput">Kreativitas / Temp (<span id="aiTempVal">0.7</span>)</label>
+              <input type="range" id="aiTempInput" min="0.1" max="1.2" step="0.1" value="0.7" class="range-control" />
+            </div>
+          </div>
+
+          <div class="field-group mt-10">
+            <label for="aiSystemInput">Peran / System Prompt</label>
+            <input type="text" id="aiSystemInput" class="input-control" value="Kamu adalah asisten AI yang ramah, cerdas, ekspresif, dan rapi dalam menjelaskan. Jawab dalam Bahasa Indonesia." />
+          </div>
         </div>
 
-        <div class="quick-prompts">
+        <!-- Quick Prompts Strip -->
+        <div class="quick-prompts-strip">
           <button type="button" class="chip-btn" data-prompt="Buatin 5 ide kencan seru dan hemat buat pasangan!">💡 Ide Nge-date</button>
           <button type="button" class="chip-btn" data-prompt="Bikinin gombalan receh tapi bikin salting buat pacar.">💘 Gombalan</button>
           <button type="button" class="chip-btn" data-prompt="Buatin caption TikTok yang aesthetic dan catchy.">🎬 Caption TikTok</button>
-          <button type="button" class="chip-btn" data-prompt="Jelasin sesuatu yang unik dan menarik hari ini.">✨ Fun Fact</button>
-        </div>
-      </div>
-
-      <div class="card chat-box-card">
-        <div class="chat-toolbar">
-          <span id="aiActiveBadge" class="model-pill">Model: Auto</span>
-          <button id="clearChatBtn" class="text-danger-btn">Bersihkan Chat</button>
+          <button type="button" class="chip-btn" data-prompt="Kasih fun fact unik hari ini.">✨ Fun Fact</button>
         </div>
 
+        <!-- Area Pesan Chat -->
         <div id="chatMessages" class="chat-messages">
-          <div class="chat-msg bot">
-            <div class="chat-bubble">
-              Halo! 👋 Aku AI asisten di <strong>Love Hub</strong>. Bisa bantu kamu ngobrol, cari ide, bikin caption, atau jawab pertanyaan apa aja. Mau mulai dari mana?
+          <div class="chat-row bot">
+            <div class="msg-avatar">🤖</div>
+            <div class="msg-content">
+              <div class="chat-bubble">Halo! 👋 Aku asisten AI di <strong>Love Hub</strong>. Bisa bantu cari ide, nulis caption, ngobrol santai, atau jawab apa aja. Mau tanya apa hari ini?</div>
+              <div class="chat-meta-row">
+                <span class="chat-meta">Love Hub AI • Siap</span>
+              </div>
             </div>
-            <span class="chat-meta">System • Siap</span>
           </div>
         </div>
 
-        <form id="aiChatForm" class="chat-input-row">
-          <textarea id="aiPromptInput" rows="2" placeholder="Ketik pesan atau pertanyaan kamu di sini... (Enter untuk kirim)" required></textarea>
-          <button type="submit" id="aiSendBtn" class="btn-primary send-btn">Kirim 🚀</button>
+        <!-- Input Bar -->
+        <form id="aiChatForm" class="chat-composer">
+          <textarea id="aiPromptInput" rows="1" placeholder="Ketik pesan ke AI..." required></textarea>
+          <button type="submit" id="aiSendBtn" class="send-circle-btn" title="Kirim Pesan">➤</button>
         </form>
       </div>
     </section>
 
     <!-- ===================================================== -->
-    <!-- PAGE 3: DOWNLOADER (CAPCUT, TIKTOK V2, DOUYIN, FB)    -->
+    <!-- PAGE 3: DOWNLOADER (FAST VIDEO + DIRECT DOWNLOAD)     -->
     <!-- ===================================================== -->
     <section id="page-downloader" class="page-section hidden">
       <div class="card">
         <div class="tool-badge-row">
           <span class="pill-tag">📥 MEDIA DOWNLOADER</span>
-          <span class="pill-tag soft">Video &amp; Media</span>
+          <span class="pill-tag soft">Fast Load &amp; HD No-WM</span>
         </div>
         <h2>Download Video CapCut, TikTok, Douyin &amp; Facebook</h2>
         <p class="subtitle left-align">
-          Tempel link video yang mau diunduh. Hasilnya langsung menampilkan <strong>player video</strong> dan <strong>tombol download video</strong> siap pakai.
+          Tempel link video di bawah. Mendukung pemutar instan ringan + tombol unduh langsung tanpa lag.
         </p>
 
         <div class="platform-tabs" id="dlPlatformTabs">
@@ -295,17 +307,17 @@
     </section>
 
     <!-- ===================================================== -->
-    <!-- PAGE 4: STALKER (TIKTOK & TWITTER)                    -->
+    <!-- PAGE 4: STALKER (LENGKAP + DEEP PARSER)               -->
     <!-- ===================================================== -->
     <section id="page-stalker" class="page-section hidden">
       <div class="card">
         <div class="tool-badge-row">
           <span class="pill-tag">🕵️ PROFILE STALKER</span>
-          <span class="pill-tag soft">TikTok &amp; Twitter</span>
+          <span class="pill-tag soft">Full Detail Profile</span>
         </div>
         <h2>Cek Profil TikTok &amp; Twitter</h2>
         <p class="subtitle left-align">
-          Masukkan username target tanpa tanda <code>@</code> untuk melihat ringkasan profil publik.
+          Masukkan username target tanpa tanda <code>@</code> untuk melihat info akun lengkap, bio, ID, verifikasi, statistik, hingga detail tambahan.
         </p>
 
         <div class="platform-tabs" id="stalkPlatformTabs">
@@ -325,7 +337,7 @@
         <div class="section-head">
           <div>
             <h3 id="stalkResultHeading">Detail Profil</h3>
-            <p id="stalkResultSub" class="muted">Data dari Siputzx Stalk API</p>
+            <p id="stalkResultSub" class="muted">Data lengkap profil</p>
           </div>
           <button id="stalkClearBtn" class="text-danger-btn">Tutup</button>
         </div>
