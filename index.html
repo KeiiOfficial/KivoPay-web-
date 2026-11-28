@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Love Gacha ✨ Hadiah Spesial Buat Kamu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-badge">💖</span>
+      <div>
+        <h1>Love Gacha</h1>
+        <p>Banner Spesial Buat Sayang</p>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <button id="soundToggle" class="icon-btn" title="Suara Efek">🔊</button>
+      <button id="themeToggle" class="icon-btn" title="Ganti Tema">☀️</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Status & Tiket -->
+    <section class="status-bar card">
+      <div class="ticket-box">
+        <span class="ticket-icon">🎟️</span>
+        <div>
+          <span class="label">Tiket Gacha Kamu</span>
+          <strong id="ticketCount" class="value">3</strong>
+        </div>
+      </div>
+
+      <div class="pity-box">
+        <div class="pity-header">
+          <span class="label">🔥 Pity Hadiah Sultan (100K / Boneka)</span>
+          <span id="pityText" class="pity-num">0 / 5</span>
+        </div>
+        <div class="progress-track">
+          <div id="pityBar" class="progress-fill" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <button id="openQuestBtn" class="btn-secondary small-btn">+ Dapet Tiket</button>
+    </section>
+
+    <!-- Banner & Mesin Gacha -->
+    <section class="gacha-stage card">
+      <div class="banner-tag">✨ LIMITED COUPLE BANNER ✨</div>
+      <h2>Pilih &amp; Putar Keberuntunganmu!</h2>
+      <p class="subtitle">Setiap tarikan punya kesempatan dapet hadiah beneran atau kena hukuman gemes 😜</p>
+
+      <!-- Capsule / Card Visual -->
+      <div class="capsule-arena" id="capsuleArena">
+        <div class="capsule-ring"></div>
+        <div class="capsule-core" id="capsuleCore">
+          <span id="capsuleEmoji">🎁</span>
+        </div>
+      </div>
+
+      <!-- Tombol Pull -->
+      <div class="pull-controls">
+        <button id="pullBtn" class="btn-primary">
+          <span>🎲 Gacha Sekarang (1x)</span>
+        </button>
+      </div>
+
+      <!-- Daftar Rate / Hadiah -->
+      <div class="rate-info">
+        <button id="toggleRatesBtn" class="link-btn">Lihat Daftar Hadiah &amp; Drop Rate ▾</button>
+        <div id="ratesPanel" class="rates-panel hidden">
+          <div class="rate-item ssr">
+            <span>🧸 Boneka Lucu</span>
+            <span class="badge">SSR • 10%</span>
+          </div>
+          <div class="rate-item ssr">
+            <span>💸 Transfer Uang Rp 100.000</span>
+            <span class="badge">SSR • 10%</span>
+          </div>
+          <div class="rate-item sr">
+            <span>💎 Top Up 400 Robux</span>
+            <span class="badge">SR • 15%</span>
+          </div>
+          <div class="rate-item sr">
+            <span>💵 Transfer Uang Rp 50.000</span>
+            <span class="badge">SR • 20%</span>
+          </div>
+          <div class="rate-item r">
+            <span>🍦 Beli Es Krim Bareng / GoFood</span>
+            <span class="badge">R • 25%</span>
+          </div>
+          <div class="rate-item zonk">
+            <span>📸 ZONK! Wajib Kirim PAP Sekarang</span>
+            <span class="badge">ZONK • 20%</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Inventory / Riwayat Voucher -->
+    <section class="inventory-section card">
+      <div class="section-head">
+        <div>
+          <h3>🎒 Tas Hadiah &amp; Hukuman</h3>
+          <p class="muted">Screenshot bukti klaim di sini terus kirim ke cowokmu!</p>
+        </div>
+        <button id="clearHistoryBtn" class="text-danger-btn" title="Reset Data">Reset</button>
+      </div>
+
+      <div id="inventoryList" class="inventory-grid">
+        <div class="empty-state">Belum ada hadiah nih. Coba gacha dulu di atas! 👆</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal Hasil Gacha -->
+  <div id="resultModal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card" id="resultCard">
+      <div id="resultRarityBadge" class="rarity-pill">SSR</div>
+      <div id="resultIcon" class="result-emoji">💸</div>
+      <h2 id="resultTitle">Transfer Uang 100K!</h2>
+      <p id="resultDesc">Selamat! Kamu hoki banget hari ini.</p>
+      <div class="claim-code-box">
+        <span>Kode Klaim:</span>
+        <strong id="claimCode">LOVE-8821</strong>
+      </div>
+      <div class="modal-actions">
+        <button id="copyProofBtn" class="btn-secondary">📋 Salin Bukti Buat WA</button>
+        <button id="closeResultBtn" class="btn-primary">Simpan ke Tas ✨</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Tambah Tiket (Mini Misi / Kode Rahasia) -->
+  <div id="questModal" class="modal hidden">
+    <div class="modal-backdrop" id="closeQuestBackdrop"></div>
+    <div class="modal-card">
+      <h3>🎟️ Tambah Tiket Gacha</h3>
+      <p class="muted">Selesaikan misi gemes atau masukin kode rahasia dari cowokmu:</p>
+
+      <div class="quest-list">
+        <div class="quest-item">
+          <div>
+            <strong>💬 Bilang "I Love You" di Chat</strong>
+            <small>Klaim harian (+1 Tiket)</small>
+          </div>
+          <button class="btn-primary small-btn" id="dailyClaimBtn">Klaim +1</button>
+        </div>
+
+        <div class="quest-item column">
+          <div>
+            <strong>🔑 Punya Kode Rahasia?</strong>
+            <small>Coba masukin kode dari cowokmu (contoh: <code>SAYANGKU</code>, <code>MAUGACHA</code>, <code>CANTIK</code>)</small>
+          </div>
+          <div class="redeem-row">
+            <input type="text" id="promoInput" placeholder="Ketik kode di sini..." />
+            <button id="redeemBtn" class="btn-secondary small-btn">Tukar</button>
+          </div>
+          <span id="promoFeedback" class="feedback-text"></span>
+        </div>
+      </div>
+
+      <button id="closeQuestBtn" class="btn-secondary full-btn">Tutup</button>
+    </div>
+  </div>
+
+  <canvas id="confettiCanvas"></canvas>
+  <script src="app.js"></script>
+</body>
+</html>
