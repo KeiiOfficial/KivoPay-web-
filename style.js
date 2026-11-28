@@ -93,7 +93,7 @@
     .bg-video-overlay {
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at 50% 25%, rgba(12, 10, 22, 0.56), rgba(9, 8, 16, 0.78));
+      background: linear-gradient(180deg, rgba(9, 8, 16, 0.34) 0%, rgba(9, 8, 16, 0.52) 55%, rgba(9, 8, 16, 0.68) 100%);
     }
 
     [data-theme="light"] .bg-video-overlay {

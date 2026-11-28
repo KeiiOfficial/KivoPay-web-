@@ -866,14 +866,39 @@
     const icon = $('bgVideoIcon');
     if (!wrap || !video || !btn) return;
 
+    const candidates = ['aset/bg-anime.mp4', 'assets/bg-anime.mp4'];
+    let candidateIdx = 0;
+
+    const tryPlay = () => {
+      video.muted = true;
+      const p = video.play();
+      if (p && typeof p.catch === 'function') p.catch(() => {});
+    };
+
+    const loadCandidate = (idx) => {
+      if (idx >= candidates.length) return;
+      candidateIdx = idx;
+      video.src = candidates[idx];
+      video.load();
+      tryPlay();
+    };
+
+    video.addEventListener('error', () => {
+      if (candidateIdx + 1 < candidates.length) {
+        loadCandidate(candidateIdx + 1);
+      }
+    });
+
     const applyBgState = (enabled) => {
       wrap.classList.toggle('hidden-bg', !enabled);
       if (icon) icon.textContent = enabled ? '🎬' : '🚫';
       btn.title = enabled ? 'Matikan Background Video' : 'Nyalakan Background Video';
       if (enabled) {
-        video.muted = true;
-        const p = video.play();
-        if (p && typeof p.catch === 'function') p.catch(() => {});
+        if (!video.getAttribute('src')) {
+          loadCandidate(0);
+        } else {
+          tryPlay();
+        }
       } else {
         video.pause();
       }
@@ -881,6 +906,7 @@
     };
 
     const saved = localStorage.getItem('lovehub_bg_video');
+    loadCandidate(0);
     applyBgState(saved !== 'off');
 
     btn.addEventListener('click', () => {
@@ -889,11 +915,9 @@
       showToast(!isCurrentlyOn ? 'Background anime dinyalakan 🎬' : 'Background anime dimatikan');
     });
 
-    // Pastikan autoplay jalan setelah interaksi pertama jika diblokir browser HP
     const resumeOnFirstTouch = () => {
       if (!wrap.classList.contains('hidden-bg') && video.paused) {
-        video.muted = true;
-        video.play().catch(() => {});
+        tryPlay();
       }
       document.removeEventListener('pointerdown', resumeOnFirstTouch);
     };
