@@ -45,10 +45,10 @@
         </div>
       </button>
       <button class="nav-item" data-tab="ai">
-        <span class="nav-icon">🤖</span>
+        <span class="nav-icon">💬</span>
         <div class="nav-text">
-          <strong>AI Chat &amp; Tools</strong>
-          <small>GPT-OSS • GLM 4.7 • Meta AI</small>
+          <strong>AI Chat (WA Style)</strong>
+          <small>gptoss120b • glm47flash • metaai</small>
         </div>
       </button>
       <button class="nav-item" data-tab="gacha">
@@ -103,7 +103,7 @@
     <div class="tab-strip" role="tablist">
       <button class="tab-pill active" data-tab="downloader" role="tab">📥 Downloader</button>
       <button class="tab-pill" data-tab="stalker" role="tab">🕵️ Stalker</button>
-      <button class="tab-pill" data-tab="ai" role="tab">🤖 AI Chat</button>
+      <button class="tab-pill" data-tab="ai" role="tab">💬 AI Chat</button>
       <button class="tab-pill" data-tab="gacha" role="tab">🎰 Love Gacha</button>
     </div>
 
@@ -147,12 +147,17 @@
           </div>
 
           <div class="video-player-wrap" id="dlPlayerWrap">
-            <video id="dlVideoPlayer" controls playsinline preload="metadata"></video>
+            <video id="dlVideoPlayer" controls playsinline preload="auto" referrerpolicy="no-referrer"></video>
+            <div class="player-fallback-note hidden" id="playerFallbackNote">
+              <span>⚠️ Preview langsung diblokir oleh CDN TikTok di browser ini, tapi video 100% siap diunduh!</span>
+              <a class="btn-secondary small-link-btn" id="openTabVideoBtn" href="#" target="_blank" rel="noopener noreferrer">▶️ Buka Video di Tab Baru</a>
+            </div>
           </div>
 
           <div class="result-actions" id="dlActionButtons">
-            <a class="btn-primary" id="dlDirectBtn" href="#" target="_blank" rel="noopener noreferrer" download>⬇️ Download Video</a>
-            <button class="btn-secondary" id="copyDlLinkBtn" type="button">📋 Salin Link Video</button>
+            <button class="btn-primary" id="dlDirectBtn" type="button">⬇️ Download Video</button>
+            <a class="btn-secondary" id="dlOpenLinkBtn" href="#" target="_blank" rel="noopener noreferrer">🔗 Link Langsung</a>
+            <button class="btn-secondary" id="copyDlLinkBtn" type="button">📋 Salin Link</button>
           </div>
         </div>
       </section>
@@ -188,7 +193,7 @@
           </div>
 
           <div class="profile-summary">
-            <img id="stalkAvatar" src="" alt="Foto Profil" class="profile-avatar" />
+            <img id="stalkAvatar" src="" alt="Foto Profil" class="profile-avatar" referrerpolicy="no-referrer" />
             <div class="profile-info">
               <div class="profile-name-row">
                 <strong id="stalkDisplayName">Nama Pengguna</strong>
@@ -218,43 +223,53 @@
         </div>
       </section>
 
-      <!-- 3. AI CHAT & TOOLS SECTION -->
+      <!-- 3. AI CHAT (WHATSAPP LAYOUT) SECTION -->
       <section class="panel" id="panel-ai">
-        <div class="card chat-shell">
-          <div class="chat-header">
-            <div class="chat-agent-info">
-              <div class="agent-avatar">🤖</div>
-              <div>
-                <div class="agent-title-row">
+        <div class="wa-container">
+          <!-- WA Top Bar -->
+          <div class="wa-header">
+            <div class="wa-contact">
+              <div class="wa-avatar">
+                🤖
+                <span class="wa-online-dot"></span>
+              </div>
+              <div class="wa-contact-meta">
+                <div class="wa-contact-name">
                   <strong>Love Hub AI</strong>
-                  <span class="online-tag">• Online</span>
+                  <span class="wa-verified-badge" title="Official AI">✓</span>
                 </div>
-                <div class="muted small" id="aiModelIndicator">Auto Fallback • gptoss120b → glm47flash → metaai</div>
+                <div class="wa-contact-status" id="aiModelIndicator">online • gptoss120b → glm47flash → metaai</div>
               </div>
             </div>
-            <div class="chat-header-btns">
-              <button class="icon-btn small-btn" id="cycleModelBtn" title="Ganti Prioritas Model">⚙️</button>
-              <button class="icon-btn small-btn" id="clearChatBtn" title="Bersihkan Riwayat Chat">🗑️</button>
+            <div class="wa-header-actions">
+              <button class="wa-icon-btn" id="cycleModelBtn" title="Ganti Prioritas Model">⚙️</button>
+              <button class="wa-icon-btn" id="clearChatBtn" title="Bersihkan Chat">🗑️</button>
             </div>
           </div>
 
-          <div class="prompt-chips">
+          <!-- Quick Prompt Bar -->
+          <div class="wa-quick-bar">
             <button class="chip-btn" data-prompt="Kasih 5 ide nge-date yang seru tapi hemat budget">💡 Ide Nge-date</button>
-            <button class="chip-btn" data-prompt="Buatin gombalan maut yang lucu dan nggak garing">💘 Gombalan</button>
+            <button class="chip-btn" data-prompt="Buatin 5 gombalan maut yang lucu dan nggak garing">💘 Gombalan</button>
             <button class="chip-btn" data-prompt="Buatin 5 caption TikTok estetik yang FYP">🎬 Caption TikTok</button>
             <button class="chip-btn" data-prompt="Kasih 1 fun fact unik tentang cinta dan psikologi">✨ Fun Fact</button>
           </div>
 
-          <div class="chat-messages" id="chatMessages"></div>
+          <!-- WA Wallpaper & Chat Stream -->
+          <div class="wa-chat-body" id="chatMessages"></div>
 
-          <div class="chat-footer">
-            <div class="chat-status-bar">
-              <span id="aiStatusText">Love Hub AI • Siap</span>
-              <span class="endpoint-chain">gptoss120b • glm47flash • metaai</span>
-            </div>
-            <form class="chat-input-form" id="chatForm">
-              <textarea id="chatInput" rows="1" placeholder="Ketik pesan ke AI..." required></textarea>
-              <button type="submit" class="send-btn" id="sendChatBtn" aria-label="Kirim Pesan">➤</button>
+          <!-- WA Bottom Input Bar -->
+          <div class="wa-footer">
+            <form class="wa-input-bar" id="chatForm">
+              <div class="wa-input-pill">
+                <span class="wa-emoji-icon">😊</span>
+                <textarea id="chatInput" rows="1" placeholder="Ketik pesan..." required></textarea>
+              </div>
+              <button type="submit" class="wa-send-circle" id="sendChatBtn" aria-label="Kirim Pesan">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+                </svg>
+              </button>
             </form>
           </div>
         </div>

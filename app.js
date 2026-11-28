@@ -11,7 +11,7 @@
   const HEADER_META = {
     downloader: { icon: '📥', title: 'Media Downloader', sub: 'Fast Load & HD No-Watermark' },
     stalker: { icon: '🕵️', title: 'Profile Stalker', sub: 'Cek Profil TikTok & Twitter' },
-    ai: { icon: '🤖', title: 'AI Chat & Tools', sub: 'gptoss120b • glm47flash • metaai' },
+    ai: { icon: '💬', title: 'AI Chat (WA Mode)', sub: 'gptoss120b • glm47flash • metaai' },
     gacha: { icon: '🎰', title: 'Love Gacha & Match', sub: 'Spin Kartu & Cek Kecocokan' }
   };
 
@@ -24,16 +24,14 @@
     { rarity: 'N 23.5%', emoji: '🍀', title: 'Fokus Diri Sendiri', desc: 'Waktu terbaik untuk upgrade diri, istirahat cukup, dan nikmati me-time.' }
   ];
 
-  // State
-  let activeTab = 'downloader';
   let selectedDlPlatform = 'tiktok';
   let selectedStalkPlatform = 'tiktok';
   let currentVideoUrl = '';
+  let currentBlobUrl = '';
   let preferredModelIndex = 0;
   let chatHistory = [];
   let gachaCollection = [];
 
-  // DOM Helpers
   const $ = (id) => document.getElementById(id);
 
   function showToast(msg) {
@@ -41,7 +39,12 @@
     toast.textContent = msg;
     toast.classList.add('show');
     clearTimeout(showToast._timer);
-    showToast._timer = setTimeout(() => toast.classList.remove('show'), 2600);
+    showToast._timer = setTimeout(() => toast.classList.remove('show'), 2700);
+  }
+
+  function getNowTime() {
+    const d = new Date();
+    return d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
   }
 
   function formatNumber(num) {
@@ -53,7 +56,7 @@
     return n.toLocaleString('id-ID');
   }
 
-  async function fetchJsonWithTimeout(url, timeoutMs = 16000) {
+  async function fetchJsonWithTimeout(url, timeoutMs = 18000) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
     try {
@@ -93,8 +96,6 @@
 
   function switchTab(tab) {
     if (!HEADER_META[tab]) return;
-    activeTab = tab;
-
     document.querySelectorAll('.panel').forEach((p) => p.classList.toggle('active', p.id === `panel-${tab}`));
     document.querySelectorAll('.tab-pill').forEach((b) => b.classList.toggle('active', b.dataset.tab === tab));
     document.querySelectorAll('.nav-item').forEach((b) => b.classList.toggle('active', b.dataset.tab === tab));
@@ -103,6 +104,11 @@
     $('headerTitle').textContent = HEADER_META[tab].title;
     $('headerSubtitle').textContent = HEADER_META[tab].sub;
     setDrawerOpen(false);
+
+    if (tab === 'ai') {
+      const box = $('chatMessages');
+      setTimeout(() => { box.scrollTop = box.scrollHeight; }, 30);
+    }
   }
 
   function initNavigation() {
@@ -115,29 +121,80 @@
     });
   }
 
-  // 1. MEDIA DOWNLOADER
-  function extractMediaUrl(payload) {
-    if (!payload) return '';
-    const d = payload.data || payload.result || payload;
-    if (typeof d === 'string' && d.startsWith('http')) return d;
+  // =========================================================
+  // 1. MEDIA DOWNLOADER (FIXED PLAYBACK & DIRECT DOWNLOAD)
+  // =========================================================
+  function collectAllUrls(obj, found = []) {
+    if (!obj) return found;
+    if (typeof obj === 'string') {
+      if (obj.startsWith('http://') || obj.startsWith('https://')) {
+        found.push(obj);
+      }
+      return found;
+    }
+    if (Array.isArray(obj)) {
+      for (const item of obj) collectAllUrls(item, found);
+      return found;
+    }
+    if (typeof obj === 'object') {
+      // Prioritize non-watermark / hd keys first
+      const priorityKeys = [
+        'nowm', 'no_watermark', 'hd', 'video_hd', 'play', 'nwm_video_url',
+        'video', 'url', 'download_url', 'downloadUrl', 'mp4', 'wmplay'
+      ];
+      for (const k of priorityKeys) {
+        if (obj[k]) collectAllUrls(obj[k], found);
+      }
+      for (const k of Object.keys(obj)) {
+        if (!priorityKeys.includes(k)) collectAllUrls(obj[k], found);
+      }
+    }
+    return found;
+  }
 
-    const candidates = [
-      d.nowm, d.no_watermark, d.hd, d.video_hd, d.video, d.url, d.play, d.wmplay,
-      d.download_url, d.downloadUrl, d.mp4,
-      Array.isArray(d.urls) ? d.urls[0] : null,
-      Array.isArray(d.media) ? (d.media[0]?.url || d.media[0]) : null,
-      Array.isArray(d.videos) ? (d.videos[0]?.url || d.videos[0]) : null
-    ];
+  function pickBestVideoUrl(payload) {
+    const urls = collectAllUrls(payload);
+    // Filter out image/audio thumbnails when possible
+    const videoCandidates = urls.filter((u) => {
+      const lower = u.toLowerCase();
+      const isImage = /\.(jpg|jpeg|png|webp|gif)(\?|$)/.test(lower);
+      const isAudio = /\.(mp3|m4a|aac|wav)(\?|$)/.test(lower);
+      return !isImage && !isAudio;
+    });
+    return videoCandidates[0] || urls[0] || '';
+  }
 
-    for (const c of candidates) {
-      if (typeof c === 'string' && c.startsWith('http')) return c;
+  async function loadVideoIntoPlayer(videoUrl) {
+    const player = $('dlVideoPlayer');
+    const fallbackNote = $('playerFallbackNote');
+    fallbackNote.classList.add('hidden');
+    $('openTabVideoBtn').href = videoUrl;
+    $('dlOpenLinkBtn').href = videoUrl;
+
+    if (currentBlobUrl) {
+      URL.revokeObjectURL(currentBlobUrl);
+      currentBlobUrl = '';
     }
 
-    // Deep scan first mp4/http link
-    const rawStr = JSON.stringify(d);
-    const mp4Match = rawStr.match(/https?:\/\/[^"\s]+\.mp4[^"\s]*/i);
-    if (mp4Match) return mp4Match[0];
-    return '';
+    // Try fetching as Blob first to bypass hotlink/Referer blocks on TikTok CDN
+    try {
+      const res = await fetch(videoUrl, { referrerPolicy: 'no-referrer' });
+      if (res.ok) {
+        const blob = await res.blob();
+        if (blob.size > 10000) {
+          currentBlobUrl = URL.createObjectURL(blob);
+          player.src = currentBlobUrl;
+          player.load();
+          return;
+        }
+      }
+    } catch (e) {
+      console.warn('Blob preview skipped (CORS), using direct stream:', e.message);
+    }
+
+    // Direct stream fallback
+    player.src = videoUrl;
+    player.load();
   }
 
   function initDownloader() {
@@ -147,6 +204,13 @@
       douyin: 'https://v.douyin.com/...',
       facebook: 'https://www.facebook.com/watch/?v=...'
     };
+
+    const player = $('dlVideoPlayer');
+    player.addEventListener('error', () => {
+      if (currentVideoUrl) {
+        $('playerFallbackNote').classList.remove('hidden');
+      }
+    });
 
     document.querySelectorAll('#dlPlatformGrid .plat-btn').forEach((btn) => {
       btn.addEventListener('click', () => {
@@ -170,8 +234,8 @@
     });
 
     $('closeDlResultBtn').addEventListener('click', () => {
-      $('dlVideoPlayer').pause();
-      $('dlVideoPlayer').removeAttribute('src');
+      player.pause();
+      player.removeAttribute('src');
       $('dlResultCard').classList.add('hidden');
     });
 
@@ -182,6 +246,45 @@
         showToast('Link video langsung disalin!');
       } catch {
         showToast('Gagal menyalin link.');
+      }
+    });
+
+    $('dlDirectBtn').addEventListener('click', async () => {
+      if (!currentVideoUrl) return;
+      const btn = $('dlDirectBtn');
+      btn.disabled = true;
+      btn.textContent = '⏳ Mengunduh...';
+
+      try {
+        if (currentBlobUrl) {
+          const a = document.createElement('a');
+          a.href = currentBlobUrl;
+          a.download = `LoveHub_${selectedDlPlatform}_${Date.now()}.mp4`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          showToast('Download dimulai!');
+        } else {
+          const res = await fetch(currentVideoUrl, { referrerPolicy: 'no-referrer' });
+          if (!res.ok) throw new Error('Direct blob blocked');
+          const blob = await res.blob();
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `LoveHub_${selectedDlPlatform}_${Date.now()}.mp4`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 10000);
+          showToast('Download dimulai!');
+        }
+      } catch {
+        // Fallback: open direct video URL in new tab so browser native player downloads it
+        window.open(currentVideoUrl, '_blank', 'noopener,noreferrer');
+        showToast('Membuka video untuk disimpan...');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '⬇️ Download Video';
       }
     });
 
@@ -199,8 +302,8 @@
       const endpointMap = {
         capcut: [`/api/d/capcut?url=${encodeURIComponent(inputUrl)}`],
         tiktok: [
-          `/api/d/tiktok/v2?url=${encodeURIComponent(inputUrl)}`,
-          `/api/d/tiktok?url=${encodeURIComponent(inputUrl)}`
+          `/api/d/tiktok?url=${encodeURIComponent(inputUrl)}`,
+          `/api/d/tiktok/v2?url=${encodeURIComponent(inputUrl)}`
         ],
         douyin: [
           `/api/d/douyin?url=${encodeURIComponent(inputUrl)}`,
@@ -219,7 +322,7 @@
       for (const route of routes) {
         try {
           const json = await fetchJsonWithTimeout(`${API_BASE}${route}`, 18000);
-          mediaUrl = extractMediaUrl(json);
+          mediaUrl = pickBestVideoUrl(json?.data || json?.result || json);
           const d = json?.data || json?.result || {};
           if (d.title || d.desc || d.caption) {
             titleText = String(d.title || d.desc || d.caption).slice(0, 72);
@@ -234,21 +337,22 @@
       btn.textContent = '⬇️ Ambil Video Sekarang';
 
       if (!mediaUrl) {
-        showToast('Video gagal diambil. Cek link atau coba platform lain.');
+        showToast('Video gagal diambil. Cek link atau coba lagi.');
         return;
       }
 
       currentVideoUrl = mediaUrl;
       $('dlResultTitle').textContent = titleText;
-      $('dlResultMeta').textContent = `Platform: ${selectedDlPlatform.toUpperCase()} • 1 link video ditemukan`;
-      $('dlVideoPlayer').src = mediaUrl;
-      $('dlDirectBtn').href = mediaUrl;
+      $('dlResultMeta').textContent = `Platform: ${selectedDlPlatform.toUpperCase()} • Siap diputar & diunduh`;
       $('dlResultCard').classList.remove('hidden');
-      showToast('Video siap diputar & diunduh!');
+      await loadVideoIntoPlayer(mediaUrl);
+      showToast('Video berhasil dimuat!');
     });
   }
 
+  // =========================================================
   // 2. PROFILE STALKER
+  // =========================================================
   function initStalker() {
     document.querySelectorAll('#stalkPlatformGrid .plat-btn').forEach((btn) => {
       btn.addEventListener('click', () => {
@@ -354,23 +458,57 @@
     });
   }
 
-  // 3. AI CHAT WITH MULTI-ENDPOINT AUTO FALLBACK
-  function renderChat() {
-    const box = $('chatMessages');
-    box.innerHTML = chatHistory.map((m) => `
-      <div class="msg-bubble ${m.role}">
-        <div>${escapeHtml(m.text)}</div>
-        ${m.meta ? `<div class="msg-meta">${escapeHtml(m.meta)}</div>` : ''}
-      </div>
-    `).join('');
-    box.scrollTop = box.scrollHeight;
-  }
-
+  // =========================================================
+  // 3. AI CHAT (WHATSAPP BUBBLES + CLEAN MARKDOWN + FALLBACK)
+  // =========================================================
   function escapeHtml(str) {
     return String(str)
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;');
+  }
+
+  function formatWaMessageText(raw) {
+    let safe = escapeHtml(raw);
+    // Render **bold** cleanly without raw asterisks
+    safe = safe.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    // Render *italic* cleanly
+    safe = safe.replace(/(^|\s)\*([^*\n]+)\*(?=\s|$|[.,!?])/g, '$1<em>$2</em>');
+    return safe;
+  }
+
+  function renderChat() {
+    const box = $('chatMessages');
+    const headerPill = '<div class="wa-date-pill">Hari Ini • Enkripsi Lokal</div>';
+    const bubbles = chatHistory.map((m) => {
+      const timeStr = m.time || getNowTime();
+      if (m.role === 'user') {
+        return `
+          <div class="wa-row user">
+            <div class="wa-bubble">
+              <div class="wa-bubble-text">${formatWaMessageText(m.text)}</div>
+              <div class="wa-bubble-footer">
+                <span>${escapeHtml(timeStr)}</span>
+                <span class="wa-ticks">✓✓</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      return `
+        <div class="wa-row ai">
+          <div class="wa-bubble">
+            <div class="wa-bubble-text">${formatWaMessageText(m.text)}</div>
+            <div class="wa-bubble-footer">
+              <span>${escapeHtml(m.meta || 'AI')} • ${escapeHtml(timeStr)}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    box.innerHTML = headerPill + bubbles;
+    box.scrollTop = box.scrollHeight;
   }
 
   function extractAiReply(json) {
@@ -402,31 +540,37 @@
     return ordered;
   }
 
-  function updateAiModelLabel() {
+  function updateAiModelLabel(statusOverride = '') {
+    if (statusOverride) {
+      $('aiModelIndicator').textContent = statusOverride;
+      return;
+    }
     const ordered = getOrderedEndpoints();
-    $('aiModelIndicator').textContent = `Auto Fallback • ${ordered.map((e) => e.id).join(' → ')}`;
+    $('aiModelIndicator').textContent = `online • ${ordered.map((e) => e.id).join(' → ')}`;
   }
 
   async function sendPromptToAi(promptText) {
     const text = promptText.trim();
     if (!text) return;
 
-    chatHistory.push({ role: 'user', text });
+    chatHistory.push({ role: 'user', text, time: getNowTime() });
     renderChat();
 
     const sendBtn = $('sendChatBtn');
     sendBtn.disabled = true;
-    $('aiStatusText').textContent = 'Love Hub AI • Mengetik...';
 
     const ordered = getOrderedEndpoints();
     let replyText = '';
     let usedEndpoint = null;
 
+    // Instruct model to answer completely and naturally in Indonesian
+    const fullPrompt = `Jawab lengkap, jelas, ramah, dan tidak terpotong dalam bahasa Indonesia: ${text}`;
+
     for (const ep of ordered) {
       try {
-        $('aiStatusText').textContent = `Mencoba ${ep.id}...`;
-        const url = `${API_BASE}${ep.path}?prompt=${encodeURIComponent(text)}`;
-        const json = await fetchJsonWithTimeout(url, 18000);
+        updateAiModelLabel(`mengetik via ${ep.id}...`);
+        const url = `${API_BASE}${ep.path}?prompt=${encodeURIComponent(fullPrompt)}`;
+        const json = await fetchJsonWithTimeout(url, 22000);
         const extracted = extractAiReply(json);
         if (extracted) {
           replyText = extracted;
@@ -439,20 +583,21 @@
     }
 
     if (!replyText) {
-      replyText = 'Maaf, ketiga server AI (gptoss120b, glm47flash, metaai) sedang sibuk sesaat. Coba kirim ulang pertanyaanmu ya!';
-      usedEndpoint = { id: 'offline-fallback' };
+      replyText = 'Maaf, ketiga server AI (gptoss120b, glm47flash, metaai) sedang sibuk sesaat. Coba kirim ulang pesanmu ya!';
+      usedEndpoint = { id: 'offline' };
     }
 
     chatHistory.push({
       role: 'ai',
       text: replyText,
-      meta: `via ${usedEndpoint.id}`
+      meta: usedEndpoint.id,
+      time: getNowTime()
     });
-    localStorage.setItem('lovehub_chat', JSON.stringify(chatHistory.slice(-30)));
+    localStorage.setItem('lovehub_chat', JSON.stringify(chatHistory.slice(-40)));
     renderChat();
 
     sendBtn.disabled = false;
-    $('aiStatusText').textContent = `Love Hub AI • Siap (${usedEndpoint.id})`;
+    updateAiModelLabel();
   }
 
   function initAiChat() {
@@ -468,8 +613,9 @@
     if (chatHistory.length === 0) {
       chatHistory.push({
         role: 'ai',
-        text: 'Halo! 👋 Aku asisten AI di Love Hub. Bisa bantu cari ide, nulis caption, ngobrol santai, atau jawab apa aja. Mau tanya apa hari ini?',
-        meta: 'Auto Fallback Ready'
+        text: 'Halo! 👋 Aku asisten AI di Love Hub. Mau tanya apa hari ini? Bisa minta ide, caption TikTok, gombalan, atau ngobrol santai.',
+        meta: 'gptoss120b',
+        time: getNowTime()
       });
     }
 
@@ -485,8 +631,9 @@
     $('clearChatBtn').addEventListener('click', () => {
       chatHistory = [{
         role: 'ai',
-        text: 'Riwayat chat dibersihkan! Ada yang bisa kubantu sekarang? ✨',
-        meta: 'Reset'
+        text: 'Obrolan dibersihkan! Silakan ketik pesan baru ✨',
+        meta: 'ready',
+        time: getNowTime()
       }];
       localStorage.setItem('lovehub_chat', JSON.stringify(chatHistory));
       renderChat();
@@ -498,16 +645,24 @@
       });
     });
 
+    const chatInput = $('chatInput');
+    chatInput.addEventListener('input', () => {
+      chatInput.style.height = 'auto';
+      chatInput.style.height = Math.min(chatInput.scrollHeight, 96) + 'px';
+    });
+
     $('chatForm').addEventListener('submit', (e) => {
       e.preventDefault();
-      const input = $('chatInput');
-      const val = input.value;
-      input.value = '';
+      const val = chatInput.value;
+      chatInput.value = '';
+      chatInput.style.height = 'auto';
       sendPromptToAi(val);
     });
   }
 
+  // =========================================================
   // 4. LOVE GACHA & MATCH
+  // =========================================================
   function rollSingleCard() {
     const r = Math.random() * 100;
     if (r < 0.5) return GACHA_POOL[0];
