@@ -919,33 +919,58 @@
     const soundBtn = $('aboveSoundBtn');
     const soundIcon = $('aboveSoundIcon');
     const soundLabel = $('aboveSoundLabel');
+    const statusBadge = $('aboveVideoStatus');
     if (!vid) return;
 
     const url = 'https://files.catbox.moe/xf4qv0.mp4';
-    if (!vid.getAttribute('src')) {
-      vid.src = url;
-    }
+    let streamError = false;
 
     const syncSoundUI = () => {
       const isOn = !vid.muted && vid.volume > 0;
       if (soundIcon) soundIcon.textContent = isOn ? '🔊' : '🔇';
-      if (soundLabel) soundLabel.textContent = isOn ? 'Suara Aktif' : 'Tap Suara';
+      if (soundLabel) soundLabel.textContent = isOn ? 'Matikan Suara' : 'Aktifkan Suara';
       if (soundBtn) soundBtn.classList.toggle('unmuted', isOn);
+      if (statusBadge) {
+        if (streamError) {
+          statusBadge.textContent = '⚠️ Link Video Belum Dapat Dimuat';
+        } else {
+          statusBadge.textContent = isOn ? '🔊 Video Header • Audio Aktif' : '🎬 Video Header • Muted';
+        }
+      }
     };
 
-    const playMutedSafe = () => {
+    const tryStartMuted = () => {
       vid.muted = true;
       const p = vid.play();
       if (p && typeof p.catch === 'function') p.catch(() => {});
       syncSoundUI();
     };
 
-    playMutedSafe();
+    if (!vid.currentSrc) {
+      vid.src = url;
+      vid.load();
+    }
+    tryStartMuted();
 
-    const toggleHeaderAudio = async (e) => {
+    vid.addEventListener('loadedmetadata', () => {
+      streamError = false;
+      tryStartMuted();
+    });
+
+    vid.addEventListener('error', () => {
+      streamError = true;
+      syncSoundUI();
+    });
+
+    const toggleAudio = async (e) => {
       if (e) {
         e.preventDefault();
         e.stopPropagation();
+      }
+      if (streamError) {
+        streamError = false;
+        vid.src = url;
+        vid.load();
       }
       try {
         if (vid.muted) {
@@ -953,9 +978,10 @@
           vid.volume = 1.0;
           await vid.play();
           syncSoundUI();
-          showToast('Suara video aktif 🔊');
+          showToast('Suara video dinyalakan 🔊');
         } else {
           vid.muted = true;
+          await vid.play().catch(() => {});
           syncSoundUI();
           showToast('Suara video dimatikan 🔇');
         }
@@ -963,21 +989,21 @@
         vid.muted = true;
         await vid.play().catch(() => {});
         syncSoundUI();
+        showToast('Ketuk sekali lagi untuk mengaktifkan suara 🔊');
       }
     };
 
-    if (soundBtn) soundBtn.addEventListener('click', toggleHeaderAudio);
-    if (stage) stage.addEventListener('click', toggleHeaderAudio);
+    if (soundBtn) soundBtn.addEventListener('click', toggleAudio);
+    if (stage) stage.addEventListener('click', toggleAudio);
     vid.addEventListener('volumechange', syncSoundUI);
 
-    // Ensure playback starts smoothly on mobile if initial autoplay was deferred
-    const ensurePlayingOnTouch = () => {
-      if (vid.paused) {
+    const onFirstTouch = () => {
+      if (!streamError && vid.paused) {
         vid.play().catch(() => {});
       }
-      document.removeEventListener('pointerdown', ensurePlayingOnTouch);
+      document.removeEventListener('pointerdown', onFirstTouch);
     };
-    document.addEventListener('pointerdown', ensurePlayingOnTouch, { passive: true });
+    document.addEventListener('pointerdown', onFirstTouch, { passive: true });
 
     syncSoundUI();
   }

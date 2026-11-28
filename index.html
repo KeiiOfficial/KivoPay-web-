@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Love Hub v17 — Media Downloader, Profile Stalker, AI Chat & Love Gacha</title>
+  <title>Love Hub v18 — Media Downloader, Profile Stalker, AI Chat & Love Gacha</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -30,7 +30,7 @@
       <div class="brand-wrap">
         <div class="brand-logo pulse-glow">💖</div>
         <div>
-          <div class="brand-title">Love Hub v17</div>
+          <div class="brand-title">Love Hub v18</div>
           <div class="brand-sub">by Keii Official</div>
         </div>
       </div>
@@ -86,40 +86,45 @@
 
   <!-- Main App Shell -->
   <div class="app-shell">
-    <!-- Unified Video Banner + Header (Menyatu Tanpa Kotak Template) -->
-    <header class="unified-header glass-panel" id="unifiedHeader">
-      <div class="header-video-stage" id="headerVideoStage" title="Ketuk video untuk nyalakan / matikan suara">
-        <video id="aboveHeaderVideo" class="header-stage-video" src="https://files.catbox.moe/xf4qv0.mp4" autoplay loop muted playsinline preload="auto" referrerpolicy="no-referrer"></video>
-        <div class="header-video-gradient" aria-hidden="true"></div>
-        <button type="button" class="floating-sound-pill" id="aboveSoundBtn" aria-label="Aktifkan atau Matikan Suara">
-          <span id="aboveSoundIcon">🔇</span>
-          <span id="aboveSoundLabel">Tap Suara</span>
-        </button>
+    <!-- Video Banner di atas Header (Menyatu & Rapi) -->
+    <section class="top-video-strip" id="aboveHeaderVideoCard" aria-label="Video Header">
+      <div class="top-video-frame" id="headerVideoStage">
+        <video id="aboveHeaderVideo" class="top-video-el" autoplay loop muted playsinline preload="auto" referrerpolicy="no-referrer">
+          <source src="https://files.catbox.moe/xf4qv0.mp4" type="video/mp4" />
+        </video>
+        <div class="top-video-scrim" aria-hidden="true"></div>
+        <div class="top-video-overlay-bar">
+          <span class="top-video-badge" id="aboveVideoStatus">🎬 Video Header • Muted</span>
+          <button type="button" class="top-sound-btn" id="aboveSoundBtn">
+            <span id="aboveSoundIcon">🔇</span>
+            <span id="aboveSoundLabel">Aktifkan Suara</span>
+          </button>
+        </div>
       </div>
+    </section>
 
-      <div class="topbar-row">
-        <div class="topbar-left">
-          <button class="icon-btn" id="openDrawerBtn" aria-label="Buka Menu">☰</button>
-          <div class="topbar-brand">
-            <div class="topbar-logo pulse-glow" id="headerIcon">📥</div>
-            <div>
-              <h1 id="headerTitle">Media Downloader</h1>
-              <p id="headerSubtitle">Fast Load &amp; HD No-Watermark</p>
-            </div>
+    <header class="topbar glass-panel">
+      <div class="topbar-left">
+        <button class="icon-btn" id="openDrawerBtn" aria-label="Buka Menu">☰</button>
+        <div class="topbar-brand">
+          <div class="topbar-logo pulse-glow" id="headerIcon">📥</div>
+          <div>
+            <h1 id="headerTitle">Media Downloader</h1>
+            <p id="headerSubtitle">Fast Load &amp; HD No-Watermark</p>
           </div>
         </div>
+      </div>
 
-        <div class="topbar-actions">
-          <button class="icon-btn" id="bgVideoToggleBtn" title="Toggle Background Video Anime">
-            <span id="bgVideoIcon">🎬</span>
-          </button>
-          <button class="icon-btn" id="quickStatusBtn" title="Status Endpoint AI">
-            <span id="activeModelBadge" class="mini-badge">AI OK</span>
-          </button>
-          <button class="icon-btn" id="themeToggleBtn" title="Ganti Tema Gelap / Terang">
-            <span id="themeIcon">☀️</span>
-          </button>
-        </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" id="bgVideoToggleBtn" title="Toggle Background Video Anime">
+          <span id="bgVideoIcon">🎬</span>
+        </button>
+        <button class="icon-btn" id="quickStatusBtn" title="Status Endpoint AI">
+          <span id="activeModelBadge" class="mini-badge">AI OK</span>
+        </button>
+        <button class="icon-btn" id="themeToggleBtn" title="Ganti Tema Gelap / Terang">
+          <span id="themeIcon">☀️</span>
+        </button>
       </div>
     </header>
 
