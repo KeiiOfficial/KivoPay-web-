@@ -1,4 +1,4 @@
-# Love Hub v23 — by Keii Official
+# Love Hub v24 — by Keii Official
 
-- **Top Video Banner + Audio**: `https://files.catbox.moe/ngfcr9.mp4` + Web Audio synth
-- **Fullscreen Background Video**: `https://files.catbox.moe/ngfcr9.mp4` (toggle `🎬`)
+- **Top Video Banner (Single Audio Source)**: `https://files.catbox.moe/ngfcr9.mp4`
+- **Fullscreen Background Video (Always Muted)**: `https://files.catbox.moe/ngfcr9.mp4` (toggle `🎬`)

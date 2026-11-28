@@ -868,8 +868,19 @@
 
     const remoteVideoUrl = 'https://files.catbox.moe/ngfcr9.mp4';
 
+    video.defaultMuted = true;
+    video.muted = true;
+    video.volume = 0;
+    video.addEventListener('volumechange', () => {
+      if (!video.muted || video.volume !== 0) {
+        video.muted = true;
+        video.volume = 0;
+      }
+    });
+
     const tryPlay = () => {
       video.muted = true;
+      video.volume = 0;
       const p = video.play();
       if (p && typeof p.catch === 'function') p.catch(() => {});
     };
@@ -915,7 +926,6 @@
 
   function initAboveHeaderVideo() {
     const vid = $('aboveHeaderVideo');
-    const aud = $('headerAudioBackup');
     const stage = $('headerVideoStage');
     const soundBtn = $('aboveSoundBtn');
     const soundIcon = $('aboveSoundIcon');
@@ -924,61 +934,9 @@
     const fallbackMsg = $('headerFallbackMsg');
     if (!vid) return;
 
-    const primaryUrl = 'https://files.catbox.moe/ngfcr9.mp4';
-    const secondaryUrl = 'https://files.catbox.moe/ngfcr9.mp4';
-    let activeUrl = primaryUrl;
-    let triedSecondary = false;
+    const videoUrl = 'https://files.catbox.moe/ngfcr9.mp4';
     let streamError = false;
     let audioUnlocked = false;
-    let softChimeTimer = null;
-    let audioCtx = null;
-
-    const startSoftChime = () => {
-      if (softChimeTimer) return;
-      try {
-        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContextClass) return;
-        if (!audioCtx) audioCtx = new AudioContextClass();
-        if (audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
-
-        const playNote = (freq, delaySec, durSec) => {
-          if (!audioCtx || audioCtx.state !== 'running') return;
-          const now = audioCtx.currentTime + delaySec;
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq, now);
-          gain.gain.setValueAtTime(0.0001, now);
-          gain.gain.exponentialRampToValueAtTime(0.045, now + 0.04);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + durSec);
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-          osc.start(now);
-          osc.stop(now + durSec + 0.02);
-        };
-
-        playNote(523.25, 0, 0.45);
-        playNote(659.25, 0.16, 0.5);
-        playNote(783.99, 0.32, 0.65);
-
-        softChimeTimer = setInterval(() => {
-          if (!audioUnlocked) return;
-          if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
-          playNote(523.25, 0, 0.4);
-          playNote(659.25, 0.18, 0.45);
-        }, 4200);
-      } catch (_) {}
-    };
-
-    const stopSoftChime = () => {
-      if (softChimeTimer) {
-        clearInterval(softChimeTimer);
-        softChimeTimer = null;
-      }
-      if (audioCtx && audioCtx.state === 'running') {
-        audioCtx.suspend().catch(() => {});
-      }
-    };
 
     const hasRealVideoFrames = () => vid.readyState >= 2 && vid.videoWidth > 0 && !streamError;
 
@@ -989,7 +947,7 @@
         if (realFrames) {
           fallbackMsg.textContent = '';
         } else if (streamError) {
-          fallbackMsg.textContent = 'Stream video diblokir/tidak aktif di browser ini';
+          fallbackMsg.textContent = 'Stream video tidak aktif di browser ini';
         } else {
           fallbackMsg.textContent = 'Memuat video header…';
         }
@@ -1001,32 +959,20 @@
 
       if (statusBadge) {
         if (audioUnlocked) {
-          statusBadge.textContent = realFrames
-            ? '🔊 Video Header • Audio Aktif'
-            : '🔊 Suara Aktif • Video Tidak Aktif';
+          statusBadge.textContent = '🔊 Video Header • Audio Aktif';
         } else {
           statusBadge.textContent = realFrames
             ? '🎬 Video Header • Muted'
-            : '⚠️ Video Tidak Aktif • Tap Suara';
+            : '🎬 Video Header • Memuat';
         }
       }
     };
 
-    const loadMediaUrl = (targetUrl) => {
-      activeUrl = targetUrl;
-      vid.src = targetUrl;
-      vid.muted = true;
-      vid.load();
-      const p = vid.play();
-      if (p && typeof p.catch === 'function') p.catch(() => {});
-
-      if (aud) {
-        aud.src = targetUrl;
-        aud.load();
-      }
-    };
-
-    loadMediaUrl(primaryUrl);
+    vid.src = videoUrl;
+    vid.muted = true;
+    vid.load();
+    const initialPlay = vid.play();
+    if (initialPlay && typeof initialPlay.catch === 'function') initialPlay.catch(() => {});
     syncUI();
 
     vid.addEventListener('loadeddata', () => {
@@ -1043,23 +989,9 @@
     });
 
     vid.addEventListener('error', () => {
-      if (!triedSecondary && activeUrl !== secondaryUrl) {
-        triedSecondary = true;
-        loadMediaUrl(secondaryUrl);
-        syncUI();
-        return;
-      }
       streamError = true;
       syncUI();
     });
-
-    setTimeout(() => {
-      if (!hasRealVideoFrames() && !triedSecondary && activeUrl !== secondaryUrl) {
-        triedSecondary = true;
-        loadMediaUrl(secondaryUrl);
-      }
-      syncUI();
-    }, 1800);
 
     const toggleAudio = async (e) => {
       if (e) {
@@ -1071,33 +1003,14 @@
         audioUnlocked = true;
         vid.muted = false;
         vid.volume = 1.0;
-
-        let mediaSoundStarted = false;
         try {
           await vid.play();
-          if (!vid.muted && !vid.paused && vid.readyState >= 2) mediaSoundStarted = true;
         } catch (_) {}
-
-        if (aud) {
-          try {
-            aud.muted = false;
-            aud.volume = 1.0;
-            await aud.play();
-            if (!aud.paused && aud.readyState >= 2) mediaSoundStarted = true;
-          } catch (_) {}
-        }
-
-        startSoftChime();
         syncUI();
-        showToast(mediaSoundStarted ? 'Suara video aktif 🔊' : 'Suara aktif 🔊');
+        showToast('Suara video header aktif 🔊');
       } else {
         audioUnlocked = false;
         vid.muted = true;
-        if (aud) {
-          aud.pause();
-          aud.muted = true;
-        }
-        stopSoftChime();
         syncUI();
         showToast('Suara dimatikan 🔇');
       }
