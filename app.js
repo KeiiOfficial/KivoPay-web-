@@ -11,8 +11,9 @@
   const HEADER_META = {
     downloader: { icon: '📥', title: 'Media Downloader', sub: 'Fast Load & HD No-Watermark' },
     stalker: { icon: '🕵️', title: 'Profile Stalker', sub: 'Cek Profil TikTok & Twitter' },
-    ai: { icon: '💬', title: 'AI Chat (WA Mode)', sub: 'gptoss120b • glm47flash • metaai' },
-    gacha: { icon: '🎰', title: 'Love Gacha & Match', sub: 'Spin Kartu & Cek Kecocokan' }
+    ai: { icon: '💬', title: 'AI Chat', sub: 'Jawaban Singkat & Lengkap' },
+    gacha: { icon: '🎰', title: 'Love Gacha & Match', sub: 'Spin Kartu & Cek Kecocokan' },
+    faq: { icon: '❓', title: 'FAQ & Developer', sub: 'Developer: Keii Official' }
   };
 
   const GACHA_POOL = [
@@ -39,6 +40,39 @@
     toast.classList.add('show');
     clearTimeout(showToast._timer);
     showToast._timer = setTimeout(() => toast.classList.remove('show'), 2800);
+  }
+
+  function spawnConfettiBurst() {
+    const layer = $('confettiLayer');
+    if (!layer) return;
+    const icons = ['💖', '✨', '💘', '🌸', '💫', '🌹'];
+    for (let i = 0; i < 18; i++) {
+      const el = document.createElement('span');
+      el.className = 'confetti-piece';
+      el.textContent = icons[i % icons.length];
+      el.style.left = `${45 + (Math.random() * 14 - 7)}%`;
+      el.style.top = '44%';
+      el.style.setProperty('--dx', `${Math.round(Math.random() * 260 - 130)}px`);
+      el.style.setProperty('--dy', `${Math.round(Math.random() * 260 - 150)}px`);
+      el.style.setProperty('--rot', `${Math.round(Math.random() * 360 - 180)}deg`);
+      layer.appendChild(el);
+      setTimeout(() => el.remove(), 1400);
+    }
+  }
+
+  function initAmbientParticles() {
+    const container = $('floatingParticles');
+    if (!container) return;
+    const glyphs = ['✨', '💗', '💫', '🌸'];
+    for (let i = 0; i < 10; i++) {
+      const span = document.createElement('span');
+      span.className = 'ambient-dot';
+      span.textContent = glyphs[i % glyphs.length];
+      span.style.left = `${(i * 10 + 4) % 96}%`;
+      span.style.animationDuration = `${12 + (i % 6) * 2}s`;
+      span.style.animationDelay = `${-(i * 1.7)}s`;
+      container.appendChild(span);
+    }
   }
 
   function getNowTime() {
@@ -278,6 +312,39 @@
       let mediaUrl = '';
       let coverUrl = '';
       let titleText = `Video ${selectedDlPlatform.toUpperCase()}`;
+      let creatorName = '';
+      let creatorHandle = '';
+      let creatorAvatar = '';
+      let viewsCount = null;
+      let likesCount = null;
+      let commentsCount = null;
+
+      function applyMetadataFromPayload(payload) {
+        if (!payload || typeof payload !== 'object') return;
+        const author = payload.author || payload.creator || payload.user || payload.uploader || {};
+        if (!creatorName) {
+          creatorName = author.nickname || author.name || payload.author_name || payload.nickname || '';
+        }
+        if (!creatorHandle) {
+          const rawHandle = author.unique_id || author.uniqueId || author.username || payload.author_username || '';
+          if (rawHandle) creatorHandle = `@${String(rawHandle).replace(/^@+/, '')}`;
+        }
+        if (!creatorAvatar) {
+          creatorAvatar = author.avatar || author.avatar_thumb || author.avatarLarger || '';
+        }
+        if (viewsCount === null) {
+          const v = payload.play_count ?? payload.view_count ?? payload.views ?? payload.stats?.playCount;
+          if (v !== undefined && v !== null) viewsCount = v;
+        }
+        if (likesCount === null) {
+          const l = payload.digg_count ?? payload.like_count ?? payload.likes ?? payload.stats?.diggCount;
+          if (l !== undefined && l !== null) likesCount = l;
+        }
+        if (commentsCount === null) {
+          const c = payload.comment_count ?? payload.comments ?? payload.stats?.commentCount;
+          if (c !== undefined && c !== null) commentsCount = c;
+        }
+      }
 
       if (selectedDlPlatform === 'tiktok' || selectedDlPlatform === 'douyin') {
         try {
@@ -287,13 +354,14 @@
             mediaUrl = json.data.hdplay || json.data.play || json.data.wmplay || '';
             coverUrl = json.data.cover || json.data.origin_cover || '';
             if (json.data.title) titleText = String(json.data.title).slice(0, 72);
+            applyMetadataFromPayload(json.data);
           }
         } catch (e) {
           console.warn('TikWM fallback to Siputzx:', e.message);
         }
       }
 
-      if (!mediaUrl) {
+      if (!mediaUrl || (selectedDlPlatform === 'tiktok' && (!creatorHandle || viewsCount === null))) {
         const endpointMap = {
           capcut: [`${API_BASE}/api/d/capcut?url=${encodeURIComponent(inputUrl)}`],
           tiktok: [
@@ -315,9 +383,12 @@
           try {
             const json = await fetchJsonSmart(fullUrl, 18000);
             const payload = json?.data || json?.result || json;
-            mediaUrl = pickBestVideoUrl(payload);
-            if (payload?.cover || payload?.thumbnail) coverUrl = payload.cover || payload.thumbnail;
-            if (payload?.title || payload?.desc) titleText = String(payload.title || payload.desc).slice(0, 72);
+            if (!mediaUrl) mediaUrl = pickBestVideoUrl(payload);
+            if (!coverUrl && (payload?.cover || payload?.thumbnail)) coverUrl = payload.cover || payload.thumbnail;
+            if ((payload?.title || payload?.desc) && titleText === `Video ${selectedDlPlatform.toUpperCase()}`) {
+              titleText = String(payload.title || payload.desc).slice(0, 72);
+            }
+            applyMetadataFromPayload(payload);
             if (mediaUrl) break;
           } catch (err) {
             console.warn('Downloader route failed:', fullUrl);
@@ -336,6 +407,24 @@
       currentVideoUrl = mediaUrl;
       $('dlResultTitle').textContent = titleText || `Video ${selectedDlPlatform.toUpperCase()}`;
       $('dlResultMeta').textContent = `Platform: ${selectedDlPlatform.toUpperCase()} • HD No-Watermark`;
+
+      if (creatorName || creatorHandle || viewsCount !== null || likesCount !== null) {
+        $('dlCreatorBox').classList.remove('hidden');
+        $('dlCreatorName').textContent = creatorName || creatorHandle || 'Kreator TikTok';
+        $('dlCreatorHandle').textContent = creatorHandle || 'Akun Kreator';
+        if (creatorAvatar) {
+          $('dlCreatorAvatar').src = creatorAvatar;
+          $('dlCreatorAvatar').classList.remove('hidden');
+        } else {
+          $('dlCreatorAvatar').classList.add('hidden');
+        }
+        $('dlViewsCount').textContent = formatNumber(viewsCount ?? 0);
+        $('dlLikesCount').textContent = formatNumber(likesCount ?? 0);
+        $('dlCommentsCount').textContent = formatNumber(commentsCount ?? 0);
+      } else {
+        $('dlCreatorBox').classList.add('hidden');
+      }
+
       $('dlResultCard').classList.remove('hidden');
       showMediaPreview(mediaUrl, coverUrl);
       showToast('Video berhasil dimuat!');
@@ -459,9 +548,49 @@
 
   function formatWaMessageText(raw) {
     let safe = escapeHtml(raw);
+    safe = safe.replace(/^#{1,4}\s*(.+)$/gm, '<strong>$1</strong>');
+    safe = safe.replace(/^---$/gm, '');
+    safe = safe.replace(/\|---[^|\n]*\|/g, '');
     safe = safe.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
     safe = safe.replace(/(^|\s)\*([^*\n]+)\*(?=\s|$|[.,!?])/g, '$1<em>$2</em>');
+    safe = safe.replace(/\n{3,}/g, '\n\n').trim();
     return safe;
+  }
+
+  function isLikelyTruncated(text) {
+    if (!text) return false;
+    const trimmed = text.trim();
+    if (trimmed.length < 120) return false;
+    const endsCleanly = /[.!?…💖💘✨😊🌹💌☕🍀"]$|[\u{1F300}-\u{1FAFF}]$/u.test(trimmed);
+    const endsMidWordOrClause = /(membayangkan|dan|atau|yang|untuk|dengan|seperti|karena|kalau|jika|saat|di|ke|dari|pada|itu|ini|bisa|akan|sangat|lebih|salah|satu|buat|pakai|kamu|aku|dia|mereka|kita|,|-|:|\|)$/i.test(trimmed);
+    return !endsCleanly || endsMidWordOrClause;
+  }
+
+  function extractAiReply(json) {
+    if (!json) return '';
+    if (typeof json === 'string') return json.trim();
+    const candidates = [
+      json.data,
+      json.result,
+      json.response,
+      json.reply,
+      json.message,
+      json.answer,
+      json.data?.response,
+      json.data?.result,
+      json.data?.text,
+      json.result?.response
+    ];
+    for (const c of candidates) {
+      if (typeof c === 'string' && c.trim()) return c.trim();
+    }
+    return '';
+  }
+
+  async function callSingleEndpoint(ep, promptStr, timeoutMs = 24000) {
+    const url = `${API_BASE}${ep.path}?prompt=${encodeURIComponent(promptStr)}`;
+    const json = await fetchJsonSmart(url, timeoutMs);
+    return extractAiReply(json);
   }
 
   function renderChat() {
@@ -498,27 +627,6 @@
     box.scrollTop = box.scrollHeight;
   }
 
-  function extractAiReply(json) {
-    if (!json) return '';
-    if (typeof json === 'string') return json.trim();
-    const candidates = [
-      json.data,
-      json.result,
-      json.response,
-      json.reply,
-      json.message,
-      json.answer,
-      json.data?.response,
-      json.data?.result,
-      json.data?.text,
-      json.result?.response
-    ];
-    for (const c of candidates) {
-      if (typeof c === 'string' && c.trim()) return c.trim();
-    }
-    return '';
-  }
-
   function getOrderedEndpoints() {
     const ordered = [];
     for (let i = 0; i < AI_ENDPOINTS.length; i++) {
@@ -550,17 +658,29 @@
     let replyText = '';
     let usedEndpoint = null;
 
-    const fullPrompt = `Jawab lengkap, jelas, ramah, dan tidak terpotong dalam bahasa Indonesia: ${text}`;
+    const fullPrompt = `Jawab sangat singkat, padat, langsung ke inti (maksimal 3-4 kalimat atau 3 poin pendek, tanpa tabel, dan pastikan selesai penuh tanpa terpotong) dalam bahasa Indonesia: ${text}`;
 
     for (const ep of ordered) {
       try {
         updateAiModelLabel(`mengetik via ${ep.id}...`);
-        const url = `${API_BASE}${ep.path}?prompt=${encodeURIComponent(fullPrompt)}`;
-        const json = await fetchJsonSmart(url, 22000);
-        const extracted = extractAiReply(json);
+        const extracted = await callSingleEndpoint(ep, fullPrompt, 24000);
         if (extracted) {
           replyText = extracted;
           usedEndpoint = ep;
+
+          if (isLikelyTruncated(replyText)) {
+            try {
+              updateAiModelLabel(`melanjutkan via ${ep.id}...`);
+              const tail = replyText.slice(-140);
+              const contPrompt = `Lanjutkan kalimat terakhir berikut sampai benar-benar selesai tanpa mengulang dari awal: "${tail}"`;
+              const extra = await callSingleEndpoint(ep, contPrompt, 20000);
+              if (extra && extra.length > 5) {
+                replyText = `${replyText.trim()} ${extra.trim()}`;
+              }
+            } catch (contErr) {
+              console.warn('Auto-continue gagal:', contErr.message);
+            }
+          }
           break;
         }
       } catch (err) {
@@ -579,7 +699,7 @@
       meta: usedEndpoint.id,
       time: getNowTime()
     });
-    localStorage.setItem('lovehub_chat_v7', JSON.stringify(chatHistory.slice(-40)));
+    localStorage.setItem('lovehub_chat_v11', JSON.stringify(chatHistory.slice(-40)));
     renderChat();
 
     sendBtn.disabled = false;
@@ -588,7 +708,7 @@
 
   function initAiChat() {
     try {
-      const saved = JSON.parse(localStorage.getItem('lovehub_chat_v7') || '[]');
+      const saved = JSON.parse(localStorage.getItem('lovehub_chat_v11') || '[]');
       if (Array.isArray(saved) && saved.length) chatHistory = saved;
     } catch {
       chatHistory = [];
@@ -619,7 +739,7 @@
         meta: 'ready',
         time: getNowTime()
       }];
-      localStorage.setItem('lovehub_chat_v7', JSON.stringify(chatHistory));
+      localStorage.setItem('lovehub_chat_v11', JSON.stringify(chatHistory));
       renderChat();
     });
 
@@ -669,12 +789,21 @@
       gachaCollection.unshift(latest);
     }
     gachaCollection = gachaCollection.slice(0, 40);
-    localStorage.setItem('lovehub_gacha_v7', JSON.stringify(gachaCollection));
+    localStorage.setItem('lovehub_gacha_v11', JSON.stringify(gachaCollection));
+
+    const cardBox = $('gachaCardBox');
+    cardBox.classList.remove('spinning');
+    void cardBox.offsetWidth;
+    cardBox.classList.add('spinning');
 
     $('gachaRarity').textContent = latest.rarity;
     $('gachaEmoji').textContent = latest.emoji;
     $('gachaCardTitle').textContent = latest.title;
     $('gachaCardDesc').textContent = latest.desc;
+
+    if (latest.rarity.startsWith('MYTHIC') || latest.rarity.startsWith('UR') || latest.rarity.startsWith('SSR')) {
+      spawnConfettiBurst();
+    }
 
     renderGachaInventory();
     showToast(count > 1 ? `Berhasil Spin ${count}x! Dapat ${latest.title}` : `Dapat kartu: ${latest.title}!`);
@@ -682,7 +811,7 @@
 
   function initGacha() {
     try {
-      const saved = JSON.parse(localStorage.getItem('lovehub_gacha_v7') || '[]');
+      const saved = JSON.parse(localStorage.getItem('lovehub_gacha_v11') || '[]');
       if (Array.isArray(saved)) gachaCollection = saved;
     } catch {
       gachaCollection = [];
@@ -693,7 +822,7 @@
     $('spinMultiBtn').addEventListener('click', () => performSpin(5));
     $('clearGachaBtn').addEventListener('click', () => {
       gachaCollection = [];
-      localStorage.removeItem('lovehub_gacha_v7');
+      localStorage.removeItem('lovehub_gacha_v11');
       renderGachaInventory();
       showToast('Koleksi gacha direset.');
     });
@@ -718,6 +847,7 @@
       if (score >= 88) {
         verdict = 'Soulmate Tingkat Tinggi! 💖';
         desc = 'Chemistry luar biasa! Cocok banget buat jangka panjang tanpa banyak drama.';
+        spawnConfettiBurst();
       } else if (score >= 70) {
         verdict = 'Kombinasi Manis ✨';
         desc = 'Tinggal jaga komunikasi terbuka, hubungan kalian bakal makin solid.';
@@ -730,6 +860,7 @@
   }
 
   // Boot
+  initAmbientParticles();
   initTheme();
   initNavigation();
   initDownloader();

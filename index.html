@@ -3,26 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Love Hub v7 — Media Downloader, Profile Stalker, AI Chat & Love Gacha</title>
+  <title>Love Hub v11 — Media Downloader, Profile Stalker, AI Chat & Love Gacha</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="bg-grid" aria-hidden="true"></div>
   <div class="bg-glow bg-glow-1" aria-hidden="true"></div>
   <div class="bg-glow bg-glow-2" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow-3" aria-hidden="true"></div>
+  <div class="floating-particles" id="floatingParticles" aria-hidden="true"></div>
+  <div class="confetti-layer" id="confettiLayer" aria-hidden="true"></div>
 
   <!-- Sidebar Drawer -->
   <div class="drawer-backdrop" id="drawerBackdrop"></div>
   <aside class="sidebar-drawer" id="sidebarDrawer" aria-label="Navigasi Utama">
     <div class="drawer-header">
       <div class="brand-wrap">
-        <div class="brand-logo">💖</div>
+        <div class="brand-logo pulse-glow">💖</div>
         <div>
-          <div class="brand-title">Love Hub v7</div>
-          <div class="brand-sub">All-in-One Tools &amp; AI</div>
+          <div class="brand-title">Love Hub v11</div>
+          <div class="brand-sub">by Keii Official</div>
         </div>
       </div>
       <button class="icon-btn" id="closeDrawerBtn" aria-label="Tutup Menu">✕</button>
@@ -47,8 +49,8 @@
       <button class="nav-item" data-tab="ai">
         <span class="nav-icon">💬</span>
         <div class="nav-text">
-          <strong>AI Chat (WA Style)</strong>
-          <small>gptoss120b • glm47flash • metaai</small>
+          <strong>AI Chat</strong>
+          <small>Asisten Chat Singkat &amp; Jelas</small>
         </div>
       </button>
       <button class="nav-item" data-tab="gacha">
@@ -56,6 +58,13 @@
         <div class="nav-text">
           <strong>Love Gacha &amp; Match</strong>
           <small>Spin Kartu, Nasib &amp; Cek Kecocokan</small>
+        </div>
+      </button>
+      <button class="nav-item" data-tab="faq">
+        <span class="nav-icon">❓</span>
+        <div class="nav-text">
+          <strong>FAQ &amp; Developer</strong>
+          <small>Info Aplikasi &amp; Keii Official</small>
         </div>
       </button>
     </nav>
@@ -70,11 +79,11 @@
 
   <!-- Main App Shell -->
   <div class="app-shell">
-    <header class="topbar">
+    <header class="topbar glass-panel">
       <div class="topbar-left">
         <button class="icon-btn" id="openDrawerBtn" aria-label="Buka Menu">☰</button>
         <div class="topbar-brand">
-          <div class="topbar-logo" id="headerIcon">📥</div>
+          <div class="topbar-logo pulse-glow" id="headerIcon">📥</div>
           <div>
             <h1 id="headerTitle">Media Downloader</h1>
             <p id="headerSubtitle">Fast Load &amp; HD No-Watermark</p>
@@ -96,20 +105,21 @@
       <button class="tab-pill active" data-tab="downloader" role="tab">📥 Downloader</button>
       <button class="tab-pill" data-tab="stalker" role="tab">🕵️ Stalker</button>
       <button class="tab-pill" data-tab="ai" role="tab">💬 AI Chat</button>
-      <button class="tab-pill" data-tab="gacha" role="tab">🎰 Love Gacha</button>
+      <button class="tab-pill" data-tab="gacha" role="tab">🎰 Gacha</button>
+      <button class="tab-pill" data-tab="faq" role="tab">❓ FAQ</button>
     </div>
 
     <main class="main-content">
 
       <!-- 1. MEDIA DOWNLOADER -->
       <section class="panel active" id="panel-downloader">
-        <div class="card hero-card">
+        <div class="card hero-card glass-panel">
           <div class="badge-row">
             <span class="pill-badge pink">📥 MEDIA DOWNLOADER</span>
             <span class="pill-badge cyan">Multi-Server Anti-Error</span>
           </div>
           <h2>Download Video CapCut, TikTok, Douyin &amp; Facebook</h2>
-          <p class="muted">Tempel link video di bawah. Mendukung pemutar langsung + tombol unduh HD tanpa watermark.</p>
+          <p class="muted">Tempel link video di bawah. Mendukung pemutar langsung + info kreator, views, like, dan unduh HD tanpa watermark.</p>
 
           <div class="platform-grid" id="dlPlatformGrid">
             <button class="plat-btn" data-platform="capcut">✂️ CapCut</button>
@@ -123,18 +133,42 @@
             <button class="btn-secondary" id="pasteDlBtn" type="button">📋 Paste</button>
           </div>
 
-          <button class="btn-primary full-width" id="fetchVideoBtn" type="button">
+          <button class="btn-primary shimmer-btn full-width" id="fetchVideoBtn" type="button">
             ⬇️ Ambil Video Sekarang
           </button>
         </div>
 
-        <div class="card result-card hidden" id="dlResultCard">
+        <div class="card result-card glass-panel pop-in hidden" id="dlResultCard">
           <div class="result-header">
             <div>
               <h3 id="dlResultTitle">Video TIKTOK</h3>
               <p class="muted small" id="dlResultMeta">Platform: TIKTOK • Siap diunduh</p>
             </div>
             <button class="text-danger-btn" id="closeDlResultBtn" type="button">Tutup</button>
+          </div>
+
+          <div class="dl-creator-box hidden" id="dlCreatorBox">
+            <div class="dl-creator-top">
+              <img id="dlCreatorAvatar" src="" alt="Foto Kreator" class="dl-creator-avatar hidden" referrerpolicy="no-referrer" />
+              <div class="dl-creator-meta">
+                <strong id="dlCreatorName">Nama Kreator</strong>
+                <span class="muted small" id="dlCreatorHandle">@username</span>
+              </div>
+            </div>
+            <div class="dl-stats-row">
+              <div class="dl-stat-pill">
+                <strong id="dlViewsCount">0</strong>
+                <span>👁️ Views</span>
+              </div>
+              <div class="dl-stat-pill">
+                <strong id="dlLikesCount">0</strong>
+                <span>❤️ Likes</span>
+              </div>
+              <div class="dl-stat-pill">
+                <strong id="dlCommentsCount">0</strong>
+                <span>💬 Komentar</span>
+              </div>
+            </div>
           </div>
 
           <div class="media-preview-box">
@@ -144,12 +178,12 @@
               <p class="muted small" style="margin-bottom: 10px;">
                 Video berhasil ditemukan! Klik tombol di bawah untuk memutar atau menyimpan video ke galeri.
               </p>
-              <a class="btn-primary" id="openTabVideoBtn" href="#" target="_blank" rel="noopener noreferrer">▶️ Putar / Simpan Video</a>
+              <a class="btn-primary shimmer-btn" id="openTabVideoBtn" href="#" target="_blank" rel="noopener noreferrer">▶️ Putar / Simpan Video</a>
             </div>
           </div>
 
           <div class="result-actions">
-            <button class="btn-primary" id="dlDirectBtn" type="button">⬇️ Download Video</button>
+            <button class="btn-primary shimmer-btn" id="dlDirectBtn" type="button">⬇️ Download Video</button>
             <a class="btn-secondary" id="dlOpenLinkBtn" href="#" target="_blank" rel="noopener noreferrer">🔗 Link Langsung</a>
             <button class="btn-secondary" id="copyDlLinkBtn" type="button">📋 Salin Link</button>
           </div>
@@ -158,7 +192,7 @@
 
       <!-- 2. PROFILE STALKER -->
       <section class="panel" id="panel-stalker">
-        <div class="card hero-card">
+        <div class="card hero-card glass-panel">
           <div class="badge-row">
             <span class="pill-badge pink">🕵️ PROFILE STALKER</span>
             <span class="pill-badge cyan">Multi-Source Fallback</span>
@@ -173,11 +207,11 @@
 
           <div class="input-action-row">
             <input type="text" id="stalkUserInput" placeholder="Contoh: manzz_xy1" autocomplete="off" />
-            <button class="btn-primary" id="checkProfileBtn" type="button">🔍 Cek Profil</button>
+            <button class="btn-primary shimmer-btn" id="checkProfileBtn" type="button">🔍 Cek Profil</button>
           </div>
         </div>
 
-        <div class="card result-card hidden" id="stalkResultCard">
+        <div class="card result-card glass-panel pop-in hidden" id="stalkResultCard">
           <div class="result-header">
             <div>
               <h3 id="stalkHeaderName">Profil Ditemukan</h3>
@@ -217,7 +251,7 @@
         </div>
       </section>
 
-      <!-- 3. AI CHAT (WHATSAPP LAYOUT) -->
+      <!-- 3. AI CHAT -->
       <section class="panel" id="panel-ai">
         <div class="wa-container">
           <div class="wa-header">
@@ -241,9 +275,9 @@
           </div>
 
           <div class="wa-quick-bar">
-            <button class="chip-btn" data-prompt="Kasih 5 ide nge-date yang seru tapi hemat budget">💡 Ide Nge-date</button>
-            <button class="chip-btn" data-prompt="Buatin 5 gombalan maut yang lucu dan nggak garing">💘 Gombalan</button>
-            <button class="chip-btn" data-prompt="Buatin 5 caption TikTok estetik yang FYP">🎬 Caption TikTok</button>
+            <button class="chip-btn" data-prompt="Kasih 3 ide nge-date yang seru tapi hemat budget">💡 Ide Nge-date</button>
+            <button class="chip-btn" data-prompt="Buatin 3 gombalan maut yang lucu dan nggak garing">💘 Gombalan</button>
+            <button class="chip-btn" data-prompt="Buatin 3 caption TikTok estetik yang FYP">🎬 Caption TikTok</button>
             <button class="chip-btn" data-prompt="Kasih 1 fun fact unik tentang cinta dan psikologi">✨ Fun Fact</button>
           </div>
 
@@ -267,7 +301,7 @@
 
       <!-- 4. LOVE GACHA & MATCH -->
       <section class="panel" id="panel-gacha">
-        <div class="card hero-card">
+        <div class="card hero-card glass-panel">
           <div class="badge-row">
             <span class="pill-badge pink">🎰 LOVE GACHA &amp; MATCH</span>
             <span class="pill-badge cyan">SSR / UR / Mythic</span>
@@ -277,6 +311,7 @@
 
           <div class="gacha-stage">
             <div class="gacha-card-preview" id="gachaCardBox">
+              <div class="gacha-shine" aria-hidden="true"></div>
               <div class="gacha-rarity" id="gachaRarity">SIAP SPIN</div>
               <div class="gacha-emoji" id="gachaEmoji">💝</div>
               <h3 id="gachaCardTitle">Kartu Takdir Cinta</h3>
@@ -285,22 +320,22 @@
           </div>
 
           <div class="gacha-btn-row">
-            <button class="btn-primary" id="spinSingleBtn" type="button">🎲 Spin 1x Gratis</button>
+            <button class="btn-primary shimmer-btn" id="spinSingleBtn" type="button">🎲 Spin 1x Gratis</button>
             <button class="btn-secondary" id="spinMultiBtn" type="button">✨ Spin 5x Combo</button>
           </div>
         </div>
 
-        <div class="card">
+        <div class="card glass-panel">
           <h3>💘 Kalkulator Kecocokan Nama</h3>
           <p class="muted small">Masukkan dua nama untuk melihat skor chemistry dan ramalan singkat.</p>
           <div class="match-inputs">
             <input type="text" id="nameOneInput" placeholder="Nama Kamu" />
-            <span class="heart-divider">❤️</span>
+            <span class="heart-divider beat-heart">❤️</span>
             <input type="text" id="nameTwoInput" placeholder="Nama Dia" />
           </div>
-          <button class="btn-primary full-width" id="calcMatchBtn" type="button">💞 Hitung Kecocokan</button>
+          <button class="btn-primary shimmer-btn full-width" id="calcMatchBtn" type="button">💞 Hitung Kecocokan</button>
 
-          <div class="match-result hidden" id="matchResultBox">
+          <div class="match-result pop-in hidden" id="matchResultBox">
             <div class="match-score-circle">
               <strong id="matchScoreText">0%</strong>
             </div>
@@ -309,7 +344,7 @@
           </div>
         </div>
 
-        <div class="card">
+        <div class="card glass-panel">
           <div class="result-header">
             <h3>🗂️ Koleksi Kartu Gacha (<span id="gachaCount">0</span>)</h3>
             <button class="text-danger-btn" id="clearGachaBtn" type="button">Reset</button>
@@ -317,6 +352,50 @@
           <div class="gacha-inventory" id="gachaInventory">
             <p class="muted small">Belum ada kartu yang didapat. Yuk spin dulu!</p>
           </div>
+        </div>
+      </section>
+
+      <!-- 5. FAQ & DEVELOPER -->
+      <section class="panel" id="panel-faq">
+        <div class="card hero-card glass-panel">
+          <div class="badge-row">
+            <span class="pill-badge pink">❓ FAQ &amp; INFO</span>
+            <span class="pill-badge cyan">Developer: Keii Official</span>
+          </div>
+          <h2>Pertanyaan Umum (FAQ)</h2>
+          <p class="muted">Informasi seputar penggunaan aplikasi web ini, fitur yang tersedia, dan identitas pengembang.</p>
+        </div>
+
+        <div class="card faq-list glass-panel">
+          <details class="faq-accordion" open>
+            <summary>Siapa developer aplikasi ini?</summary>
+            <p class="muted small">Aplikasi web ini dikembangkan dan dikelola oleh <strong>Keii Official</strong>.</p>
+          </details>
+
+          <details class="faq-accordion">
+            <summary>Apakah web ini gratis digunakan?</summary>
+            <p class="muted small">Ya, seluruh fitur (Media Downloader, Profile Stalker, AI Chat, dan Love Gacha) gratis digunakan tanpa login.</p>
+          </details>
+
+          <details class="faq-accordion">
+            <summary>Kenapa video atau profil kadang gagal dimuat?</summary>
+            <p class="muted small">Biasanya karena tautan bersifat privat, link sudah kedaluwarsa, atau server API publik sedang padat. Coba ulangi beberapa saat lagi dengan link publik.</p>
+          </details>
+
+          <details class="faq-accordion">
+            <summary>Kenapa balasan AI dibuat singkat?</summary>
+            <p class="muted small">Jawaban AI diatur singkat dan langsung ke inti agar tidak terpotong di tengah kalimat, dengan pergantian model otomatis jika server sibuk.</p>
+          </details>
+
+          <details class="faq-accordion">
+            <summary>Apakah data chat dan gacha tersimpan aman?</summary>
+            <p class="muted small">Semua riwayat chat dan koleksi kartu gacha disimpan lokal di browser perangkat kamu (LocalStorage) dan tidak dikirim ke pihak lain.</p>
+          </details>
+
+          <details class="faq-accordion">
+            <summary>Bagaimana cara menghubungi developer?</summary>
+            <p class="muted small">Kamu bisa menghubungi <strong>Keii Official</strong> melalui halaman GitHub resmi atau kanal sosial media pengembang.</p>
+          </details>
         </div>
       </section>
 
