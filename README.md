@@ -1,4 +1,4 @@
-# Love Hub v20 — by Keii Official
+# Love Hub v22 — by Keii Official
 
-- **Top Video Banner + Audio Backup**: `https://files.catbox.moe/xf4qv0.mp4`
+- **Top Video Banner + Audio**: `https://files.catbox.moe/0q8sz3.mp4` (fallback `https://files.catbox.moe/ngfcr9.mp4` + Web Audio synth)
 - **Fullscreen Background Video**: `https://files.catbox.moe/ngfcr9.mp4` (toggle `🎬`)

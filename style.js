@@ -242,14 +242,20 @@
       align-items: center;
       justify-content: center;
       gap: 4px;
-      background: linear-gradient(135deg, rgba(255, 77, 148, 0.30), rgba(139, 92, 246, 0.32));
+      background: linear-gradient(135deg, rgba(255, 77, 148, 0.32), rgba(139, 92, 246, 0.34));
       pointer-events: none;
       opacity: 1;
       transition: opacity 0.25s ease;
+      z-index: 2;
     }
 
     .top-video-frame.has-video .top-video-art {
       opacity: 0;
+    }
+
+    .top-video-el {
+      position: relative;
+      z-index: 1;
     }
 
     .top-art-emoji {

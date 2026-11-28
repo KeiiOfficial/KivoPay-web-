@@ -924,7 +924,10 @@
     const fallbackMsg = $('headerFallbackMsg');
     if (!vid) return;
 
-    const url = 'https://files.catbox.moe/xf4qv0.mp4';
+    const primaryUrl = 'https://files.catbox.moe/0q8sz3.mp4';
+    const secondaryUrl = 'https://files.catbox.moe/ngfcr9.mp4';
+    let activeUrl = primaryUrl;
+    let triedSecondary = false;
     let streamError = false;
     let audioUnlocked = false;
     let softChimeTimer = null;
@@ -939,13 +942,14 @@
         if (audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
 
         const playNote = (freq, delaySec, durSec) => {
+          if (!audioCtx || audioCtx.state !== 'running') return;
           const now = audioCtx.currentTime + delaySec;
           const osc = audioCtx.createOscillator();
           const gain = audioCtx.createGain();
           osc.type = 'sine';
           osc.frequency.setValueAtTime(freq, now);
           gain.gain.setValueAtTime(0.0001, now);
-          gain.gain.exponentialRampToValueAtTime(0.04, now + 0.04);
+          gain.gain.exponentialRampToValueAtTime(0.045, now + 0.04);
           gain.gain.exponentialRampToValueAtTime(0.0001, now + durSec);
           osc.connect(gain);
           gain.connect(audioCtx.destination);
@@ -985,9 +989,9 @@
         if (realFrames) {
           fallbackMsg.textContent = '';
         } else if (streamError) {
-          fallbackMsg.textContent = 'Link xf4qv0.mp4 diblokir/gagal dimuat di browser';
+          fallbackMsg.textContent = 'Stream video diblokir/tidak aktif di browser ini';
         } else {
-          fallbackMsg.textContent = 'Menunggu stream xf4qv0.mp4…';
+          fallbackMsg.textContent = 'Memuat video header…';
         }
       }
 
@@ -999,35 +1003,38 @@
         if (audioUnlocked) {
           statusBadge.textContent = realFrames
             ? '🔊 Video Header • Audio Aktif'
-            : '🔊 Suara Aktif • Video Gagal Dimuat';
+            : '🔊 Suara Aktif • Video Tidak Aktif';
         } else {
           statusBadge.textContent = realFrames
             ? '🎬 Video Header • Muted'
-            : '⚠️ Video Belum Muncul • Tap Suara';
+            : '⚠️ Video Tidak Aktif • Tap Suara';
         }
       }
     };
 
-    const tryStartMuted = () => {
+    const loadMediaUrl = (targetUrl) => {
+      activeUrl = targetUrl;
+      vid.src = targetUrl;
       vid.muted = true;
+      vid.load();
       const p = vid.play();
       if (p && typeof p.catch === 'function') p.catch(() => {});
-      syncUI();
+
+      if (aud) {
+        aud.src = targetUrl;
+        aud.load();
+      }
     };
 
-    if (!vid.currentSrc) {
-      vid.src = url;
-      vid.load();
-    }
-    if (aud && !aud.currentSrc) {
-      aud.src = url;
-      aud.load();
-    }
-    tryStartMuted();
+    loadMediaUrl(primaryUrl);
+    syncUI();
 
     vid.addEventListener('loadeddata', () => {
       streamError = false;
-      tryStartMuted();
+      vid.muted = !audioUnlocked;
+      const p = vid.play();
+      if (p && typeof p.catch === 'function') p.catch(() => {});
+      syncUI();
     });
 
     vid.addEventListener('canplay', () => {
@@ -1036,11 +1043,23 @@
     });
 
     vid.addEventListener('error', () => {
+      if (!triedSecondary && activeUrl !== secondaryUrl) {
+        triedSecondary = true;
+        loadMediaUrl(secondaryUrl);
+        syncUI();
+        return;
+      }
       streamError = true;
       syncUI();
     });
 
-    setTimeout(syncUI, 1500);
+    setTimeout(() => {
+      if (!hasRealVideoFrames() && !triedSecondary && activeUrl !== secondaryUrl) {
+        triedSecondary = true;
+        loadMediaUrl(secondaryUrl);
+      }
+      syncUI();
+    }, 1800);
 
     const toggleAudio = async (e) => {
       if (e) {
@@ -1056,7 +1075,7 @@
         let mediaSoundStarted = false;
         try {
           await vid.play();
-          if (!vid.muted && !vid.paused) mediaSoundStarted = true;
+          if (!vid.muted && !vid.paused && vid.readyState >= 2) mediaSoundStarted = true;
         } catch (_) {}
 
         if (aud) {
@@ -1064,16 +1083,13 @@
             aud.muted = false;
             aud.volume = 1.0;
             await aud.play();
-            if (!aud.paused) mediaSoundStarted = true;
+            if (!aud.paused && aud.readyState >= 2) mediaSoundStarted = true;
           } catch (_) {}
         }
 
-        if (!mediaSoundStarted) {
-          startSoftChime();
-        }
-
+        startSoftChime();
         syncUI();
-        showToast('Suara aktif 🔊');
+        showToast(mediaSoundStarted ? 'Suara video aktif 🔊' : 'Suara aktif 🔊');
       } else {
         audioUnlocked = false;
         vid.muted = true;
