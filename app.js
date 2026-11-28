@@ -913,77 +913,68 @@
     document.addEventListener('pointerdown', resumeOnFirstTouch, { passive: true });
   }
 
-  function initHeaderVideo() {
-    const headerVideo = $('headerBgVideo');
-    const soundBtn = $('headerSoundToggleBtn');
-    const soundIcon = $('headerSoundIcon');
-    if (!headerVideo || !soundBtn) return;
+  function initAboveHeaderVideo() {
+    const vid = $('aboveHeaderVideo');
+    const soundBtn = $('aboveSoundBtn');
+    if (!vid) return;
 
-    const headerUrl = 'https://files.catbox.moe/xf4qv0.mp4';
-    if (!headerVideo.getAttribute('src')) {
-      headerVideo.src = headerUrl;
-      headerVideo.load();
+    const url = 'https://files.catbox.moe/xf4qv0.mp4';
+    if (!vid.getAttribute('src')) {
+      vid.src = url;
+      vid.load();
     }
 
-    let soundWanted = localStorage.getItem('lovehub_header_sound') !== 'off';
-
-    const updateSoundUi = () => {
-      const isMuted = headerVideo.muted;
-      if (soundIcon) soundIcon.textContent = isMuted ? '🔊' : '🔈';
-      if (soundIcon) soundIcon.textContent = isMuted ? '🔇' : '🔊';
-      soundBtn.title = isMuted ? 'Nyalakan Suara Header' : 'Matikan Suara Header';
+    const syncSoundButton = () => {
+      if (!soundBtn) return;
+      const hasSound = !vid.muted && vid.volume > 0;
+      soundBtn.textContent = hasSound ? '🔇 Matikan Suara' : '🔊 Aktifkan Suara';
+      soundBtn.classList.toggle('unmuted', hasSound);
     };
 
-    const playHeaderVideo = async (withSound) => {
+    const startMutedPlayback = () => {
+      vid.muted = true;
+      const p = vid.play();
+      if (p && typeof p.catch === 'function') p.catch(() => {});
+      syncSoundButton();
+    };
+
+    startMutedPlayback();
+
+    const enableSoundFromTap = async () => {
       try {
-        headerVideo.muted = !withSound;
-        headerVideo.volume = 0.85;
-        await headerVideo.play();
-        updateSoundUi();
-        return true;
+        vid.muted = false;
+        vid.volume = 1.0;
+        await vid.play();
+        syncSoundButton();
+        showToast('Suara video header aktif 🔊');
       } catch (err) {
-        // Browser autoplay policy blocks unmuted playback until user taps screen
-        headerVideo.muted = true;
-        try { await headerVideo.play(); } catch (e) {}
-        updateSoundUi();
-        return false;
+        vid.muted = true;
+        syncSoundButton();
       }
     };
 
-    // Start muted first so video always moves immediately, then unmute on first tap if soundWanted
-    playHeaderVideo(false);
+    if (soundBtn) {
+      soundBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (vid.muted) {
+          await enableSoundFromTap();
+        } else {
+          vid.muted = true;
+          syncSoundButton();
+          showToast('Suara video header dimatikan 🔇');
+        }
+      });
+    }
 
-    const unlockAudioOnFirstInteraction = async () => {
-      if (soundWanted && headerVideo.muted) {
-        await playHeaderVideo(true);
-      } else if (headerVideo.paused) {
-        await playHeaderVideo(soundWanted);
-      }
-      document.removeEventListener('pointerdown', unlockAudioOnFirstInteraction);
-      document.removeEventListener('keydown', unlockAudioOnFirstInteraction);
-    };
-
-    document.addEventListener('pointerdown', unlockAudioOnFirstInteraction, { passive: true });
-    document.addEventListener('keydown', unlockAudioOnFirstInteraction, { passive: true });
-
-    soundBtn.addEventListener('click', async (e) => {
-      e.stopPropagation();
-      const willEnableSound = headerVideo.muted;
-      soundWanted = willEnableSound;
-      localStorage.setItem('lovehub_header_sound', willEnableSound ? 'on' : 'off');
-      const ok = await playHeaderVideo(willEnableSound);
-      if (willEnableSound && ok) {
-        showToast('Suara video header dinyalakan 🔊');
-      } else if (!willEnableSound) {
-        showToast('Suara video header dimatikan 🔇');
-      }
-    });
+    vid.addEventListener('volumechange', syncSoundButton);
+    syncSoundButton();
   }
 
   // Boot
   initAmbientParticles();
   initBgVideo();
-  initHeaderVideo();
+  initAboveHeaderVideo();
   initTheme();
   initNavigation();
   initDownloader();

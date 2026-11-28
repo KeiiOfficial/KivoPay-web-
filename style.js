@@ -207,6 +207,68 @@
       padding: 12px 12px 36px;
     }
 
+
+    .above-header-video-card {
+      position: relative;
+      z-index: 3;
+      margin-bottom: 10px;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      box-shadow: var(--shadow);
+    }
+
+    .above-header-video {
+      display: block;
+      width: 100%;
+      max-height: 210px;
+      object-fit: cover;
+      background: #090810;
+    }
+
+    .above-header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 12px;
+      background: var(--bg-card-solid);
+      border-top: 1px solid var(--border);
+    }
+
+    .above-header-label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .above-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .mini-action-btn,
+    .mini-action-link {
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-input);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .mini-action-btn.unmuted {
+      background: linear-gradient(135deg, var(--primary-1), var(--primary-2));
+      color: #fff;
+      border-color: transparent;
+    }
+
     .topbar {
       position: relative;
       overflow: hidden;
