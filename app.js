@@ -945,7 +945,7 @@
           osc.type = 'sine';
           osc.frequency.setValueAtTime(freq, now);
           gain.gain.setValueAtTime(0.0001, now);
-          gain.gain.exponentialRampToValueAtTime(0.035, now + 0.04);
+          gain.gain.exponentialRampToValueAtTime(0.04, now + 0.04);
           gain.gain.exponentialRampToValueAtTime(0.0001, now + durSec);
           osc.connect(gain);
           gain.connect(audioCtx.destination);
@@ -979,12 +979,16 @@
     const hasRealVideoFrames = () => vid.readyState >= 2 && vid.videoWidth > 0 && !streamError;
 
     const syncUI = () => {
-      const showFallback = !hasRealVideoFrames();
-      if (stage) stage.classList.toggle('is-fallback', showFallback);
+      const realFrames = hasRealVideoFrames();
+      if (stage) stage.classList.toggle('has-video', realFrames);
       if (fallbackMsg) {
-        fallbackMsg.textContent = streamError
-          ? 'Stream Catbox diblokir/gagal dimuat di browser ini'
-          : 'Memuat video header…';
+        if (realFrames) {
+          fallbackMsg.textContent = '';
+        } else if (streamError) {
+          fallbackMsg.textContent = 'Link xf4qv0.mp4 diblokir/gagal dimuat di browser';
+        } else {
+          fallbackMsg.textContent = 'Menunggu stream xf4qv0.mp4…';
+        }
       }
 
       if (soundIcon) soundIcon.textContent = audioUnlocked ? '🔊' : '🔇';
@@ -993,13 +997,13 @@
 
       if (statusBadge) {
         if (audioUnlocked) {
-          statusBadge.textContent = hasRealVideoFrames()
+          statusBadge.textContent = realFrames
             ? '🔊 Video Header • Audio Aktif'
-            : '🔊 Mode Suara Aktif • Stream Terbatas';
+            : '🔊 Suara Aktif • Video Gagal Dimuat';
         } else {
-          statusBadge.textContent = hasRealVideoFrames()
+          statusBadge.textContent = realFrames
             ? '🎬 Video Header • Muted'
-            : '🎬 Header Banner • Tap Suara';
+            : '⚠️ Video Belum Muncul • Tap Suara';
         }
       }
     };

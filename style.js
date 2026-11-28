@@ -242,14 +242,14 @@
       align-items: center;
       justify-content: center;
       gap: 4px;
-      background: linear-gradient(135deg, rgba(255, 77, 148, 0.28), rgba(139, 92, 246, 0.30));
+      background: linear-gradient(135deg, rgba(255, 77, 148, 0.30), rgba(139, 92, 246, 0.32));
       pointer-events: none;
-      opacity: 0;
+      opacity: 1;
       transition: opacity 0.25s ease;
     }
 
-    .top-video-frame.is-fallback .top-video-art {
-      opacity: 1;
+    .top-video-frame.has-video .top-video-art {
+      opacity: 0;
     }
 
     .top-art-emoji {
