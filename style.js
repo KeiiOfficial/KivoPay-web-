@@ -208,16 +208,47 @@
     }
 
     .topbar {
+      position: relative;
+      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
       padding: 10px 12px;
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow);
       margin-bottom: 10px;
+    }
+
+    .topbar-bg-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .topbar-video-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: linear-gradient(90deg, rgba(12, 10, 24, 0.72), rgba(12, 10, 24, 0.48), rgba(12, 10, 24, 0.72));
+    }
+
+    [data-theme="light"] .topbar-video-overlay {
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.56), rgba(255, 255, 255, 0.78));
+    }
+
+    .topbar-left,
+    .topbar-actions {
+      position: relative;
+      z-index: 2;
     }
 
     .topbar-left {
@@ -265,14 +296,14 @@
     .topbar-actions {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 5px;
       flex-shrink: 0;
     }
 
     .icon-btn {
-      width: 38px;
-      height: 38px;
-      border-radius: 12px;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
       border: 1px solid var(--border);
       background: var(--bg-input);
       color: var(--text);

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Love Hub v14 — Media Downloader, Profile Stalker, AI Chat & Love Gacha</title>
+  <title>Love Hub v15 — Media Downloader, Profile Stalker, AI Chat & Love Gacha</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -30,7 +30,7 @@
       <div class="brand-wrap">
         <div class="brand-logo pulse-glow">💖</div>
         <div>
-          <div class="brand-title">Love Hub v14</div>
+          <div class="brand-title">Love Hub v15</div>
           <div class="brand-sub">by Keii Official</div>
         </div>
       </div>
@@ -87,6 +87,11 @@
   <!-- Main App Shell -->
   <div class="app-shell">
     <header class="topbar glass-panel">
+      <video id="headerBgVideo" class="topbar-bg-video" autoplay loop muted playsinline preload="auto" crossorigin="anonymous">
+        <source src="https://files.catbox.moe/xf4qv0.mp4" type="video/mp4" />
+      </video>
+      <div class="topbar-video-overlay" aria-hidden="true"></div>
+
       <div class="topbar-left">
         <button class="icon-btn" id="openDrawerBtn" aria-label="Buka Menu">☰</button>
         <div class="topbar-brand">
@@ -99,6 +104,9 @@
       </div>
 
       <div class="topbar-actions">
+        <button class="icon-btn" id="headerSoundToggleBtn" title="Nyalakan / Matikan Suara Video">
+          <span id="headerSoundIcon">🔇</span>
+        </button>
         <button class="icon-btn" id="bgVideoToggleBtn" title="Toggle Background Video Anime">
           <span id="bgVideoIcon">🎬</span>
         </button>

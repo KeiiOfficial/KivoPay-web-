@@ -913,9 +913,77 @@
     document.addEventListener('pointerdown', resumeOnFirstTouch, { passive: true });
   }
 
+  function initHeaderVideo() {
+    const headerVideo = $('headerBgVideo');
+    const soundBtn = $('headerSoundToggleBtn');
+    const soundIcon = $('headerSoundIcon');
+    if (!headerVideo || !soundBtn) return;
+
+    const headerUrl = 'https://files.catbox.moe/xf4qv0.mp4';
+    if (!headerVideo.getAttribute('src')) {
+      headerVideo.src = headerUrl;
+      headerVideo.load();
+    }
+
+    let soundWanted = localStorage.getItem('lovehub_header_sound') !== 'off';
+
+    const updateSoundUi = () => {
+      const isMuted = headerVideo.muted;
+      if (soundIcon) soundIcon.textContent = isMuted ? '🔊' : '🔈';
+      if (soundIcon) soundIcon.textContent = isMuted ? '🔇' : '🔊';
+      soundBtn.title = isMuted ? 'Nyalakan Suara Header' : 'Matikan Suara Header';
+    };
+
+    const playHeaderVideo = async (withSound) => {
+      try {
+        headerVideo.muted = !withSound;
+        headerVideo.volume = 0.85;
+        await headerVideo.play();
+        updateSoundUi();
+        return true;
+      } catch (err) {
+        // Browser autoplay policy blocks unmuted playback until user taps screen
+        headerVideo.muted = true;
+        try { await headerVideo.play(); } catch (e) {}
+        updateSoundUi();
+        return false;
+      }
+    };
+
+    // Start muted first so video always moves immediately, then unmute on first tap if soundWanted
+    playHeaderVideo(false);
+
+    const unlockAudioOnFirstInteraction = async () => {
+      if (soundWanted && headerVideo.muted) {
+        await playHeaderVideo(true);
+      } else if (headerVideo.paused) {
+        await playHeaderVideo(soundWanted);
+      }
+      document.removeEventListener('pointerdown', unlockAudioOnFirstInteraction);
+      document.removeEventListener('keydown', unlockAudioOnFirstInteraction);
+    };
+
+    document.addEventListener('pointerdown', unlockAudioOnFirstInteraction, { passive: true });
+    document.addEventListener('keydown', unlockAudioOnFirstInteraction, { passive: true });
+
+    soundBtn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const willEnableSound = headerVideo.muted;
+      soundWanted = willEnableSound;
+      localStorage.setItem('lovehub_header_sound', willEnableSound ? 'on' : 'off');
+      const ok = await playHeaderVideo(willEnableSound);
+      if (willEnableSound && ok) {
+        showToast('Suara video header dinyalakan 🔊');
+      } else if (!willEnableSound) {
+        showToast('Suara video header dimatikan 🔇');
+      }
+    });
+  }
+
   // Boot
   initAmbientParticles();
   initBgVideo();
+  initHeaderVideo();
   initTheme();
   initNavigation();
   initDownloader();
