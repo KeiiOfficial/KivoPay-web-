@@ -859,8 +859,50 @@
     });
   }
 
+  function initBgVideo() {
+    const wrap = $('bgVideoWrap');
+    const video = $('bgAnimeVideo');
+    const btn = $('bgVideoToggleBtn');
+    const icon = $('bgVideoIcon');
+    if (!wrap || !video || !btn) return;
+
+    const applyBgState = (enabled) => {
+      wrap.classList.toggle('hidden-bg', !enabled);
+      if (icon) icon.textContent = enabled ? '🎬' : '🚫';
+      btn.title = enabled ? 'Matikan Background Video' : 'Nyalakan Background Video';
+      if (enabled) {
+        video.muted = true;
+        const p = video.play();
+        if (p && typeof p.catch === 'function') p.catch(() => {});
+      } else {
+        video.pause();
+      }
+      localStorage.setItem('lovehub_bg_video', enabled ? 'on' : 'off');
+    };
+
+    const saved = localStorage.getItem('lovehub_bg_video');
+    applyBgState(saved !== 'off');
+
+    btn.addEventListener('click', () => {
+      const isCurrentlyOn = !wrap.classList.contains('hidden-bg');
+      applyBgState(!isCurrentlyOn);
+      showToast(!isCurrentlyOn ? 'Background anime dinyalakan 🎬' : 'Background anime dimatikan');
+    });
+
+    // Pastikan autoplay jalan setelah interaksi pertama jika diblokir browser HP
+    const resumeOnFirstTouch = () => {
+      if (!wrap.classList.contains('hidden-bg') && video.paused) {
+        video.muted = true;
+        video.play().catch(() => {});
+      }
+      document.removeEventListener('pointerdown', resumeOnFirstTouch);
+    };
+    document.addEventListener('pointerdown', resumeOnFirstTouch, { passive: true });
+  }
+
   // Boot
   initAmbientParticles();
+  initBgVideo();
   initTheme();
   initNavigation();
   initDownloader();

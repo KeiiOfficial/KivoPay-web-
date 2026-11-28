@@ -67,6 +67,39 @@
       overflow-x: hidden;
     }
 
+    /* Anime Video Background */
+    .bg-video-wrap {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+      transition: opacity 0.35s ease;
+    }
+
+    .bg-video-wrap.hidden-bg {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .bg-anime-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      filter: contrast(1.06) saturate(1.05);
+    }
+
+    .bg-video-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 25%, rgba(12, 10, 22, 0.56), rgba(9, 8, 16, 0.78));
+    }
+
+    [data-theme="light"] .bg-video-overlay {
+      background: radial-gradient(circle at 50% 25%, rgba(243, 242, 250, 0.68), rgba(243, 242, 250, 0.86));
+    }
+
     /* Background Grid & Ambient Orbs */
     .bg-grid {
       position: fixed;

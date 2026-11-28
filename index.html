@@ -3,12 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Love Hub v11 — Media Downloader, Profile Stalker, AI Chat & Love Gacha</title>
+  <title>Love Hub v12 — Media Downloader, Profile Stalker, AI Chat & Love Gacha</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 </head>
 <body>
+  <!-- Anime Video Background -->
+  <div class="bg-video-wrap" id="bgVideoWrap" aria-hidden="true">
+    <video id="bgAnimeVideo" class="bg-anime-video" autoplay loop muted playsinline preload="metadata">
+      <source src="assets/bg-anime.mp4" type="video/mp4" />
+    </video>
+    <div class="bg-video-overlay"></div>
+  </div>
   <div class="bg-grid" aria-hidden="true"></div>
   <div class="bg-glow bg-glow-1" aria-hidden="true"></div>
   <div class="bg-glow bg-glow-2" aria-hidden="true"></div>
@@ -23,7 +30,7 @@
       <div class="brand-wrap">
         <div class="brand-logo pulse-glow">💖</div>
         <div>
-          <div class="brand-title">Love Hub v11</div>
+          <div class="brand-title">Love Hub v12</div>
           <div class="brand-sub">by Keii Official</div>
         </div>
       </div>
@@ -92,6 +99,9 @@
       </div>
 
       <div class="topbar-actions">
+        <button class="icon-btn" id="bgVideoToggleBtn" title="Toggle Background Video Anime">
+          <span id="bgVideoIcon">🎬</span>
+        </button>
         <button class="icon-btn" id="quickStatusBtn" title="Status Endpoint AI">
           <span id="activeModelBadge" class="mini-badge">AI OK</span>
         </button>
