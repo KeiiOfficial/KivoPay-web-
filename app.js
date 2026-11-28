@@ -866,8 +866,7 @@
     const icon = $('bgVideoIcon');
     if (!wrap || !video || !btn) return;
 
-    const candidates = ['aset/bg-anime.mp4', 'assets/bg-anime.mp4'];
-    let candidateIdx = 0;
+    const remoteVideoUrl = 'https://files.catbox.moe/ngfcr9.mp4';
 
     const tryPlay = () => {
       video.muted = true;
@@ -875,30 +874,20 @@
       if (p && typeof p.catch === 'function') p.catch(() => {});
     };
 
-    const loadCandidate = (idx) => {
-      if (idx >= candidates.length) return;
-      candidateIdx = idx;
-      video.src = candidates[idx];
-      video.load();
+    const ensureSource = () => {
+      if (!video.getAttribute('src')) {
+        video.src = remoteVideoUrl;
+        video.load();
+      }
       tryPlay();
     };
-
-    video.addEventListener('error', () => {
-      if (candidateIdx + 1 < candidates.length) {
-        loadCandidate(candidateIdx + 1);
-      }
-    });
 
     const applyBgState = (enabled) => {
       wrap.classList.toggle('hidden-bg', !enabled);
       if (icon) icon.textContent = enabled ? '🎬' : '🚫';
       btn.title = enabled ? 'Matikan Background Video' : 'Nyalakan Background Video';
       if (enabled) {
-        if (!video.getAttribute('src')) {
-          loadCandidate(0);
-        } else {
-          tryPlay();
-        }
+        ensureSource();
       } else {
         video.pause();
       }
@@ -906,7 +895,7 @@
     };
 
     const saved = localStorage.getItem('lovehub_bg_video');
-    loadCandidate(0);
+    ensureSource();
     applyBgState(saved !== 'off');
 
     btn.addEventListener('click', () => {
