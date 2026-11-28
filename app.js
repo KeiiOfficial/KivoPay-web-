@@ -27,7 +27,6 @@
   let selectedDlPlatform = 'tiktok';
   let selectedStalkPlatform = 'tiktok';
   let currentVideoUrl = '';
-  let currentBlobUrl = '';
   let preferredModelIndex = 0;
   let chatHistory = [];
   let gachaCollection = [];
@@ -39,12 +38,11 @@
     toast.textContent = msg;
     toast.classList.add('show');
     clearTimeout(showToast._timer);
-    showToast._timer = setTimeout(() => toast.classList.remove('show'), 2700);
+    showToast._timer = setTimeout(() => toast.classList.remove('show'), 2800);
   }
 
   function getNowTime() {
-    const d = new Date();
-    return d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+    return new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
   }
 
   function formatNumber(num) {
@@ -56,23 +54,32 @@
     return n.toLocaleString('id-ID');
   }
 
-  async function fetchJsonWithTimeout(url, timeoutMs = 18000) {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeoutMs);
-    try {
-      const res = await fetch(url, {
-        method: 'GET',
-        headers: { 'Accept': 'application/json' },
-        signal: controller.signal
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      return await res.json();
-    } finally {
-      clearTimeout(timer);
+  async function fetchJsonSmart(url, timeoutMs = 18000) {
+    const attempts = [
+      url,
+      `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`
+    ];
+
+    for (const targetUrl of attempts) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const res = await fetch(targetUrl, {
+          method: 'GET',
+          headers: { 'Accept': 'application/json' },
+          signal: controller.signal
+        });
+        clearTimeout(timer);
+        if (!res.ok) continue;
+        const text = await res.text();
+        return JSON.parse(text);
+      } catch (err) {
+        clearTimeout(timer);
+      }
     }
+    throw new Error('Semua jalur koneksi gagal');
   }
 
-  // Theme
   function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     $('themeIcon').textContent = theme === 'dark' ? '☀️' : '🌙';
@@ -80,15 +87,13 @@
   }
 
   function initTheme() {
-    const saved = localStorage.getItem('lovehub_theme') || 'dark';
-    applyTheme(saved);
+    applyTheme(localStorage.getItem('lovehub_theme') || 'dark');
     $('themeToggleBtn').addEventListener('click', () => {
       const current = document.documentElement.getAttribute('data-theme');
       applyTheme(current === 'dark' ? 'light' : 'dark');
     });
   }
 
-  // Drawer & Tabs
   function setDrawerOpen(open) {
     $('sidebarDrawer').classList.toggle('open', open);
     $('drawerBackdrop').classList.toggle('open', open);
@@ -115,46 +120,39 @@
     $('openDrawerBtn').addEventListener('click', () => setDrawerOpen(true));
     $('closeDrawerBtn').addEventListener('click', () => setDrawerOpen(false));
     $('drawerBackdrop').addEventListener('click', () => setDrawerOpen(false));
-
     document.querySelectorAll('[data-tab]').forEach((btn) => {
       btn.addEventListener('click', () => switchTab(btn.dataset.tab));
     });
   }
 
-  // =========================================================
-  // 1. MEDIA DOWNLOADER (FIXED PLAYBACK & DIRECT DOWNLOAD)
-  // =========================================================
-  function collectAllUrls(obj, found = []) {
+  // 1. MEDIA DOWNLOADER
+  function collectUrls(obj, found = []) {
     if (!obj) return found;
     if (typeof obj === 'string') {
-      if (obj.startsWith('http://') || obj.startsWith('https://')) {
-        found.push(obj);
-      }
+      if (obj.startsWith('http://') || obj.startsWith('https://')) found.push(obj);
       return found;
     }
     if (Array.isArray(obj)) {
-      for (const item of obj) collectAllUrls(item, found);
+      for (const item of obj) collectUrls(item, found);
       return found;
     }
     if (typeof obj === 'object') {
-      // Prioritize non-watermark / hd keys first
       const priorityKeys = [
-        'nowm', 'no_watermark', 'hd', 'video_hd', 'play', 'nwm_video_url',
-        'video', 'url', 'download_url', 'downloadUrl', 'mp4', 'wmplay'
+        'hdplay', 'play', 'nowm', 'no_watermark', 'video_hd',
+        'nwm_video_url', 'video', 'url', 'download_url', 'mp4', 'wmplay'
       ];
       for (const k of priorityKeys) {
-        if (obj[k]) collectAllUrls(obj[k], found);
+        if (obj[k]) collectUrls(obj[k], found);
       }
       for (const k of Object.keys(obj)) {
-        if (!priorityKeys.includes(k)) collectAllUrls(obj[k], found);
+        if (!priorityKeys.includes(k)) collectUrls(obj[k], found);
       }
     }
     return found;
   }
 
   function pickBestVideoUrl(payload) {
-    const urls = collectAllUrls(payload);
-    // Filter out image/audio thumbnails when possible
+    const urls = collectUrls(payload);
     const videoCandidates = urls.filter((u) => {
       const lower = u.toLowerCase();
       const isImage = /\.(jpg|jpeg|png|webp|gif)(\?|$)/.test(lower);
@@ -164,35 +162,31 @@
     return videoCandidates[0] || urls[0] || '';
   }
 
-  async function loadVideoIntoPlayer(videoUrl) {
+  function showMediaPreview(videoUrl, coverUrl = '') {
     const player = $('dlVideoPlayer');
-    const fallbackNote = $('playerFallbackNote');
-    fallbackNote.classList.add('hidden');
+    const fallbackCard = $('coverFallbackCard');
+    const coverImg = $('dlCoverImg');
+
     $('openTabVideoBtn').href = videoUrl;
     $('dlOpenLinkBtn').href = videoUrl;
 
-    if (currentBlobUrl) {
-      URL.revokeObjectURL(currentBlobUrl);
-      currentBlobUrl = '';
+    fallbackCard.classList.add('hidden');
+    player.classList.remove('hidden');
+
+    if (coverUrl) {
+      coverImg.src = coverUrl;
+      coverImg.classList.remove('hidden');
+      player.poster = coverUrl;
+    } else {
+      coverImg.classList.add('hidden');
+      player.removeAttribute('poster');
     }
 
-    // Try fetching as Blob first to bypass hotlink/Referer blocks on TikTok CDN
-    try {
-      const res = await fetch(videoUrl, { referrerPolicy: 'no-referrer' });
-      if (res.ok) {
-        const blob = await res.blob();
-        if (blob.size > 10000) {
-          currentBlobUrl = URL.createObjectURL(blob);
-          player.src = currentBlobUrl;
-          player.load();
-          return;
-        }
-      }
-    } catch (e) {
-      console.warn('Blob preview skipped (CORS), using direct stream:', e.message);
-    }
+    player.onerror = () => {
+      player.classList.add('hidden');
+      fallbackCard.classList.remove('hidden');
+    };
 
-    // Direct stream fallback
     player.src = videoUrl;
     player.load();
   }
@@ -204,13 +198,6 @@
       douyin: 'https://v.douyin.com/...',
       facebook: 'https://www.facebook.com/watch/?v=...'
     };
-
-    const player = $('dlVideoPlayer');
-    player.addEventListener('error', () => {
-      if (currentVideoUrl) {
-        $('playerFallbackNote').classList.remove('hidden');
-      }
-    });
 
     document.querySelectorAll('#dlPlatformGrid .plat-btn').forEach((btn) => {
       btn.addEventListener('click', () => {
@@ -234,6 +221,7 @@
     });
 
     $('closeDlResultBtn').addEventListener('click', () => {
+      const player = $('dlVideoPlayer');
       player.pause();
       player.removeAttribute('src');
       $('dlResultCard').classList.add('hidden');
@@ -253,33 +241,21 @@
       if (!currentVideoUrl) return;
       const btn = $('dlDirectBtn');
       btn.disabled = true;
-      btn.textContent = '⏳ Mengunduh...';
-
+      btn.textContent = '⏳ Menyiapkan...';
       try {
-        if (currentBlobUrl) {
-          const a = document.createElement('a');
-          a.href = currentBlobUrl;
-          a.download = `LoveHub_${selectedDlPlatform}_${Date.now()}.mp4`;
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-          showToast('Download dimulai!');
-        } else {
-          const res = await fetch(currentVideoUrl, { referrerPolicy: 'no-referrer' });
-          if (!res.ok) throw new Error('Direct blob blocked');
-          const blob = await res.blob();
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `LoveHub_${selectedDlPlatform}_${Date.now()}.mp4`;
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-          setTimeout(() => URL.revokeObjectURL(url), 10000);
-          showToast('Download dimulai!');
-        }
+        const res = await fetch(currentVideoUrl, { referrerPolicy: 'no-referrer' });
+        if (!res.ok) throw new Error('CORS');
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `LoveHub_${selectedDlPlatform}_${Date.now()}.mp4`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 10000);
+        showToast('Download video dimulai!');
       } catch {
-        // Fallback: open direct video URL in new tab so browser native player downloads it
         window.open(currentVideoUrl, '_blank', 'noopener,noreferrer');
         showToast('Membuka video untuk disimpan...');
       } finally {
@@ -299,37 +275,53 @@
       btn.disabled = true;
       btn.textContent = '⏳ Mengambil video...';
 
-      const endpointMap = {
-        capcut: [`/api/d/capcut?url=${encodeURIComponent(inputUrl)}`],
-        tiktok: [
-          `/api/d/tiktok?url=${encodeURIComponent(inputUrl)}`,
-          `/api/d/tiktok/v2?url=${encodeURIComponent(inputUrl)}`
-        ],
-        douyin: [
-          `/api/d/douyin?url=${encodeURIComponent(inputUrl)}`,
-          `/api/d/tiktok?url=${encodeURIComponent(inputUrl)}`
-        ],
-        facebook: [
-          `/api/d/facebook?url=${encodeURIComponent(inputUrl)}`,
-          `/api/d/fb?url=${encodeURIComponent(inputUrl)}`
-        ]
-      };
-
-      const routes = endpointMap[selectedDlPlatform] || endpointMap.tiktok;
       let mediaUrl = '';
+      let coverUrl = '';
       let titleText = `Video ${selectedDlPlatform.toUpperCase()}`;
 
-      for (const route of routes) {
+      if (selectedDlPlatform === 'tiktok' || selectedDlPlatform === 'douyin') {
         try {
-          const json = await fetchJsonWithTimeout(`${API_BASE}${route}`, 18000);
-          mediaUrl = pickBestVideoUrl(json?.data || json?.result || json);
-          const d = json?.data || json?.result || {};
-          if (d.title || d.desc || d.caption) {
-            titleText = String(d.title || d.desc || d.caption).slice(0, 72);
+          const tikwmUrl = `https://www.tikwm.com/api/?url=${encodeURIComponent(inputUrl)}&hd=1`;
+          const json = await fetchJsonSmart(tikwmUrl, 16000);
+          if (json && json.data) {
+            mediaUrl = json.data.hdplay || json.data.play || json.data.wmplay || '';
+            coverUrl = json.data.cover || json.data.origin_cover || '';
+            if (json.data.title) titleText = String(json.data.title).slice(0, 72);
           }
-          if (mediaUrl) break;
-        } catch (err) {
-          console.warn('Downloader fallback:', route, err.message);
+        } catch (e) {
+          console.warn('TikWM fallback to Siputzx:', e.message);
+        }
+      }
+
+      if (!mediaUrl) {
+        const endpointMap = {
+          capcut: [`${API_BASE}/api/d/capcut?url=${encodeURIComponent(inputUrl)}`],
+          tiktok: [
+            `${API_BASE}/api/d/tiktok?url=${encodeURIComponent(inputUrl)}`,
+            `${API_BASE}/api/d/tiktok/v2?url=${encodeURIComponent(inputUrl)}`
+          ],
+          douyin: [
+            `${API_BASE}/api/d/douyin?url=${encodeURIComponent(inputUrl)}`,
+            `${API_BASE}/api/d/tiktok?url=${encodeURIComponent(inputUrl)}`
+          ],
+          facebook: [
+            `${API_BASE}/api/d/facebook?url=${encodeURIComponent(inputUrl)}`,
+            `${API_BASE}/api/d/fb?url=${encodeURIComponent(inputUrl)}`
+          ]
+        };
+
+        const routes = endpointMap[selectedDlPlatform] || endpointMap.tiktok;
+        for (const fullUrl of routes) {
+          try {
+            const json = await fetchJsonSmart(fullUrl, 18000);
+            const payload = json?.data || json?.result || json;
+            mediaUrl = pickBestVideoUrl(payload);
+            if (payload?.cover || payload?.thumbnail) coverUrl = payload.cover || payload.thumbnail;
+            if (payload?.title || payload?.desc) titleText = String(payload.title || payload.desc).slice(0, 72);
+            if (mediaUrl) break;
+          } catch (err) {
+            console.warn('Downloader route failed:', fullUrl);
+          }
         }
       }
 
@@ -337,22 +329,20 @@
       btn.textContent = '⬇️ Ambil Video Sekarang';
 
       if (!mediaUrl) {
-        showToast('Video gagal diambil. Cek link atau coba lagi.');
+        showToast('Video gagal diambil. Pastikan link publik & valid.');
         return;
       }
 
       currentVideoUrl = mediaUrl;
-      $('dlResultTitle').textContent = titleText;
-      $('dlResultMeta').textContent = `Platform: ${selectedDlPlatform.toUpperCase()} • Siap diputar & diunduh`;
+      $('dlResultTitle').textContent = titleText || `Video ${selectedDlPlatform.toUpperCase()}`;
+      $('dlResultMeta').textContent = `Platform: ${selectedDlPlatform.toUpperCase()} • HD No-Watermark`;
       $('dlResultCard').classList.remove('hidden');
-      await loadVideoIntoPlayer(mediaUrl);
+      showMediaPreview(mediaUrl, coverUrl);
       showToast('Video berhasil dimuat!');
     });
   }
 
-  // =========================================================
   // 2. PROFILE STALKER
-  // =========================================================
   function initStalker() {
     document.querySelectorAll('#stalkPlatformGrid .plat-btn').forEach((btn) => {
       btn.addEventListener('click', () => {
@@ -382,25 +372,26 @@
 
       const routes = selectedStalkPlatform === 'tiktok'
         ? [
-            `/api/stalk/tiktok?username=${encodeURIComponent(rawUser)}`,
-            `/api/stalk/tiktok?user=${encodeURIComponent(rawUser)}`
+            `${API_BASE}/api/stalk/tiktok?username=${encodeURIComponent(rawUser)}`,
+            `${API_BASE}/api/stalk/tiktok?user=${encodeURIComponent(rawUser)}`,
+            `https://www.tikwm.com/api/user/info?unique_id=${encodeURIComponent(rawUser)}`
           ]
         : [
-            `/api/stalk/twitter?user=${encodeURIComponent(rawUser)}`,
-            `/api/stalk/twitter?username=${encodeURIComponent(rawUser)}`
+            `${API_BASE}/api/stalk/twitter?user=${encodeURIComponent(rawUser)}`,
+            `${API_BASE}/api/stalk/twitter?username=${encodeURIComponent(rawUser)}`
           ];
 
       let profile = null;
-      for (const route of routes) {
+      for (const fullUrl of routes) {
         try {
-          const json = await fetchJsonWithTimeout(`${API_BASE}${route}`, 16000);
+          const json = await fetchJsonSmart(fullUrl, 16000);
           const d = json?.data || json?.result || json;
-          if (d && (d.user || d.username || d.nickname || d.name || d.stats)) {
+          if (d && (d.user || d.username || d.uniqueId || d.nickname || d.name || d.stats)) {
             profile = d;
             break;
           }
         } catch (err) {
-          console.warn('Stalker fallback:', route, err.message);
+          console.warn('Stalker route failed:', fullUrl);
         }
       }
 
@@ -418,7 +409,7 @@
       const displayName = u.nickname || u.name || u.fullName || rawUser;
       const username = u.uniqueId || u.username || u.screen_name || rawUser;
       const bio = u.signature || u.bio || u.description || 'Tidak ada bio.';
-      const avatar = u.avatarLarger || u.avatarMedium || u.avatar || u.profile_image_url || 'https://api.dicebear.com/9.x/thumbs/svg?seed=' + encodeURIComponent(username);
+      const avatar = u.avatarLarger || u.avatarMedium || u.avatarThumb || u.avatar || u.profile_image_url || `https://api.dicebear.com/9.x/thumbs/svg?seed=${encodeURIComponent(username)}`;
       const verified = Boolean(u.verified || u.isVerified);
 
       const followers = stats.followerCount ?? stats.followers ?? stats.followers_count ?? 0;
@@ -458,9 +449,7 @@
     });
   }
 
-  // =========================================================
-  // 3. AI CHAT (WHATSAPP BUBBLES + CLEAN MARKDOWN + FALLBACK)
-  // =========================================================
+  // 3. AI CHAT
   function escapeHtml(str) {
     return String(str)
       .replace(/&/g, '&amp;')
@@ -470,16 +459,14 @@
 
   function formatWaMessageText(raw) {
     let safe = escapeHtml(raw);
-    // Render **bold** cleanly without raw asterisks
     safe = safe.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-    // Render *italic* cleanly
     safe = safe.replace(/(^|\s)\*([^*\n]+)\*(?=\s|$|[.,!?])/g, '$1<em>$2</em>');
     return safe;
   }
 
   function renderChat() {
     const box = $('chatMessages');
-    const headerPill = '<div class="wa-date-pill">Hari Ini • Enkripsi Lokal</div>';
+    const headerPill = '<div class="wa-date-pill">Hari Ini • End-to-End AI</div>';
     const bubbles = chatHistory.map((m) => {
       const timeStr = m.time || getNowTime();
       if (m.role === 'user') {
@@ -563,14 +550,13 @@
     let replyText = '';
     let usedEndpoint = null;
 
-    // Instruct model to answer completely and naturally in Indonesian
     const fullPrompt = `Jawab lengkap, jelas, ramah, dan tidak terpotong dalam bahasa Indonesia: ${text}`;
 
     for (const ep of ordered) {
       try {
         updateAiModelLabel(`mengetik via ${ep.id}...`);
         const url = `${API_BASE}${ep.path}?prompt=${encodeURIComponent(fullPrompt)}`;
-        const json = await fetchJsonWithTimeout(url, 22000);
+        const json = await fetchJsonSmart(url, 22000);
         const extracted = extractAiReply(json);
         if (extracted) {
           replyText = extracted;
@@ -578,7 +564,7 @@
           break;
         }
       } catch (err) {
-        console.warn(`Endpoint ${ep.id} gagal, fallback berikutnya:`, err.message);
+        console.warn(`Endpoint ${ep.id} gagal:`, err.message);
       }
     }
 
@@ -593,7 +579,7 @@
       meta: usedEndpoint.id,
       time: getNowTime()
     });
-    localStorage.setItem('lovehub_chat', JSON.stringify(chatHistory.slice(-40)));
+    localStorage.setItem('lovehub_chat_v7', JSON.stringify(chatHistory.slice(-40)));
     renderChat();
 
     sendBtn.disabled = false;
@@ -602,10 +588,8 @@
 
   function initAiChat() {
     try {
-      const saved = JSON.parse(localStorage.getItem('lovehub_chat') || '[]');
-      if (Array.isArray(saved) && saved.length) {
-        chatHistory = saved;
-      }
+      const saved = JSON.parse(localStorage.getItem('lovehub_chat_v7') || '[]');
+      if (Array.isArray(saved) && saved.length) chatHistory = saved;
     } catch {
       chatHistory = [];
     }
@@ -635,34 +619,24 @@
         meta: 'ready',
         time: getNowTime()
       }];
-      localStorage.setItem('lovehub_chat', JSON.stringify(chatHistory));
+      localStorage.setItem('lovehub_chat_v7', JSON.stringify(chatHistory));
       renderChat();
     });
 
     document.querySelectorAll('.chip-btn').forEach((chip) => {
-      chip.addEventListener('click', () => {
-        sendPromptToAi(chip.dataset.prompt);
-      });
-    });
-
-    const chatInput = $('chatInput');
-    chatInput.addEventListener('input', () => {
-      chatInput.style.height = 'auto';
-      chatInput.style.height = Math.min(chatInput.scrollHeight, 96) + 'px';
+      chip.addEventListener('click', () => sendPromptToAi(chip.dataset.prompt));
     });
 
     $('chatForm').addEventListener('submit', (e) => {
       e.preventDefault();
-      const val = chatInput.value;
-      chatInput.value = '';
-      chatInput.style.height = 'auto';
+      const input = $('chatInput');
+      const val = input.value;
+      input.value = '';
       sendPromptToAi(val);
     });
   }
 
-  // =========================================================
   // 4. LOVE GACHA & MATCH
-  // =========================================================
   function rollSingleCard() {
     const r = Math.random() * 100;
     if (r < 0.5) return GACHA_POOL[0];
@@ -695,12 +669,7 @@
       gachaCollection.unshift(latest);
     }
     gachaCollection = gachaCollection.slice(0, 40);
-    localStorage.setItem('lovehub_gacha', JSON.stringify(gachaCollection));
-
-    const box = $('gachaCardBox');
-    box.classList.remove('pop');
-    void box.offsetWidth;
-    box.classList.add('pop');
+    localStorage.setItem('lovehub_gacha_v7', JSON.stringify(gachaCollection));
 
     $('gachaRarity').textContent = latest.rarity;
     $('gachaEmoji').textContent = latest.emoji;
@@ -713,7 +682,7 @@
 
   function initGacha() {
     try {
-      const saved = JSON.parse(localStorage.getItem('lovehub_gacha') || '[]');
+      const saved = JSON.parse(localStorage.getItem('lovehub_gacha_v7') || '[]');
       if (Array.isArray(saved)) gachaCollection = saved;
     } catch {
       gachaCollection = [];
@@ -724,7 +693,7 @@
     $('spinMultiBtn').addEventListener('click', () => performSpin(5));
     $('clearGachaBtn').addEventListener('click', () => {
       gachaCollection = [];
-      localStorage.removeItem('lovehub_gacha');
+      localStorage.removeItem('lovehub_gacha_v7');
       renderGachaInventory();
       showToast('Koleksi gacha direset.');
     });
