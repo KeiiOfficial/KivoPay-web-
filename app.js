@@ -915,26 +915,91 @@
 
   function initAboveHeaderVideo() {
     const vid = $('aboveHeaderVideo');
+    const aud = $('headerAudioBackup');
     const stage = $('headerVideoStage');
     const soundBtn = $('aboveSoundBtn');
     const soundIcon = $('aboveSoundIcon');
     const soundLabel = $('aboveSoundLabel');
     const statusBadge = $('aboveVideoStatus');
+    const fallbackMsg = $('headerFallbackMsg');
     if (!vid) return;
 
     const url = 'https://files.catbox.moe/xf4qv0.mp4';
     let streamError = false;
+    let audioUnlocked = false;
+    let softChimeTimer = null;
+    let audioCtx = null;
 
-    const syncSoundUI = () => {
-      const isOn = !vid.muted && vid.volume > 0;
-      if (soundIcon) soundIcon.textContent = isOn ? '🔊' : '🔇';
-      if (soundLabel) soundLabel.textContent = isOn ? 'Matikan Suara' : 'Aktifkan Suara';
-      if (soundBtn) soundBtn.classList.toggle('unmuted', isOn);
+    const startSoftChime = () => {
+      if (softChimeTimer) return;
+      try {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) return;
+        if (!audioCtx) audioCtx = new AudioContextClass();
+        if (audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
+
+        const playNote = (freq, delaySec, durSec) => {
+          const now = audioCtx.currentTime + delaySec;
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now);
+          gain.gain.setValueAtTime(0.0001, now);
+          gain.gain.exponentialRampToValueAtTime(0.035, now + 0.04);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + durSec);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + durSec + 0.02);
+        };
+
+        playNote(523.25, 0, 0.45);
+        playNote(659.25, 0.16, 0.5);
+        playNote(783.99, 0.32, 0.65);
+
+        softChimeTimer = setInterval(() => {
+          if (!audioUnlocked) return;
+          if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
+          playNote(523.25, 0, 0.4);
+          playNote(659.25, 0.18, 0.45);
+        }, 4200);
+      } catch (_) {}
+    };
+
+    const stopSoftChime = () => {
+      if (softChimeTimer) {
+        clearInterval(softChimeTimer);
+        softChimeTimer = null;
+      }
+      if (audioCtx && audioCtx.state === 'running') {
+        audioCtx.suspend().catch(() => {});
+      }
+    };
+
+    const hasRealVideoFrames = () => vid.readyState >= 2 && vid.videoWidth > 0 && !streamError;
+
+    const syncUI = () => {
+      const showFallback = !hasRealVideoFrames();
+      if (stage) stage.classList.toggle('is-fallback', showFallback);
+      if (fallbackMsg) {
+        fallbackMsg.textContent = streamError
+          ? 'Stream Catbox diblokir/gagal dimuat di browser ini'
+          : 'Memuat video header…';
+      }
+
+      if (soundIcon) soundIcon.textContent = audioUnlocked ? '🔊' : '🔇';
+      if (soundLabel) soundLabel.textContent = audioUnlocked ? 'Matikan Suara' : 'Aktifkan Suara';
+      if (soundBtn) soundBtn.classList.toggle('unmuted', audioUnlocked);
+
       if (statusBadge) {
-        if (streamError) {
-          statusBadge.textContent = '⚠️ Link Video Belum Dapat Dimuat';
+        if (audioUnlocked) {
+          statusBadge.textContent = hasRealVideoFrames()
+            ? '🔊 Video Header • Audio Aktif'
+            : '🔊 Mode Suara Aktif • Stream Terbatas';
         } else {
-          statusBadge.textContent = isOn ? '🔊 Video Header • Audio Aktif' : '🎬 Video Header • Muted';
+          statusBadge.textContent = hasRealVideoFrames()
+            ? '🎬 Video Header • Muted'
+            : '🎬 Header Banner • Tap Suara';
         }
       }
     };
@@ -943,69 +1008,85 @@
       vid.muted = true;
       const p = vid.play();
       if (p && typeof p.catch === 'function') p.catch(() => {});
-      syncSoundUI();
+      syncUI();
     };
 
     if (!vid.currentSrc) {
       vid.src = url;
       vid.load();
     }
+    if (aud && !aud.currentSrc) {
+      aud.src = url;
+      aud.load();
+    }
     tryStartMuted();
 
-    vid.addEventListener('loadedmetadata', () => {
+    vid.addEventListener('loadeddata', () => {
       streamError = false;
       tryStartMuted();
     });
 
+    vid.addEventListener('canplay', () => {
+      streamError = false;
+      syncUI();
+    });
+
     vid.addEventListener('error', () => {
       streamError = true;
-      syncSoundUI();
+      syncUI();
     });
+
+    setTimeout(syncUI, 1500);
 
     const toggleAudio = async (e) => {
       if (e) {
         e.preventDefault();
         e.stopPropagation();
       }
-      if (streamError) {
-        streamError = false;
-        vid.src = url;
-        vid.load();
-      }
-      try {
-        if (vid.muted) {
-          vid.muted = false;
-          vid.volume = 1.0;
+
+      if (!audioUnlocked) {
+        audioUnlocked = true;
+        vid.muted = false;
+        vid.volume = 1.0;
+
+        let mediaSoundStarted = false;
+        try {
           await vid.play();
-          syncSoundUI();
-          showToast('Suara video dinyalakan 🔊');
-        } else {
-          vid.muted = true;
-          await vid.play().catch(() => {});
-          syncSoundUI();
-          showToast('Suara video dimatikan 🔇');
+          if (!vid.muted && !vid.paused) mediaSoundStarted = true;
+        } catch (_) {}
+
+        if (aud) {
+          try {
+            aud.muted = false;
+            aud.volume = 1.0;
+            await aud.play();
+            if (!aud.paused) mediaSoundStarted = true;
+          } catch (_) {}
         }
-      } catch (err) {
+
+        if (!mediaSoundStarted) {
+          startSoftChime();
+        }
+
+        syncUI();
+        showToast('Suara aktif 🔊');
+      } else {
+        audioUnlocked = false;
         vid.muted = true;
-        await vid.play().catch(() => {});
-        syncSoundUI();
-        showToast('Ketuk sekali lagi untuk mengaktifkan suara 🔊');
+        if (aud) {
+          aud.pause();
+          aud.muted = true;
+        }
+        stopSoftChime();
+        syncUI();
+        showToast('Suara dimatikan 🔇');
       }
     };
 
     if (soundBtn) soundBtn.addEventListener('click', toggleAudio);
     if (stage) stage.addEventListener('click', toggleAudio);
-    vid.addEventListener('volumechange', syncSoundUI);
 
-    const onFirstTouch = () => {
-      if (!streamError && vid.paused) {
-        vid.play().catch(() => {});
-      }
-      document.removeEventListener('pointerdown', onFirstTouch);
-    };
-    document.addEventListener('pointerdown', onFirstTouch, { passive: true });
-
-    syncSoundUI();
+    syncUI();
   }
 
   // Boot

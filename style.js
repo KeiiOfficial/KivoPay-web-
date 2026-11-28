@@ -234,6 +234,35 @@
       object-position: center;
     }
 
+    .top-video-art {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      background: linear-gradient(135deg, rgba(255, 77, 148, 0.28), rgba(139, 92, 246, 0.30));
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+
+    .top-video-frame.is-fallback .top-video-art {
+      opacity: 1;
+    }
+
+    .top-art-emoji {
+      font-size: 28px;
+    }
+
+    .top-art-text {
+      font-size: 11px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.88);
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+    }
+
     .top-video-scrim {
       position: absolute;
       inset: 0;
